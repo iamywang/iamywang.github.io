@@ -35,7 +35,7 @@
     <script class="keep-theme-configurations">
     const KEEP = window.KEEP || {}
     KEEP.hexo_config = {"hostname":"iamywang.github.io","root":"/","language":"zh-CN","path":"search.json"}
-    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true,"layout":"left"},"style":{"primary_color":"#0f59a4","logo":"/images/avatar.jpg","favicon":"/images/logo.jpg","avatar":"/images/avatar.jpg","first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"一个对计算机体系结构、侧信道安全与足球充满兴趣的程序员。 || All or Nothing.","hitokoto":false},"scroll":{"progress_bar":true,"percent":false}},"local_search":{"enable":true,"preload":true},"code_block":{"tools":{"enable":true,"style":"default"},"highlight_theme":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"comment":{"enable":true,"use":"gitalk","valine":{"appid":null,"appkey":null,"server_urls":null,"placeholder":null},"gitalk":{"github_id":"iamywang","github_admins":null,"repository":"iamywang.github.io","client_id":"26feb95465193b82487e","client_secret":"52087dc36c8bc13caa1845b46ea88a6bf157c5da","proxy":null},"twikoo":{"env_id":null,"region":null,"version":"1.6.21"},"waline":{"server_url":null,"reaction":false,"version":2},"giscus":{"repo":null,"repo_id":null,"category":"Announcements","category_id":null,"reactions_enabled":false}},"post":{"author_label":{"enable":false,"auto":true,"custom_label_list":["Trainee","Engineer","Architect"]},"word_count":{"wordcount":true,"min2read":true},"datetime_format":"YYYY-MM-DD HH:mm:ss","copyright_info":true,"share":true,"reward":{"enable":false,"img_link":null,"text":null}},"website_count":{"busuanzi_count":{"enable":true,"site_uv":true,"site_pv":true,"page_pv":true}},"version":"3.8.4"}
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true,"layout":"left"},"style":{"primary_color":"#0f59a4","logo":"/images/avatar.jpg","favicon":"/images/logo.jpg","avatar":"/images/avatar.jpg","first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"一个对计算机体系结构、侧信道安全与足球充满兴趣的程序员。 || All or Nothing.","hitokoto":false},"scroll":{"progress_bar":true,"percent":false}},"local_search":{"enable":true,"preload":true},"code_block":{"tools":{"enable":true,"style":"default"},"highlight_theme":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"comment":{"enable":true,"use":"giscus","valine":{"appid":null,"appkey":null,"server_urls":null,"placeholder":null},"gitalk":{"github_id":"iamywang","github_admins":null,"repository":"iamywang.github.io","client_id":"26feb95465193b82487e","client_secret":"52087dc36c8bc13caa1845b46ea88a6bf157c5da","proxy":null},"twikoo":{"env_id":null,"region":null,"version":"1.6.21"},"waline":{"server_url":null,"reaction":false,"version":2},"giscus":{"repo":"iamywang/iamywang.github.io","repo_id":"MDEwOlJlcG9zaXRvcnkxNTY0OTIyOTA=","category":"Announcements","category_id":"DIC_kwDOCVPiAs4CaIL_","reactions_enabled":true}},"post":{"author_label":{"enable":false,"auto":true,"custom_label_list":["Trainee","Engineer","Architect"]},"word_count":{"wordcount":true,"min2read":true},"datetime_format":"YYYY-MM-DD HH:mm:ss","copyright_info":true,"share":true,"reward":{"enable":false,"img_link":null,"text":null}},"website_count":{"busuanzi_count":{"enable":true,"site_uv":true,"site_pv":true,"page_pv":true}},"version":"3.8.4"}
     KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"}
     KEEP.language_code_block = {"copy":"复制代码","copied":"已复制","fold":"折叠代码块","folded":"已折叠"}
     KEEP.language_copy_copyright = {"copy":"复制版权信息","copied":"已复制","title":"原文标题","author":"原文作者","link":"原文链接"}
@@ -478,42 +478,66 @@
         
             
 
-    <div class="gitalk-comment-container">
-        <div id="gitalk-container"></div>
-        <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.css">
-        <script  src="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+    <div class="giscus-comments-container">
+        <div class="giscus" id="giscus"></div>
         <script >
-          function loadGitalk() {
-            let __gitalk__pathname = decodeURI(location.pathname);
-            const __gitalk__pathnameLength = __gitalk__pathname.length;
-            const __gitalk__pathnameMaxLength = 50;
-            if (__gitalk__pathnameLength > __gitalk__pathnameMaxLength) {
-              __gitalk__pathname = __gitalk__pathname.substring(0, __gitalk__pathnameMaxLength - 3) + '...';
-            }
 
-            try {
-              Gitalk && new Gitalk({
-                clientID: '26feb95465193b82487e',
-                clientSecret: '52087dc36c8bc13caa1845b46ea88a6bf157c5da',
-                repo: 'iamywang.github.io',
-                owner: 'iamywang',
-                admin: 'iamywang',
-                id: __gitalk__pathname,
-                proxy: '',
-                language: 'zh-CN'
-              }).render('gitalk-container');
-            } catch (e) {
-              window.Gitalk = null;
+          if (!window?.__getGiscusTheme) {
+            window.__getGiscusTheme = () => {
+              return document.body.classList.contains("dark-mode") ? "dark_dimmed" : "light_tritanopia";
+            };
+          }
+
+          if (!window?.__changeGiscusTheme) {
+            window.__changeGiscusTheme = () => {
+              const iframe = document.querySelector("iframe.giscus-frame");
+              iframe && iframe.contentWindow.postMessage({
+                giscus: {
+                  setConfig: {
+                    theme: __getGiscusTheme()
+                  }
+                }
+              }, "https://giscus.app");
+            };
+          }
+
+          if (!window?.__loadGiscus) {
+            window.__loadGiscus = () => {
+              const script = document.createElement("script");
+              script.async = true;
+              script.src = "https://giscus.app/client.js";
+              script.setAttribute("data-repo", 'iamywang/iamywang.github.io');
+              script.setAttribute("data-repo-id", 'MDEwOlJlcG9zaXRvcnkxNTY0OTIyOTA=');
+              script.setAttribute("data-category", 'Announcements');
+              script.setAttribute("data-category-id", 'DIC_kwDOCVPiAs4CaIL_');
+              script.setAttribute("data-reactions-enabled", '1');
+              script.setAttribute("data-lang", 'zh-CN');
+              script.setAttribute("data-mapping", "pathname");
+              script.setAttribute("data-strict", "0");
+              script.setAttribute("data-emit-metadata", "0");
+              script.setAttribute("data-input-position", "top");
+              script.setAttribute("crossorigin", "anonymous");
+              script.setAttribute("loading", "lazy");
+              script.setAttribute("data-theme", __getGiscusTheme());
+              document.querySelector(".giscus-comments-container").appendChild(script);
+
+              const toggleThemeBtn = document.querySelector(".tool-dark-light-toggle");
+              toggleThemeBtn && toggleThemeBtn.addEventListener("click", () => {
+                __changeGiscusTheme();
+              });
             }
           }
 
-          if ('false' === 'true') {
-            const loadGitalkTimeout = setTimeout(() => {
-              loadGitalk();
-              clearTimeout(loadGitalkTimeout);
+          if ('false' === "true") {
+            setTimeout(() => {
+              __loadGiscus();
             }, 1000);
           } else {
-            window.addEventListener('DOMContentLoaded', loadGitalk);
+            window.addEventListener("DOMContentLoaded", () => {
+              setTimeout(() => {
+                __loadGiscus();
+              }, 1000);
+            });
           }
         </script>
     </div>
