@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="iamywang">
+    
+    <title>
+        
+            gem5（3）——gem5相关论文整理 |
+        
+        没事我就挠脑袋
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.jpg">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/font/css/fontawesome.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/font/css/regular.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/font/css/solid.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/font/css/brands.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {}
+    KEEP.hexo_config = {"hostname":"iamywang.github.io","root":"/","language":"zh-CN","path":"search.json"}
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true},"style":{"primary_color":"#0f59a4","logo":"/images/avatar.jpg","favicon":"/images/logo.jpg","avatar":"/images/avatar.jpg","font_size":null,"font_family":null,"hover":{"shadow":true,"scale":true},"first_screen":{"enable":true,"header_transparent":true,"background_img":"/images/bg.svg","description":"一个对计算机体系结构、侧信道安全与足球充满兴趣的程序员。 || All or Nothing.","font_color":null,"hitokoto":false},"scroll":{"progress_bar":true,"percent":false}},"local_search":{"enable":true,"preload":true},"code_copy":{},"code_block":{"tools":{"enable":true,"style":"default"},"highlight_theme":"default"},"side_tools":{},"pjax":{"enable":false},"lazyload":{"enable":true},"comment":{"enable":true,"use":"gitalk","valine":{"appid":null,"appkey":null,"server_urls":null,"placeholder":null},"gitalk":{"github_id":"iamywang","github_admins":null,"repository":"iamywang.github.io","client_id":"ba4b1883b3d135eff41c","client_secret":"332966f462b6832cf08c586a0061f6af8d774b26","proxy":null},"twikoo":{"env_id":null,"region":null,"version":"1.6.8"},"waline":{"server_url":null,"reaction":false,"version":2}},"post":{"author_label":{"enable":false,"auto":true,"custom_label_list":["Trainee","Engineer","Architect"]},"word_count":{"enable":true,"wordcount":true,"min2read":true},"img_align":"left","copyright_info":true},"version":"3.6.1"}
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"}
+    KEEP.language_code_block = {"copy":"复制代码","copied":"已复制","fold":"折叠代码块","folded":"已折叠"}
+    KEEP.language_copy_copyright = {"copy":"复制版权信息","copied":"已复制","title":"原文标题","author":"原文作者","link":"原文链接"}
+  </script>
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            
+<header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/">
+                    <img src="/images/avatar.jpg">
+                </a>
+            
+            <a class="logo-title" href="/">
+               没事我就挠脑袋
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                文章
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                分类
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                标签
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/links"
+                            >
+                                友链
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                关于
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">文章</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">分类</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">标签</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/links">友链</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">关于</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            <div class="article-title">
+                <span class="title-hover-animation">gem5（3）——gem5相关论文整理</span>
+            </div>
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/images/avatar.jpg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">iamywang</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            
+<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        
+            <i class="fa-regular fa-calendar-plus"></i>&nbsp;
+        
+        <span class="pc">2022-09-08 11:00:00</span>
+        <span class="mobile">2022-09-08 11:00</span>
+    </span>
+    
+        <span class="article-update-date article-meta-item">
+        <i class="fas fa-file-pen"></i>&nbsp;
+        <span class="pc">2022-09-08 11:00:00</span>
+    </span>
+    
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">体系结构</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/%E8%AE%BA%E6%96%87/">论文</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">体系结构</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/gem5/">gem5</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fas fa-file-word"></i>&nbsp;<span>3.8k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>13 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content keep-markdown-body">
+                
+
+                <h2 id="论文列表"><a href="#论文列表" class="headerlink" title="论文列表"></a>论文列表</h2><table>
+<thead>
+<tr>
+<th align="center">序号</th>
+<th align="left">论文</th>
+<th align="center">出处</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td align="left">DAGguise: Mitigating memory timing side channels</td>
+<td align="center">ASPLOS 2022</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="left">Pinned loads: Taming speculative loads in secure processors</td>
+<td align="center">ASPLOS 2022</td>
+</tr>
+<tr>
+<td align="center">3</td>
+<td align="left">Abusing Cache Line Dirty States to Leak Information in Commercial Processors</td>
+<td align="center">HPCA 2022</td>
+</tr>
+<tr>
+<td align="center">4</td>
+<td align="left">unXpec: Breaking Undo-based Safe Speculation</td>
+<td align="center">HPCA 2022</td>
+</tr>
+<tr>
+<td align="center">5</td>
+<td align="left">PS-ORAM: Efficient crash consistency support for oblivious RAM on NVM</td>
+<td align="center">ISCA 2022</td>
+</tr>
+<tr>
+<td align="center">6</td>
+<td align="left">MOESI-prime: Preventing coherence-induced hammering in commodity workloads</td>
+<td align="center">ISCA 2022</td>
+</tr>
+<tr>
+<td align="center">7</td>
+<td align="left">ProTRR: Principled yet Optimal In-DRAM Target Row Refresh</td>
+<td align="center">S&amp;P 2022</td>
+</tr>
+<tr>
+<td align="center">8</td>
+<td align="left">SecSMT: Securing SMT processors against contention-based covert channels</td>
+<td align="center">USENIX Security 2022</td>
+</tr>
+<tr>
+<td align="center">9</td>
+<td align="left">Composable Cachelets: Protecting Enclaves from Cache Side-Channel Attacks</td>
+<td align="center">USENIX Security 2022</td>
+</tr>
+</tbody></table>
+<h2 id="DAGguise-Mitigating-memory-timing-side-channels"><a href="#DAGguise-Mitigating-memory-timing-side-channels" class="headerlink" title="DAGguise: Mitigating memory timing side channels"></a>DAGguise: Mitigating memory timing side channels</h2><p>本文研究了内存时序旁路的缓解问题，攻击者利用DRAM控制器内的争夺来推断受害者的秘密。这类通道已经很实用，对共享内存环境中的安全计算构成了重要的挑战。</p>
+<p>现有的最先进的内存定时侧信道缓解措施有几个关键的性能和安全限制。先前的方案需要繁琐的静态带宽划分，广泛的剖析阶段，或者根本无法防止利用细粒度的定时和银行信息的攻击。</p>
+<p>作者提出了DAGguise，这是一种防御机制，可以完全防止内存时间侧信道，同时允许动态流量争用，以实现良好的性能。DAGguise利用一种新的抽象内存访问表示法，即有向无环请求图（简称DAG），来模拟经历争夺的内存访问模式。DAGguise根据公开的𝑟DAG塑造受害者的内存访问模式，通过轻量级的剖析阶段获得，完全消除了信息泄漏。</p>
+<p>作者形式化验证了DAGguise的安全性，证明它保持了强大的安全保证。此外，通过允许动态流量竞争，DAGguise实现了相对于Fixed Service的12%的整体系统速度提升，Fixed Service是最先进的缓解机制，对于不需要保护的同地应用，其相对速度提升了20%。作者进一步宣称，DAGguise的原则可以被推广到保护其他类型的基于调度器的时序侧信道，例如那些针对片上网络或SMT内核的功能单元的侧信道。</p>
+<h2 id="Pinned-loads-Taming-speculative-loads-in-secure-processors"><a href="#Pinned-loads-Taming-speculative-loads-in-secure-processors" class="headerlink" title="Pinned loads: Taming speculative loads in secure processors"></a>Pinned loads: Taming speculative loads in secure processors</h2><p>在投机执行的安全框架中，当一条指令不再容易受到流水线压制时，它就会达到其可见点（VP）。在一个潜在的泄漏指令达到其VP之前，它必须停滞，除非有一个防御方案，如隐形投机提供保护。不幸的是，无论是停顿还是保护前VP指令的执行，通常都有性能上的代价。</p>
+<p>实现低开销安全执行的方法之一是开发技术，加速VP从旧指令向新指令的推进。在本文中，作者提出了一个这样的技术。作者发现，在没有可能违反内存一致性（MCVs）的情况下，加载VP的进展主要受到阻碍。因此，作者的技术被称为 “钉住负载”，试图使负载尽可能早地不受MCVs的影响，作者称之为在流水线上钉住负载的过程。其结果是加快了副总裁的进度，减少了防御方案的执行开销。</p>
+<p>在本文中，作者描述了Pinned Loads所需要的硬件，以及两种可能的Pinned Loads设计，在硬件要求和性能之间有不同的权衡。作者的评估表明，Pinned Loads非常有效：用Pinned Loads扩展三种流行的防御方案，防止投机执行攻击，在SPEC17和SPLASH2&#x2F;PARSEC应用中的平均执行开销减少了约50%。例如，在SPEC17上，三种防御方案的执行开销从112.6%下降到51.3%，从35.8%下降到15.3%，以及从24.8%下降到13.2%。</p>
+<h2 id="Abusing-Cache-Line-Dirty-States-to-Leak-Information-in-Commercial-Processors"><a href="#Abusing-Cache-Line-Dirty-States-to-Leak-Information-in-Commercial-Processors" class="headerlink" title="Abusing Cache Line Dirty States to Leak Information in Commercial Processors"></a>Abusing Cache Line Dirty States to Leak Information in Commercial Processors</h2><p>缓存已经被用来构建各种类型的隐蔽和侧面渠道来泄露信息。大多数隐蔽的高速缓存通道利用了高速缓存点击和高速缓存失误之间的时间差异。然而，作者引入了一个新的和更广泛的缓存隐蔽渠道攻击分类。Hit+Miss，Hit+Hit，以及Miss+Miss。作者强调，处于不同状态的缓存线的缓存缺失（或缓存命中）可能有更大的时间差异，这些可以被用作定时通道。基于这种分类，作者提出了一种新的稳定和隐蔽的Miss+Miss缓存通道。回写型高速缓存在现代处理器中被广泛部署。</p>
+<p>本文详细介绍了一种方法，即替换延迟的差异可以用来构建基于时间的通道（称为WB通道）来泄露回写缓存中的信息。发送方对缓存行的任何修改都会将其设置为脏污状态，而接收方可以通过测量替换这个缓存集的延迟来观察到这一点。作者还演示了发送方如何利用缓存组中不同数量的脏缓存线来提高编码多比特的符号的传输带宽。在发送方和接收方之间没有共享内存的超线程设置中，商业系统中WB信道的峰值传输带宽可以在每个缓存集1300到4400kbps之间变化。</p>
+<p>与大多数现有的总是针对特定内存地址的高速缓存通道相比，新的WB通道专注于高速缓存集和高速缓存行的状态，使得通道很难受到内核上其他进程的干扰，而且它们仍然可以在使用随机替换策略的高速缓存中工作。作者还从高速缓存负载的数量和高速缓存失误率的角度分析了WB通道的隐蔽性。作者讨论并评估了可能的防御措施。本文最后讨论了各种形式的侧面通道攻击。</p>
+<h2 id="unXpec-Breaking-Undo-based-Safe-Speculation"><a href="#unXpec-Breaking-Undo-based-Safe-Speculation" class="headerlink" title="unXpec: Breaking Undo-based Safe Speculation"></a>unXpec: Breaking Undo-based Safe Speculation</h2><p>利用投机执行来泄密的投机执行攻击在工业界和学术界都引起了极大的关注。它们主要是利用由错误猜测和压制指令（即瞬时指令）留下的微架构状态的隐蔽或侧面通道。大多数此类攻击的目标是缓存状态。现有的基于缓存的防御系统对投机执行的攻击分为两类：shadow和undo。</p>
+<p>大多数shadow防御系统对投机性指令的执行元数据进行缓冲，只有在投机性执行的指令被确定后才将其放入缓存。由于错误猜测是罕见的情况，undo防御系统允许猜测性指令修改缓存状态。一旦出现错误的猜测，它们会将缓存状态回滚到瞬时指令执行之前的状态。然而，shadow防御系统最近被投机性干扰攻击发现是不安全的。这就要求对undo防御系统进行深入的安全检查，以应对投机执行攻击。</p>
+<p>在本文中，作者提出了unXpec作为对基于Undo的安全推测的第一种攻击。它利用了undo防御的回滚操作所表现出的秘密依赖的时间通道。具体来说，回滚过程需要使瞬时指令带入缓存的缓存行失效，并通过瞬时加载的数据从缓存中恢复被驱逐的缓存行。这就开辟了一个渠道，通过回滚时是否涉及很多无效和恢复的时间差异来编码秘密。作者进一步利用驱逐集来执行更多的恢复操作。这就产生了更长的回滚时间，从而产生了更大的依赖于秘密的时间差异。</p>
+<p>作者在开源的CleanupSpec上展示了时间通道，这是一个有代表性的undo解决方案。一个单一的瞬时负载可以触发22个周期（没有驱逐集）和32个周期（有驱逐集）的秘密依赖的时间差异，这对于构建投机执行攻击的隐蔽通道来说是足够利用的。作者在gem5模拟器上运行unXpec并启用CleanupSpec。结果显示，unXpec可以以140Kbps的高速度泄露秘密，准确率超过90%。简单地强制执行恒定时间回滚以减轻unXpec的影响可能会引起超过70%的性能开销。</p>
+<h2 id="PS-ORAM-Efficient-crash-consistency-support-for-oblivious-RAM-on-NVM"><a href="#PS-ORAM-Efficient-crash-consistency-support-for-oblivious-RAM-on-NVM" class="headerlink" title="PS-ORAM: Efficient crash consistency support for oblivious RAM on NVM"></a>PS-ORAM: Efficient crash consistency support for oblivious RAM on NVM</h2><p>Oblivious RAM（ORAM）是一种可证明的安全原件，用于防止内存总线上的访问模式泄漏。通过对数据块进行重新映射和访问冗余块，ORAM通过模糊化防止访问模式泄露。字节可寻址的非易失性存储器（NVM）被认为是主存储器的候选者，因为它具有更好的可扩展性，有竞争力的性能和持久的数据存储。虽然之前有很多工作集中在提高ORAM在传统的基于DRAM的内存系统上的性能，但当内存技术转向使用NVM时，为了安全、正确性和性能，需要确保一个高效的碰撞一致性的ORAM。对ORAM系统直接使用传统的基于软件的碰撞一致性支持不仅昂贵，而且不安全。</p>
+<p>在这项工作中，作者研究了如何用一个基于NVM的内存系统来坚持ORAM的构建。为了在不破坏ORAM系统安全和影响性能的情况下支持碰撞一致性，作者提出了PS-ORAM。PS-ORAM包括一个新的ORAM控制器设计和一套支持崩溃一致性的ORAM访问协议。</p>
+<p>作者对PS-ORAM与不支持崩溃一致性的系统进行了评估，非递归和递归的PS-ORAM只产生了4.29%和3.65%的额外性能开销。结果表明，PS-ORAM不仅以最小的性能和硬件开销支持有效的崩溃一致性，而且对NVM的寿命也是友好的。</p>
+<h2 id="MOESI-prime-Preventing-coherence-induced-hammering-in-commodity-workloads"><a href="#MOESI-prime-Preventing-coherence-induced-hammering-in-commodity-workloads" class="headerlink" title="MOESI-prime: Preventing coherence-induced hammering in commodity workloads"></a>MOESI-prime: Preventing coherence-induced hammering in commodity workloads</h2><p>之前的工作表明，RowHammer攻击–通过频繁激活同一行来翻转DRAM中的比特–是可行的。广告商通常通过精心设计的指令序列来实施这些攻击，以绕过CPU缓存。然而，作者发现了一种新的翻转形式，作者称之为相干性诱导的翻转，由英特尔实施的缓存相干性非统一内存访问（ccNUMA）协议引起。作者表明，这种翻转发生在一个主要云提供商的生产硬件的商品基准中，这是第一次发现由非恶意代码产生的翻转。鉴于DRAM对比特翻转的敏感性上升，防止相干性引起的翻转以确保云的可靠性和安全性是最重要的。</p>
+<p>因此，作者介绍了MOESI-prime，这是一种ccNUMA相干协议，可以缓解相干性引起的翻转，同时重新保持英特尔最先进的可扩展性。MOESI-prime表明，大多数DRAM的读和写触发这种翻转是不必要的。因此，通过在一致性协议中编码额外的信息，MOESI-prime可以省略这些读和写，防止在非恶意和恶意的工作负载中出现一致性引起的敲击。此外，通过省略不必要的读写，MOESI-prime对平均性能（在MESI和MOESI的±0.61%范围内）和平均DRAM功率（0.03%-0.22%的改进）的影响在评估的ccNUMA配置中可忽略不计。</p>
+<h2 id="ProTRR-Principled-yet-Optimal-In-DRAM-Target-Row-Refresh"><a href="#ProTRR-Principled-yet-Optimal-In-DRAM-Target-Row-Refresh" class="headerlink" title="ProTRR: Principled yet Optimal In-DRAM Target Row Refresh"></a>ProTRR: Principled yet Optimal In-DRAM Target Row Refresh</h2><p>随着科技的发展，DRAM越来越容易受到Rowhammer攻击的影响。本文介绍了PROTRR，这是第一个原则性的DRAM内目标行刷新缓解措施，具有安全保证和低开销的界限。与需要改变内存控制器的现有建议不同，PROTRR的DRAM内性质使其能够无缝集成。然而，这意味着PROTRR必须尊重DRAM协议的同步性，这限制了在任何特定时间可以保护的DRAM行的数量。</p>
+<p>为了克服这一挑战，PROTRR主动刷新未来最有可能观察到比特翻转的每一行。虽然这个策略可以捕捉到被攻击最多的行，但其他一些行可能仍然在雷达下飞。作者利用这一观察来构建FEINTING，这是一种新的行锤攻击，作者证明在这种情况下是最佳的。然后，作者对PROTRR进行配置，使其能够安全地应对FEINTING。为了实现这一点，PROTRR应该跟踪对每一行的访问，这在硬件上实现起来非常昂贵。相反，PROTRR使用一个新的频繁项目计数方案，利用FEINTING在可容忍的DRAM漏洞、计数器的数量和额外刷新的数量之间提供一个可证明的最佳而灵活的权衡。</p>
+<p>作者使用PROTRR的ASIC实现和周期精确的模拟进行的广泛评估表明，PROTRR可以为当前和未来的DRAM技术提供原则性的保护，对性能、功耗和面积的影响可以忽略不计。PROTRR与DDR4和DDR5中新的刷新管理（RFM）扩展完全兼容。</p>
+<h2 id="SecSMT-Securing-SMT-processors-against-contention-based-covert-channels"><a href="#SecSMT-Securing-SMT-processors-against-contention-based-covert-channels" class="headerlink" title="SecSMT: Securing SMT processors against contention-based covert channels"></a>SecSMT: Securing SMT processors against contention-based covert channels</h2><p>本文首次全面分析了高性能同步多线程（SMT）处理器中基于争用的安全漏洞。它的特点是描述了整个共享管道的争用情况，以及每个资源的潜在泄漏渠道。此外，它提出了一套统一的缓解&#x2F;隔离策略，在保留完整的、不安全的SMT实现的大部分性能的同时，极大地减少了这种泄漏。这些结果为考虑SMT执行及其性能优势奠定了基础，甚至对安全敏感的应用来说，它也是一个合理的选择。</p>
+<h2 id="Composable-Cachelets-Protecting-Enclaves-from-Cache-Side-Channel-Attacks"><a href="#Composable-Cachelets-Protecting-Enclaves-from-Cache-Side-Channel-Attacks" class="headerlink" title="Composable Cachelets: Protecting Enclaves from Cache Side-Channel Attacks"></a>Composable Cachelets: Protecting Enclaves from Cache Side-Channel Attacks</h2><p>诸如英特尔SGX这样的隔离执行架构的安全性受到了最近出现的侧信道攻击的极大威胁。缓存侧信道攻击允许对手在不直接访问飞地内存的情况下泄露存储在飞地内部的秘密。在某些情况下，即使不知道受害者的应用代码或没有操作系统级别的权限，秘密也会被泄露。</p>
+<p>作者提出了Composable Cachelets（CC）的概念，这是一种新的可扩展策略，用于动态划分最后一级缓存（LLC），将飞地与其他应用程序和相互之间完全隔离。CC支持缓存中的飞地隔离，能够在飞地被创建和销毁时动态地重新调整缓存容量。作者提出了一个缓存感知和飞地感知的操作语义，以帮助严格建立CC的安全属性，并且作者通过实验证明，CC在对性能和复杂性影响不大的情况下挫败了对缓存的旁路攻击。</p>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    
+<div class="article-copyright-info-container">
+    <ul class="copyright-info-content">
+        <li class="post-title">
+            <span class="type">本文标题</span>：<span class="content">gem5（3）——gem5相关论文整理</span>
+        </li>
+        <li class="post-author">
+            <span class="type">本文作者</span>：<span class="content">iamywang</span>
+        </li>
+        <li class="post-time">
+            <span class="type">创建时间</span>：<span class="content">2022-09-08 11:00:00</span>
+        </li>
+        <li class="post-link">
+            <span class="type">本文链接</span>：<span class="content">2022/09/08/gem5-3/</span>
+        </li>
+        <li class="post-license">
+            <span class="type">版权声明</span>：<span class="content">本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！</span>
+        </li>
+    </ul>
+    <div class="copy-copyright-info flex-center tooltip" data-content="复制版权信息" data-offset-y="-2px">
+        <i class="fa-solid fa-copy"></i>
+    </div>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/tags/%E8%AE%BA%E6%96%87/">#论文</a>&nbsp;
+                        </li>
+                    
+                        <li class="tag-item">
+                            <a href="/tags/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">#体系结构</a>&nbsp;
+                        </li>
+                    
+                        <li class="tag-item">
+                            <a href="/tags/gem5/">#gem5</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                               rel="prev"
+                               href="/2022/09/12/gem5-4/"
+                            >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                                <span class="title flex-center">
+                                <span class="post-nav-title-item">gem5（4）——利用gem5自定义系统配置在SE模式下进行模拟</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                               rel="next"
+                               href="/2022/09/07/moon-cake-22/"
+                            >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">中秋月饼</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                                <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+            
+                <div class="comment-container">
+                    
+<div class="comments-container">
+    <div id="comments-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments"></i>&nbsp;评论
+    </div>
+    
+        
+            
+
+    <div class="gitalk-comment-container">
+        <div id="gitalk-container"></div>
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.css">
+        <script  src="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+        <script >
+          function loadGitalk() {
+            let __gitalk__pathname = decodeURI(location.pathname);
+            const __gitalk__pathnameLength = __gitalk__pathname.length;
+            const __gitalk__pathnameMaxLength = 50;
+            if (__gitalk__pathnameLength > __gitalk__pathnameMaxLength) {
+              __gitalk__pathname = __gitalk__pathname.substring(0, __gitalk__pathnameMaxLength - 3) + '...';
+            }
+
+            try {
+              Gitalk && new Gitalk({
+                clientID: 'ba4b1883b3d135eff41c',
+                clientSecret: '332966f462b6832cf08c586a0061f6af8d774b26',
+                repo: 'iamywang.github.io',
+                owner: 'iamywang',
+                admin: 'iamywang',
+                id: __gitalk__pathname,
+                proxy: '',
+                language: 'zh-CN'
+              }).render('gitalk-container');
+            } catch (e) {
+              window.Gitalk = null;
+            }
+          }
+
+          if ('false' === 'true') {
+            const loadGitalkTimeout = setTimeout(() => {
+              loadGitalk();
+              clearTimeout(loadGitalkTimeout);
+            }, 1000);
+          } else {
+            window.addEventListener('DOMContentLoaded', loadGitalk);
+          }
+        </script>
+    </div>
+
+
+
+        
+    
+</div>
+
+                </div>
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BA%E6%96%87%E5%88%97%E8%A1%A8"><span class="nav-number">1.</span> <span class="nav-text">论文列表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DAGguise-Mitigating-memory-timing-side-channels"><span class="nav-number">2.</span> <span class="nav-text">DAGguise: Mitigating memory timing side channels</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pinned-loads-Taming-speculative-loads-in-secure-processors"><span class="nav-number">3.</span> <span class="nav-text">Pinned loads: Taming speculative loads in secure processors</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Abusing-Cache-Line-Dirty-States-to-Leak-Information-in-Commercial-Processors"><span class="nav-number">4.</span> <span class="nav-text">Abusing Cache Line Dirty States to Leak Information in Commercial Processors</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#unXpec-Breaking-Undo-based-Safe-Speculation"><span class="nav-number">5.</span> <span class="nav-text">unXpec: Breaking Undo-based Safe Speculation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PS-ORAM-Efficient-crash-consistency-support-for-oblivious-RAM-on-NVM"><span class="nav-number">6.</span> <span class="nav-text">PS-ORAM: Efficient crash consistency support for oblivious RAM on NVM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MOESI-prime-Preventing-coherence-induced-hammering-in-commodity-workloads"><span class="nav-number">7.</span> <span class="nav-text">MOESI-prime: Preventing coherence-induced hammering in commodity workloads</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ProTRR-Principled-yet-Optimal-In-DRAM-Target-Row-Refresh"><span class="nav-number">8.</span> <span class="nav-text">ProTRR: Principled yet Optimal In-DRAM Target Row Refresh</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SecSMT-Securing-SMT-processors-against-contention-based-covert-channels"><span class="nav-number">9.</span> <span class="nav-text">SecSMT: Securing SMT processors against contention-based covert channels</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Composable-Cachelets-Protecting-Enclaves-from-Cache-Side-Channel-Attacks"><span class="nav-number">10.</span> <span class="nav-text">Composable Cachelets: Protecting Enclaves from Cache Side-Channel Attacks</span></a></li></ol>
+    </div>
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            
+<footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+                <span>2022</span> -
+            
+            2023
+            
+                &nbsp;<i class="fas fa-heart icon-animate"></i>
+                &nbsp;<a href="/">iamywang</a>
+            
+        </div>
+        
+            <script async 
+                    src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                
+                
+                    总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.6.1</a>
+        </div>
+        
+        
+            <div class="deploy-info info-item">
+                
+                    本站由 <span class="tooltip" data-content="GitHub Pages"><img src="/images/deploy-provider/github.png"></span> 提供部署服务
+                
+            </div>
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item flex-center toggle-show-toc">
+                <i class="fas fa-list"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="tools-item flex-center go-to-comments">
+                <i class="fas fa-comment"></i>
+                <span class="post-comments-count"></span>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+            <li class="tools-item rss flex-center">
+                <a class="flex-center"
+                   href="/atom.xml"
+                   target="_blank"
+                >
+                    <i class="fas fa-rss"></i>
+                </a>
+            </li>
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="zoom-in-image-mask">
+    <img class="zoom-in-image">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="close-popup-btn">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/dark-light-toggle.js"></script>
+
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/code-block.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/lazyload.js"></script>
+
+
+<div class="post-scripts">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/post-helper.js"></script>
+        
+            <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/libs/anime.min.js"></script>
+        
+        
+            <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/toc.js"></script>
+        
+    
+</div>
+
+
+
+</body>
+</html>

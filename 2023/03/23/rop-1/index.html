@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="iamywang">
+    
+    <title>
+        
+            ROP/JOP/COP（1）——攻击基本原理、现有芯片级对策 |
+        
+        没事我就挠脑袋
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.jpg">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/font/css/fontawesome.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/font/css/regular.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/font/css/solid.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/font/css/brands.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {}
+    KEEP.hexo_config = {"hostname":"iamywang.github.io","root":"/","language":"zh-CN","path":"search.json"}
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true},"style":{"primary_color":"#0f59a4","logo":"/images/avatar.jpg","favicon":"/images/logo.jpg","avatar":"/images/avatar.jpg","font_size":null,"font_family":null,"hover":{"shadow":true,"scale":true},"first_screen":{"enable":true,"header_transparent":true,"background_img":"/images/bg.svg","description":"一个对计算机体系结构、侧信道安全与足球充满兴趣的程序员。 || All or Nothing.","font_color":null,"hitokoto":false},"scroll":{"progress_bar":true,"percent":false}},"local_search":{"enable":true,"preload":true},"code_copy":{},"code_block":{"tools":{"enable":true,"style":"default"},"highlight_theme":"default"},"side_tools":{},"pjax":{"enable":false},"lazyload":{"enable":true},"comment":{"enable":true,"use":"gitalk","valine":{"appid":null,"appkey":null,"server_urls":null,"placeholder":null},"gitalk":{"github_id":"iamywang","github_admins":null,"repository":"iamywang.github.io","client_id":"ba4b1883b3d135eff41c","client_secret":"332966f462b6832cf08c586a0061f6af8d774b26","proxy":null},"twikoo":{"env_id":null,"region":null,"version":"1.6.8"},"waline":{"server_url":null,"reaction":false,"version":2}},"post":{"author_label":{"enable":false,"auto":true,"custom_label_list":["Trainee","Engineer","Architect"]},"word_count":{"enable":true,"wordcount":true,"min2read":true},"img_align":"left","copyright_info":true},"version":"3.6.1"}
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"}
+    KEEP.language_code_block = {"copy":"复制代码","copied":"已复制","fold":"折叠代码块","folded":"已折叠"}
+    KEEP.language_copy_copyright = {"copy":"复制版权信息","copied":"已复制","title":"原文标题","author":"原文作者","link":"原文链接"}
+  </script>
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            
+<header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/">
+                    <img src="/images/avatar.jpg">
+                </a>
+            
+            <a class="logo-title" href="/">
+               没事我就挠脑袋
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                文章
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                分类
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                标签
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/links"
+                            >
+                                友链
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                关于
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">文章</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">分类</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">标签</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/links">友链</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">关于</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            <div class="article-title">
+                <span class="title-hover-animation">ROP/JOP/COP（1）——攻击基本原理、现有芯片级对策</span>
+            </div>
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/images/avatar.jpg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">iamywang</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            
+<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        
+            <i class="fa-regular fa-calendar-plus"></i>&nbsp;
+        
+        <span class="pc">2023-03-23 10:00:00</span>
+        <span class="mobile">2023-03-23 10:00</span>
+    </span>
+    
+        <span class="article-update-date article-meta-item">
+        <i class="fas fa-file-pen"></i>&nbsp;
+        <span class="pc">2023-03-23 10:00:00</span>
+    </span>
+    
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/%E5%86%85%E5%AD%98%E5%AE%89%E5%85%A8/">内存安全</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/%E5%86%85%E5%AD%98%E5%AE%89%E5%85%A8/">内存安全</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/%E6%A0%88%E6%BA%A2%E5%87%BA/">栈溢出</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/%E9%9D%A2%E5%90%91%E8%BF%94%E5%9B%9E%E7%BC%96%E7%A8%8B/">面向返回编程</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/%E9%9D%A2%E5%90%91%E8%B7%B3%E8%BD%AC%E7%BC%96%E7%A8%8B/">面向跳转编程</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/%E9%9D%A2%E5%90%91%E8%B0%83%E7%94%A8%E7%BC%96%E7%A8%8B/">面向调用编程</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fas fa-file-word"></i>&nbsp;<span>1.8k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>6 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content keep-markdown-body">
+                
+
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>从计算机体系结构的角度来说，内存安全违规（memory safety violation）一般分为两大类：</p>
+<ul>
+<li>时间违规（temporal violation）：典型代表为Use-After-Free（UAF）漏洞，即在释放内存后，再次对该内存进行访问。</li>
+<li>空间违规（spatial violation）：典型代表为栈溢出（stack overflow）漏洞，即在栈上分配的内存空间不足以存放当前的数据。</li>
+</ul>
+<p>而面向返回编程（Return-Oriented Programming，ROP）、面向跳转编程（Jump-Oriented Programming，JOP）和面向调用编程（Call-Oriented Programming，COP）都是基于空间违规的攻击手段，本文将从攻击基本原理、现有芯片级对策和思考三个方面来介绍ROP&#x2F;JOP&#x2F;COP。</p>
+<p>而ROP攻击产生的一大原因是因为，现代操作系统为了防止攻击者在栈上发起代码注入漏洞，采用了W^X的内存保护机制，即栈上的内存空间只能执行，不能写入。因此，攻击者在栈上发起代码注入漏洞时，只能通过覆盖返回地址来控制程序的执行流程，而这种攻击手段就是ROP。</p>
+<p><img  
+                     lazyload
+                     alt="image"
+                     data-src="/images/rop-1/1.png"
+                      alt="ROP"
+                ></p>
+<p>以下是一个较为详细的ppt：<a href="https://iamywang.github.io/images/rop-1/memory-safety.pdf">memory-safety.pdf</a></p>
+<h2 id="ROP-x2F-JOP-x2F-COP"><a href="#ROP-x2F-JOP-x2F-COP" class="headerlink" title="ROP&#x2F;JOP&#x2F;COP"></a>ROP&#x2F;JOP&#x2F;COP</h2><h3 id="ROP"><a href="#ROP" class="headerlink" title="ROP"></a>ROP</h3><p>在x86中，ret指令指令的执行可以看做：<br>（1）pop：从栈中弹出一个返回地址；<br>（2）jmp：跳转到该返回地址处执行。</p>
+<p>此外，函数调用的参数传递是通过寄存器（eax、ebx、ecx、edx等）来完成的，比如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">execve(<span class="string">&quot;/bin/sh&quot;</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>);</span><br></pre></td></tr></table></figure>
+<p>其中，系统中断的值为0x80，而execve调用的值为0xb（存放在eax寄存器中），剩余三个参数分别为：&#x2F;bin&#x2F;sh（存放在ebx寄存器中）、NULL（存放在ecx寄存器中）、NULL（存放在edx寄存器中）。因此，如果攻击者能够将返回地址覆盖为0x80指令所在的地址，并且将四个寄存器的值分别设置为0xb、&#x2F;bin&#x2F;sh、NULL、NULL，那么就可以实现execve(“&#x2F;bin&#x2F;sh”, NULL, NULL)的调用。ROP代码段是一串以ret指令结尾的代码段，因此攻击者希望填充的恶意数据为：<br>（0）数据与返回地址的偏移量；<br>（1）<code>pop eax; ret;</code>所在的地址；<br>（2）eax寄存器的目标值0xb；<br>（3）<code>pop ebx; ret;</code>所在的地址；<br>（4）ebx寄存器的目标值&#x2F;bin&#x2F;sh；<br>（5）<code>pop ecx; ret;</code>所在的地址；<br>（6）ecx寄存器的目标值NULL；<br>（7）<code>pop edx; ret;</code>所在的地址；<br>（8）edx寄存器的目标值NULL；<br>（9）0x80指令所在的地址。</p>
+<p>指令序列的寻找可以通过JonathanSalwan开发的ROPgadget工具[1]来完成，以下面这段代码为例：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">gets(&amp;var1);</span><br><span class="line">...</span><br><span class="line"><span class="keyword">return</span> <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+<p>由于gets函数存在栈溢出漏洞，因此攻击者可以通过恶意输入var1覆盖返回地址，并完成恶意代码执行：<br>（1）计算var1与返回地址的偏移量；<br>（2）用ROPgadget工具生成ROP链；<br>（3）将ROP链写入var1，从而控制程序的执行流程。</p>
+<h3 id="JOP-x2F-COP"><a href="#JOP-x2F-COP" class="headerlink" title="JOP&#x2F;COP"></a>JOP&#x2F;COP</h3><p>在JOP攻击中，攻击者控制的恶意数据覆盖jmp指令的跳转地址实现控制流劫持，JOP代码段是一串以jmp指令结尾的代码段。而在COP攻击中，攻击者控制的恶意数据覆盖call指令的跳转地址实现控制流劫持，COP代码段是一串以call指令结尾的代码段。对于JOP&#x2F;COP攻击而言，攻击者要找寻的代码段中，除了要修改目标寄存器外，还要包含一个用于修改后续jmp&#x2F;call跳转地址的pop指令（在ROP攻击中，由ret指令的特点，不需要攻击者额外控制）。</p>
+<p>值得一提的是，在实际应用中，攻击者为了达成劫持控制流的目的，会将三种代码段通过组合的方式发起混合攻击。</p>
+<h2 id="现有硬件级对策"><a href="#现有硬件级对策" class="headerlink" title="现有硬件级对策"></a>现有硬件级对策</h2><h3 id="Intel-CET"><a href="#Intel-CET" class="headerlink" title="Intel CET"></a>Intel CET</h3><p>Intel CET（Control-Flow Enforcement Technology）是Intel新推出的一项新的硬件级对策，其主要目的是防止攻击者通过ROP&#x2F;JOP&#x2F;COP等攻击手段来劫持控制流。<br>对于ROP攻击的防护，其基本思想与影子栈（shadow stack）类似，即由操作系统在内存中复制一份程序的内存栈或者是仅仅保留控制流跳转地址。然后，这个影子栈无法由正常的store、load指令进行控制，只能通过专门的指令来进行控制。因此，即使攻击者覆盖了软件栈上的返回地址，但是由于影子栈中仍然保存着原始的跳转地址，因此检查失败后会通过抛出异常来终止程序的执行。<br>对于JOP&#x2F;COP攻击的防护，Intel提出一种叫做IBT（Indirect Branch Tracking）的技术，其基本思想是通过编译器在合理的间接跳转中⽤新的指令做标记，然后程序执行时会检查下一条指令是否为新添加的指令（endbr），如果不是则会抛出#CP异常。</p>
+<h3 id="ARM-PAC"><a href="#ARM-PAC" class="headerlink" title="ARM PAC"></a>ARM PAC</h3><p>ARM PAC（Pointer Authentication）是ARMv8.3引入的一项新的硬件级对策，其主要通过对指针进行鉴权来防止攻击者通过ROP&#x2F;JOP&#x2F;COP等攻击手段来劫持控制流。<br>这种防护方法的基本原理是，利用64位地址空间中暂时空闲的高16位来存放指针的鉴权结果（MAC码），然后在每次指针使用前，都会对指针进行鉴权，如果鉴权失败，则会抛出异常来终止程序的执行。</p>
+<h2 id="相关论文（体系结构级别）"><a href="#相关论文（体系结构级别）" class="headerlink" title="相关论文（体系结构级别）"></a>相关论文（体系结构级别）</h2><h3 id="论文：PACMAN（ISCA-2022）"><a href="#论文：PACMAN（ISCA-2022）" class="headerlink" title="论文：PACMAN（ISCA 2022）"></a>论文：PACMAN（ISCA 2022）</h3><p>利用预测执行机制，通过隐蔽信道泄漏PAC机制的鉴权结果。</p>
+<p><img  
+                     lazyload
+                     alt="image"
+                     data-src="/images/rop-1/2.png"
+                      alt="PACMAN"
+                ></p>
+<h3 id="论文：ZeRO（ISCA-2021）"><a href="#论文：ZeRO（ISCA-2021）" class="headerlink" title="论文：ZeRØ（ISCA 2021）"></a>论文：ZeRØ（ISCA 2021）</h3><p>ZeRØ提出了独特的内存指令和新颖的元数据编码方案来保护代码和数据指针，仅仅只需要微小的微架构变化。ZeRØ在SPEC CPU2017基准上的性能开销为零，VLSI测量显示了低功率和面积开销。</p>
+<p><img  
+                     lazyload
+                     alt="image"
+                     data-src="/images/rop-1/3.png"
+                      alt="ZeRØ"
+                ></p>
+<h3 id="论文：No-FAT（ISCA-2021）"><a href="#论文：No-FAT（ISCA-2021）" class="headerlink" title="论文：No-FAT（ISCA 2021）"></a>论文：No-FAT（ISCA 2021）</h3><p>No-FAT将内存分配大小（例如malloc大小）作为一个架构特征，来克服传统内存安全方法的许多棘手问题，例如与不安全软件的兼容性和显著的性能下降。No-FAT在SPEC CPU2017基准测试中产生了8%的开销，VLSI测量显示了低功率和面积开销。</p>
+<p><img  
+                     lazyload
+                     alt="image"
+                     data-src="/images/rop-1/4.png"
+                      alt="No-FAT"
+                ></p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1] <a class="link"   target="_blank" rel="noopener" href="https://github.com/JonathanSalwan/ROPgadget" >https://github.com/JonathanSalwan/ROPgadget<i class="fas fa-external-link-alt"></i></a></p>
+<p>[2] Ravichandran, J., Na, W. T., Lang, J., &amp; Yan, M. (2022, June). PACMAN: attacking ARM pointer authentication with speculative execution. In Proceedings of the 49th Annual International Symposium on Computer Architecture (pp. 685-698).</p>
+<p>[3] Ziad, M. T. I., Arroyo, M. A., Manzhosov, E., &amp; Sethumadhavan, S. (2021, June). ZeRØ: Zero-overhead resilient operation under pointer integrity attacks. In 2021 ACM&#x2F;IEEE 48th Annual International Symposium on Computer Architecture (ISCA) (pp. 999-1012). IEEE.</p>
+<p>[4] Ziad, M. T. I., Arroyo, M. A., Manzhosov, E., Piersma, R., &amp; Sethumadhavan, S. (2021, June). No-FAT: Architectural support for low overhead memory safety checks. In 2021 ACM&#x2F;IEEE 48th Annual International Symposium on Computer Architecture (ISCA) (pp. 916-929). IEEE.</p>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    
+<div class="article-copyright-info-container">
+    <ul class="copyright-info-content">
+        <li class="post-title">
+            <span class="type">本文标题</span>：<span class="content">ROP/JOP/COP（1）——攻击基本原理、现有芯片级对策</span>
+        </li>
+        <li class="post-author">
+            <span class="type">本文作者</span>：<span class="content">iamywang</span>
+        </li>
+        <li class="post-time">
+            <span class="type">创建时间</span>：<span class="content">2023-03-23 10:00:00</span>
+        </li>
+        <li class="post-link">
+            <span class="type">本文链接</span>：<span class="content">2023/03/23/rop-1/</span>
+        </li>
+        <li class="post-license">
+            <span class="type">版权声明</span>：<span class="content">本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！</span>
+        </li>
+    </ul>
+    <div class="copy-copyright-info flex-center tooltip" data-content="复制版权信息" data-offset-y="-2px">
+        <i class="fa-solid fa-copy"></i>
+    </div>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/tags/%E5%86%85%E5%AD%98%E5%AE%89%E5%85%A8/">#内存安全</a>&nbsp;
+                        </li>
+                    
+                        <li class="tag-item">
+                            <a href="/tags/%E6%A0%88%E6%BA%A2%E5%87%BA/">#栈溢出</a>&nbsp;
+                        </li>
+                    
+                        <li class="tag-item">
+                            <a href="/tags/%E9%9D%A2%E5%90%91%E8%BF%94%E5%9B%9E%E7%BC%96%E7%A8%8B/">#面向返回编程</a>&nbsp;
+                        </li>
+                    
+                        <li class="tag-item">
+                            <a href="/tags/%E9%9D%A2%E5%90%91%E8%B7%B3%E8%BD%AC%E7%BC%96%E7%A8%8B/">#面向跳转编程</a>&nbsp;
+                        </li>
+                    
+                        <li class="tag-item">
+                            <a href="/tags/%E9%9D%A2%E5%90%91%E8%B0%83%E7%94%A8%E7%BC%96%E7%A8%8B/">#面向调用编程</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                               rel="prev"
+                               href="/2023/05/08/dating-2/"
+                            >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                                <span class="title flex-center">
+                                <span class="post-nav-title-item">2023、五一错峰、约会</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                               rel="next"
+                               href="/2022/10/02/dating-1/"
+                            >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">2022、国庆节、约会</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                                <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+            
+                <div class="comment-container">
+                    
+<div class="comments-container">
+    <div id="comments-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments"></i>&nbsp;评论
+    </div>
+    
+        
+            
+
+    <div class="gitalk-comment-container">
+        <div id="gitalk-container"></div>
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.css">
+        <script  src="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+        <script >
+          function loadGitalk() {
+            let __gitalk__pathname = decodeURI(location.pathname);
+            const __gitalk__pathnameLength = __gitalk__pathname.length;
+            const __gitalk__pathnameMaxLength = 50;
+            if (__gitalk__pathnameLength > __gitalk__pathnameMaxLength) {
+              __gitalk__pathname = __gitalk__pathname.substring(0, __gitalk__pathnameMaxLength - 3) + '...';
+            }
+
+            try {
+              Gitalk && new Gitalk({
+                clientID: 'ba4b1883b3d135eff41c',
+                clientSecret: '332966f462b6832cf08c586a0061f6af8d774b26',
+                repo: 'iamywang.github.io',
+                owner: 'iamywang',
+                admin: 'iamywang',
+                id: __gitalk__pathname,
+                proxy: '',
+                language: 'zh-CN'
+              }).render('gitalk-container');
+            } catch (e) {
+              window.Gitalk = null;
+            }
+          }
+
+          if ('false' === 'true') {
+            const loadGitalkTimeout = setTimeout(() => {
+              loadGitalk();
+              clearTimeout(loadGitalkTimeout);
+            }, 1000);
+          } else {
+            window.addEventListener('DOMContentLoaded', loadGitalk);
+          }
+        </script>
+    </div>
+
+
+
+        
+    
+</div>
+
+                </div>
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ROP-x2F-JOP-x2F-COP"><span class="nav-number">2.</span> <span class="nav-text">ROP&#x2F;JOP&#x2F;COP</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ROP"><span class="nav-number">2.1.</span> <span class="nav-text">ROP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JOP-x2F-COP"><span class="nav-number">2.2.</span> <span class="nav-text">JOP&#x2F;COP</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%B0%E6%9C%89%E7%A1%AC%E4%BB%B6%E7%BA%A7%E5%AF%B9%E7%AD%96"><span class="nav-number">3.</span> <span class="nav-text">现有硬件级对策</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Intel-CET"><span class="nav-number">3.1.</span> <span class="nav-text">Intel CET</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ARM-PAC"><span class="nav-number">3.2.</span> <span class="nav-text">ARM PAC</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%87%EF%BC%88%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E7%BA%A7%E5%88%AB%EF%BC%89"><span class="nav-number">4.</span> <span class="nav-text">相关论文（体系结构级别）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BA%E6%96%87%EF%BC%9APACMAN%EF%BC%88ISCA-2022%EF%BC%89"><span class="nav-number">4.1.</span> <span class="nav-text">论文：PACMAN（ISCA 2022）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BA%E6%96%87%EF%BC%9AZeRO%EF%BC%88ISCA-2021%EF%BC%89"><span class="nav-number">4.2.</span> <span class="nav-text">论文：ZeRØ（ISCA 2021）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BA%E6%96%87%EF%BC%9ANo-FAT%EF%BC%88ISCA-2021%EF%BC%89"><span class="nav-number">4.3.</span> <span class="nav-text">论文：No-FAT（ISCA 2021）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">5.</span> <span class="nav-text">参考文献</span></a></li></ol>
+    </div>
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            
+<footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+                <span>2022</span> -
+            
+            2023
+            
+                &nbsp;<i class="fas fa-heart icon-animate"></i>
+                &nbsp;<a href="/">iamywang</a>
+            
+        </div>
+        
+            <script async 
+                    src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                
+                
+                    总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.6.1</a>
+        </div>
+        
+        
+            <div class="deploy-info info-item">
+                
+                    本站由 <span class="tooltip" data-content="GitHub Pages"><img src="/images/deploy-provider/github.png"></span> 提供部署服务
+                
+            </div>
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item flex-center toggle-show-toc">
+                <i class="fas fa-list"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="tools-item flex-center go-to-comments">
+                <i class="fas fa-comment"></i>
+                <span class="post-comments-count"></span>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+            <li class="tools-item rss flex-center">
+                <a class="flex-center"
+                   href="/atom.xml"
+                   target="_blank"
+                >
+                    <i class="fas fa-rss"></i>
+                </a>
+            </li>
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="zoom-in-image-mask">
+    <img class="zoom-in-image">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="close-popup-btn">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/dark-light-toggle.js"></script>
+
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/code-block.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/lazyload.js"></script>
+
+
+<div class="post-scripts">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/post-helper.js"></script>
+        
+            <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/libs/anime.min.js"></script>
+        
+        
+            <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/toc.js"></script>
+        
+    
+</div>
+
+
+
+</body>
+</html>

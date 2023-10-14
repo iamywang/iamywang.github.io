@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="iamywang">
+    
+    <title>
+        
+            gem5（2）——利用gem5模拟Spectre攻击 |
+        
+        没事我就挠脑袋
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.jpg">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/font/css/fontawesome.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/font/css/regular.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/font/css/solid.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/font/css/brands.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {}
+    KEEP.hexo_config = {"hostname":"iamywang.github.io","root":"/","language":"zh-CN","path":"search.json"}
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true},"style":{"primary_color":"#0f59a4","logo":"/images/avatar.jpg","favicon":"/images/logo.jpg","avatar":"/images/avatar.jpg","font_size":null,"font_family":null,"hover":{"shadow":true,"scale":true},"first_screen":{"enable":true,"header_transparent":true,"background_img":"/images/bg.svg","description":"一个对计算机体系结构、侧信道安全与足球充满兴趣的程序员。 || All or Nothing.","font_color":null,"hitokoto":false},"scroll":{"progress_bar":true,"percent":false}},"local_search":{"enable":true,"preload":true},"code_copy":{},"code_block":{"tools":{"enable":true,"style":"default"},"highlight_theme":"default"},"side_tools":{},"pjax":{"enable":false},"lazyload":{"enable":true},"comment":{"enable":true,"use":"gitalk","valine":{"appid":null,"appkey":null,"server_urls":null,"placeholder":null},"gitalk":{"github_id":"iamywang","github_admins":null,"repository":"iamywang.github.io","client_id":"ba4b1883b3d135eff41c","client_secret":"332966f462b6832cf08c586a0061f6af8d774b26","proxy":null},"twikoo":{"env_id":null,"region":null,"version":"1.6.8"},"waline":{"server_url":null,"reaction":false,"version":2}},"post":{"author_label":{"enable":false,"auto":true,"custom_label_list":["Trainee","Engineer","Architect"]},"word_count":{"enable":true,"wordcount":true,"min2read":true},"img_align":"left","copyright_info":true},"version":"3.6.1"}
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"}
+    KEEP.language_code_block = {"copy":"复制代码","copied":"已复制","fold":"折叠代码块","folded":"已折叠"}
+    KEEP.language_copy_copyright = {"copy":"复制版权信息","copied":"已复制","title":"原文标题","author":"原文作者","link":"原文链接"}
+  </script>
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            
+<header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/">
+                    <img src="/images/avatar.jpg">
+                </a>
+            
+            <a class="logo-title" href="/">
+               没事我就挠脑袋
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                文章
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                分类
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                标签
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/links"
+                            >
+                                友链
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                关于
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">文章</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">分类</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">标签</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/links">友链</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">关于</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            <div class="article-title">
+                <span class="title-hover-animation">gem5（2）——利用gem5模拟Spectre攻击</span>
+            </div>
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/images/avatar.jpg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">iamywang</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            
+<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        
+            <i class="fa-regular fa-calendar-plus"></i>&nbsp;
+        
+        <span class="pc">2022-09-06 16:30:00</span>
+        <span class="mobile">2022-09-06 16:30</span>
+    </span>
+    
+        <span class="article-update-date article-meta-item">
+        <i class="fas fa-file-pen"></i>&nbsp;
+        <span class="pc">2023-04-11 20:00:00</span>
+    </span>
+    
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">体系结构</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">体系结构</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/gem5/">gem5</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/Spectre%E6%94%BB%E5%87%BB/">Spectre攻击</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/CPU%E5%AE%89%E5%85%A8/">CPU安全</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fas fa-file-word"></i>&nbsp;<span>1.7k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>8 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content keep-markdown-body">
+                
+
+                <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>从去年开始，一直在学习Meltdown攻击和Spectre攻击，包括攻击原理的学习、攻击的复现（在x86和ARM两种架构下复现）、利用符号执行（基于LLVM的KLEE）进行检测等。</p>
+<p>Meltdown攻击是通过绕过CPU的权限检查机制，将内核态的数据读取到用户态，从而实现数据泄露。Spectre攻击是通过利用CPU的分支预测机制，让CPU错误预测执行，从而实现数据泄露。</p>
+<p>这两种攻击都是通过利用CPU的特性来实现的，而gem5是一个CPU模拟器，并且提供了这两种攻击所利用到的乱序执行、分支预测特性以及Cache，因此理论上可以利用gem5来模拟这两种攻击。</p>
+<h3 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h3><p>在查阅相关资料时，发现2021年的一篇文章[1]，利用gem5模拟了Spectre攻击，因此决定在学习gem5的过程中对这篇论文进行复现。</p>
+<p>主要工作：</p>
+<ol>
+<li>复现论文”Reproducing Spectre Attack with gem5: How To Do It Right?”，尽管经过了一番努力，仍然没有配置成功；</li>
+<li>利用gem5推荐的系统镜像运行并进行Spectre攻击的复现，这次系统引导成功，程序也可以运行，但是没有得到与论文中一样的结果；</li>
+<li>利用X86架构的gem5模拟Spectre攻击，采用Spectre论文中的PoC。</li>
+</ol>
+<h2 id="2023-4-11-利用X86架构的gem5模拟器复现Spectre攻击"><a href="#2023-4-11-利用X86架构的gem5模拟器复现Spectre攻击" class="headerlink" title="(2023.4.11) 利用X86架构的gem5模拟器复现Spectre攻击"></a>(2023.4.11) 利用X86架构的gem5模拟器复现Spectre攻击</h2><p>PoC地址[6]：<a class="link"   target="_blank" rel="noopener" href="https://spectreattack.com/spectre.pdf" >https://spectreattack.com/spectre.pdf<i class="fas fa-external-link-alt"></i></a></p>
+<h3 id="配置脚本"><a href="#配置脚本" class="headerlink" title="配置脚本"></a>配置脚本</h3><p>CPU类型为乱序执行的DerivO3CPU，使用LTAGE分支预测器。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./build/X86/gem5.opt --debug-flags=O3PipeView --debug-start=369832000 --debug-file=trace.out \</span><br><span class="line">configs/example/se.py --caches --l2cache --cpu-type=DerivO3CPU --bp-type=LTAGE \</span><br><span class="line">--cmd=../spectre</span><br></pre></td></tr></table></figure>
+
+<h3 id="SE模式下运行结果"><a href="#SE模式下运行结果" class="headerlink" title="SE模式下运行结果"></a>SE模式下运行结果</h3><p><img  
+                     lazyload
+                     alt="image"
+                     data-src="/images/gem5-2/6.png"
+                      alt="X86 SE模式下攻击成功"
+                ></p>
+<h3 id="o3-pipeline"><a href="#o3-pipeline" class="headerlink" title="o3 pipeline"></a>o3 pipeline</h3><p>在gem5.opt添加参数–debug-flags&#x3D;O3PipeView –debug-start&#x3D;369832000 –debug-file&#x3D;trace.out，可以在m5out文件夹下生成trace.out文件，该文件包含了CPU的执行轨迹，可以利用o3-pipeview.py脚本将其转换为可视化的o3 pipeline。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./util/o3-pipeview.py -c 1000 -o pipeview.out --color m5out/trace.out</span><br></pre></td></tr></table></figure>
+
+<p>在1GHz下，每个周期的Tick是1000（-c 1000），转化为可视化的o3 pipeline如下：</p>
+<p><img  
+                     lazyload
+                     alt="image"
+                     data-src="/images/gem5-2/7.png"
+                      alt="X86 o3 pipeline"
+                ></p>
+<h2 id="论文环境搭建：在ARM架构下复现Spectre攻击"><a href="#论文环境搭建：在ARM架构下复现Spectre攻击" class="headerlink" title="论文环境搭建：在ARM架构下复现Spectre攻击"></a>论文环境搭建：在ARM架构下复现Spectre攻击</h2><p>本节的主要内容是复现论文”Reproducing Spectre Attack with gem5: How To Do It Right?”的环境配置。</p>
+<h3 id="编译gem5"><a href="#编译gem5" class="headerlink" title="编译gem5"></a>编译gem5</h3><p>编译ARM架构的gem5：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ scons build/ARM/gem5.opt -j5</span><br></pre></td></tr></table></figure>
+
+<p>编译m5term：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> util/term</span><br><span class="line">$ make</span><br></pre></td></tr></table></figure>
+
+<h3 id="树莓派4B配置文件"><a href="#树莓派4B配置文件" class="headerlink" title="树莓派4B配置文件"></a>树莓派4B配置文件</h3><p>从[3]中克隆代码到本地：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/pierreay/reproduce-spectre-gem5.git</span><br></pre></td></tr></table></figure>
+
+<p>在gem5目录下有树莓派4和A72处理器核的配置文件：</p>
+<p><img  
+                     lazyload
+                     alt="image"
+                     data-src="/images/gem5-2/1.png"
+                      alt="配置文件列表"
+                ></p>
+<h3 id="操作系统和内核"><a href="#操作系统和内核" class="headerlink" title="操作系统和内核"></a>操作系统和内核</h3><p>下载系统和内核镜像文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ wget -O - http://dist.gem5.org/dist/current/arm/disks/linaro-minimal-aarch64.img.bz2 | bunzip2 &gt; linaro-minimal-aarch64.img</span><br><span class="line">$ wget -O - http://dist.gem5.org/dist/current/arm/aarch-system-201901106.tar.bz2 | tar xjv</span><br></pre></td></tr></table></figure>
+
+<p>解压缩后的文件目录为：</p>
+<p><img  
+                     lazyload
+                     alt="image"
+                     data-src="/images/gem5-2/2.png"
+                      alt="系统文件列表"
+                ></p>
+<h3 id="创建工作镜像"><a href="#创建工作镜像" class="headerlink" title="创建工作镜像"></a>创建工作镜像</h3><p>接下来利用dd命令创建workload.img文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">dd</span> <span class="keyword">if</span>=/dev/zero of=workload.img count=200K</span><br></pre></td></tr></table></figure>
+
+<p>创建一个回环设备以便将镜像文件作为块设备访问：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ dev=$(sudo losetup -f)</span><br><span class="line">$ sudo losetup -fP workload.img</span><br></pre></td></tr></table></figure>
+
+<p>创建分区表以及ext4文件系统：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="string">&quot;,&quot;</span> | sudo sfdisk <span class="variable">$dev</span></span><br><span class="line">$ sudo mkfs.ext4 <span class="variable">$&#123;dev&#125;</span>p1</span><br></pre></td></tr></table></figure>
+
+<p><img  
+                     lazyload
+                     alt="image"
+                     data-src="/images/gem5-2/3.png"
+                      alt="创建分区表"
+                ></p>
+<p>最后，从回环设备中卸载：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo losetup -d <span class="variable">$dev</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h3><p>这里如果直接按照[2]中执行，会遇到以下问题：</p>
+<p><strong>（1）没有将gem5的config添加到python的搜索路径中，会报找不到common的错误：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ModuleNotFoundError: No module named &#x27;common&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>因此，需要修改RPIv4.py文件，添加：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sys.path.append(<span class="string">&quot;/home/gem5/gem5/configs/&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>（2）在gem5的commit中（5195c801156d1f9ff08d7ef4aceff2ff532c852），参数ArmITB和ArmDTB被统一换成了ArmTLB：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">arch-arm, configs: Remove ArmITB/ArmDTB</span><br><span class="line">Removing ArmITB and ArmDTB makes sense as it implies a fixed 2 TLBs system;</span><br><span class="line">by using the generic ArmTLB class we open up to a more generic configuration</span><br></pre></td></tr></table></figure>
+
+<p>因此，修改ARMv8A_Cortex_A72.py文件，将ArmITB和ArmDTB替换成ArmTLB：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ARM_A72_TLB_L1D</span>(<span class="title class_ inherited__">ArmTLB</span>):</span><br><span class="line">    entry_type=<span class="string">&quot;data&quot;</span></span><br><span class="line">    size = <span class="number">48</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ARM_A72_TLB_L1I</span>(<span class="title class_ inherited__">ArmTLB</span>):</span><br><span class="line">    entry_type=<span class="string">&quot;instruction&quot;</span></span><br><span class="line">    size = <span class="number">32</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ARM_A72_Cluster</span>(<span class="title class_ inherited__">SubSystem</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">connectDirect</span>(<span class="params">self, bus</span>):</span><br><span class="line">        <span class="keyword">for</span> cpu <span class="keyword">in</span> self.cpus:</span><br><span class="line">            cpu.mmu.dtb_walker.port = bus.slave</span><br><span class="line">            cpu.mmu.itb_walker.port = bus.slave</span><br><span class="line">            cpu.dcache_port = bus.slave</span><br><span class="line">            cpu.icache_port = bus.slave</span><br></pre></td></tr></table></figure>
+
+<p><strong>（3）在gem5的commit中（6ecf110b06d7333aae13bcc16216cc127fdda7f0），flags_addr被移除：</strong></p>
+<p>同时，参考configs&#x2F;example&#x2F;arm&#x2F;devices.py文件，将RPIv4.py中的对应代码去掉：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># system.flags_addr = system.realview.realview_io.pio_addr + 0x30</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>（4）在gem5的commit中（5f95d7a89a56513876a7bb5dd8055d6b1d080c8b），IntrControl被移除：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cpu: IntrControl, clear all and check helpers</span><br><span class="line">This patch extends the IntrControl to provided additional member functions for</span><br><span class="line">(1) clearing all pending interrupts in a PE and</span><br><span class="line">(2) checking for any pending interrupt in a PE.</span><br><span class="line">These are intended to be used from interrupt management related peripherals.</span><br></pre></td></tr></table></figure>
+
+<p>因此，直接将RPIv4.py中的以下代码注释掉：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># system.intrctrl = IntrControl()</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>（5）slave和master的接口变化：</strong></p>
+<p>修改RPIv4.py文件：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Wire up the system port to the previously created memory bus (gem5</span></span><br><span class="line"><span class="comment"># uses it to load the kernel and to perform debug accesses).</span></span><br><span class="line">self.system_port = self.membus.cpu_side_ports</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="comment"># Connect the two IO bridges to the IO bus and the system bus.</span></span><br><span class="line">system.iobridge.iobus.mem_side_port = system.iobus.cpu_side_ports</span><br><span class="line">system.iobridge.iobus.cpu_side_port = system.membus.mem_side_ports</span><br><span class="line">system.iobridge.membus.mem_side_port = system.membus.cpu_side_ports</span><br><span class="line">system.iobridge.membus.cpu_side_port = system.iobus.mem_side_ports</span><br></pre></td></tr></table></figure>
+
+<p>修改A72.py文件：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">connectCacheL2</span>(<span class="params">self, bus</span>):</span><br><span class="line">    self.l2.mem_side = bus.cpu_side_ports</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">connectDirect</span>(<span class="params">self, bus</span>):</span><br><span class="line">    <span class="keyword">for</span> cpu <span class="keyword">in</span> self.cpus:</span><br><span class="line">        cpu.mmu.itb_walker.port = bus.cpu_side_ports</span><br><span class="line">        cpu.mmu.dtb_walker.port = bus.cpu_side_ports</span><br><span class="line">        cpu.dcache_port = bus.cpu_side_ports</span><br><span class="line">        cpu.icache_port = bus.cpu_side_ports</span><br></pre></td></tr></table></figure>
+
+<h3 id="启动系统"><a href="#启动系统" class="headerlink" title="启动系统"></a>启动系统</h3><p>首先，配置M5_PATH环境变量：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">export</span> M5_PATH=<span class="variable">$PWD</span>/img/</span><br></pre></td></tr></table></figure>
+
+<p>接着，引导系统：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ build/ARM/gem5.opt -q -d 01boot \</span><br><span class="line">    ../reproduce-spectre-gem5/gem5/RPIv4.py -v --num-cores=4 --fs \</span><br><span class="line">    --fs-kernel=./img/binaries/vmlinux.arm64 \</span><br><span class="line">    --fs-disk-image=./img/linaro-minimal-aarch64.img \</span><br><span class="line">    --fs-workload-image=./img/workload.img</span><br></pre></td></tr></table></figure>
+
+<p>引导过程如下：</p>
+<p><img  
+                     lazyload
+                     alt="image"
+                     data-src="/images/gem5-2/4.png"
+                      alt="引导过程"
+                ></p>
+<p>然后，在另一个终端连接到m5term：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ util/term/m5term localhost 3456</span><br></pre></td></tr></table></figure>
+
+<p>但是这一步可能是因为版本的问题失败了。尽管终端的输出显示已经开始模拟，连接m5term也有输出和提示，但是没有拿到ARM模拟器的shell，也没有引导成功的说明。</p>
+<h2 id="gem5官方推荐ARM架构fs环境搭建"><a href="#gem5官方推荐ARM架构fs环境搭建" class="headerlink" title="gem5官方推荐ARM架构fs环境搭建"></a>gem5官方推荐ARM架构fs环境搭建</h2><h3 id="下载系统和内核"><a href="#下载系统和内核" class="headerlink" title="下载系统和内核"></a>下载系统和内核</h3><p>下载Linux系统和内核镜像文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ wget -O - http://dist.gem5.org/dist/v22-0/arm/aarch-system-20220707.tar.bz2 | tar xjv</span><br><span class="line">$ wget -O - http://dist.gem5.org/dist/v22-0/arm/disks/ubuntu-18.04-arm64-docker.img.bz2 | bunzip2 &gt; ubuntu-18.04-arm64-docker.img</span><br></pre></td></tr></table></figure>
+
+<h3 id="引导系统"><a href="#引导系统" class="headerlink" title="引导系统"></a>引导系统</h3><p>引导系统：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ build/ARM/gem5.opt -q ./configs/example/fs.py --num-cpu=4 \ </span><br><span class="line">    --kernel=./ubuntu-1804/binaries/vmlinux.arm64 \</span><br><span class="line">    --disk-image=./ubuntu-1804/ubuntu-18.04-arm64-docker.img</span><br></pre></td></tr></table></figure>
+
+<p>连接m5term：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ util/term/m5term localhost 3456</span><br></pre></td></tr></table></figure>
+
+<p>引导成功的截图如下：</p>
+<p><img  
+                     lazyload
+                     alt="image"
+                     data-src="/images/gem5-2/5.png"
+                      alt="引导成功"
+                ></p>
+<h3 id="挂载镜像"><a href="#挂载镜像" class="headerlink" title="挂载镜像"></a>挂载镜像</h3><p>挂载disk镜像并写入攻击程序：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">mkdir</span> -p disk</span><br><span class="line">$ util/gem5img.py mount ~/ubuntu-1804/ubuntu-18.04-arm64-docker.img ./disk</span><br><span class="line">$ sudo <span class="built_in">cp</span> -r ~/reproduce-spectre-gem5/spectre ./root/</span><br></pre></td></tr></table></figure>
+
+<h3 id="执行Spectre攻击"><a href="#执行Spectre攻击" class="headerlink" title="执行Spectre攻击"></a>执行Spectre攻击</h3><p>执行攻击：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> spectre</span><br><span class="line">$ ./spectre -m 10 -l 100 -t 999</span><br></pre></td></tr></table></figure>
+
+<p>但是没有得到预期的结果，攻击失败，猜测应该是环境与论文中的不一致导致的。</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ol>
+<li>Ayoub, P., &amp; Maurice, C. (2021, April). Reproducing spectre attack with gem5: How to do it right?. In Proceedings of the 14th European Workshop on Systems Security (pp. 15-20).</li>
+<li><a class="link"   target="_blank" rel="noopener" href="https://pierreay.github.io/reproduce-spectre-gem5/" >https://pierreay.github.io/reproduce-spectre-gem5/<i class="fas fa-external-link-alt"></i></a></li>
+<li><a class="link"   target="_blank" rel="noopener" href="https://github.com/pierreay/reproduce-spectre-gem5" >https://github.com/pierreay/reproduce-spectre-gem5<i class="fas fa-external-link-alt"></i></a></li>
+<li><a class="link"   target="_blank" rel="noopener" href="https://github.com/gem5/gem5" >https://github.com/gem5/gem5<i class="fas fa-external-link-alt"></i></a></li>
+<li><a class="link"   target="_blank" rel="noopener" href="https://www.gem5.org/documentation/general_docs/fullsystem/guest_binaries" >https://www.gem5.org/documentation/general_docs/fullsystem/guest_binaries<i class="fas fa-external-link-alt"></i></a></li>
+<li>Kocher, P., Horn, J., Fogh, A., Genkin, D., Gruss, D., Haas, W., … &amp; Yarom, Y. (2019, May). Spectre Attacks: Exploiting Speculative Execution. In 2019 IEEE Symposium on Security and Privacy (SP) (pp. 1-19). IEEE.</li>
+</ol>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    
+<div class="article-copyright-info-container">
+    <ul class="copyright-info-content">
+        <li class="post-title">
+            <span class="type">本文标题</span>：<span class="content">gem5（2）——利用gem5模拟Spectre攻击</span>
+        </li>
+        <li class="post-author">
+            <span class="type">本文作者</span>：<span class="content">iamywang</span>
+        </li>
+        <li class="post-time">
+            <span class="type">创建时间</span>：<span class="content">2022-09-06 16:30:00</span>
+        </li>
+        <li class="post-link">
+            <span class="type">本文链接</span>：<span class="content">2022/09/06/gem5-2/</span>
+        </li>
+        <li class="post-license">
+            <span class="type">版权声明</span>：<span class="content">本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！</span>
+        </li>
+    </ul>
+    <div class="copy-copyright-info flex-center tooltip" data-content="复制版权信息" data-offset-y="-2px">
+        <i class="fa-solid fa-copy"></i>
+    </div>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/tags/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">#体系结构</a>&nbsp;
+                        </li>
+                    
+                        <li class="tag-item">
+                            <a href="/tags/gem5/">#gem5</a>&nbsp;
+                        </li>
+                    
+                        <li class="tag-item">
+                            <a href="/tags/Spectre%E6%94%BB%E5%87%BB/">#Spectre攻击</a>&nbsp;
+                        </li>
+                    
+                        <li class="tag-item">
+                            <a href="/tags/CPU%E5%AE%89%E5%85%A8/">#CPU安全</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                               rel="prev"
+                               href="/2022/09/07/moon-cake-22/"
+                            >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                                <span class="title flex-center">
+                                <span class="post-nav-title-item">中秋月饼</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                               rel="next"
+                               href="/2022/09/05/gem5-1/"
+                            >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">gem5（1）——环境搭建</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                                <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+            
+                <div class="comment-container">
+                    
+<div class="comments-container">
+    <div id="comments-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments"></i>&nbsp;评论
+    </div>
+    
+        
+            
+
+    <div class="gitalk-comment-container">
+        <div id="gitalk-container"></div>
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.css">
+        <script  src="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+        <script >
+          function loadGitalk() {
+            let __gitalk__pathname = decodeURI(location.pathname);
+            const __gitalk__pathnameLength = __gitalk__pathname.length;
+            const __gitalk__pathnameMaxLength = 50;
+            if (__gitalk__pathnameLength > __gitalk__pathnameMaxLength) {
+              __gitalk__pathname = __gitalk__pathname.substring(0, __gitalk__pathnameMaxLength - 3) + '...';
+            }
+
+            try {
+              Gitalk && new Gitalk({
+                clientID: 'ba4b1883b3d135eff41c',
+                clientSecret: '332966f462b6832cf08c586a0061f6af8d774b26',
+                repo: 'iamywang.github.io',
+                owner: 'iamywang',
+                admin: 'iamywang',
+                id: __gitalk__pathname,
+                proxy: '',
+                language: 'zh-CN'
+              }).render('gitalk-container');
+            } catch (e) {
+              window.Gitalk = null;
+            }
+          }
+
+          if ('false' === 'true') {
+            const loadGitalkTimeout = setTimeout(() => {
+              loadGitalk();
+              clearTimeout(loadGitalkTimeout);
+            }, 1000);
+          } else {
+            window.addEventListener('DOMContentLoaded', loadGitalk);
+          }
+        </script>
+    </div>
+
+
+
+        
+    
+</div>
+
+                </div>
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E5%B7%A5%E4%BD%9C"><span class="nav-number">1.2.</span> <span class="nav-text">主要工作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2023-4-11-%E5%88%A9%E7%94%A8X86%E6%9E%B6%E6%9E%84%E7%9A%84gem5%E6%A8%A1%E6%8B%9F%E5%99%A8%E5%A4%8D%E7%8E%B0Spectre%E6%94%BB%E5%87%BB"><span class="nav-number">2.</span> <span class="nav-text">(2023.4.11) 利用X86架构的gem5模拟器复现Spectre攻击</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E8%84%9A%E6%9C%AC"><span class="nav-number">2.1.</span> <span class="nav-text">配置脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SE%E6%A8%A1%E5%BC%8F%E4%B8%8B%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C"><span class="nav-number">2.2.</span> <span class="nav-text">SE模式下运行结果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#o3-pipeline"><span class="nav-number">2.3.</span> <span class="nav-text">o3 pipeline</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BA%E6%96%87%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%EF%BC%9A%E5%9C%A8ARM%E6%9E%B6%E6%9E%84%E4%B8%8B%E5%A4%8D%E7%8E%B0Spectre%E6%94%BB%E5%87%BB"><span class="nav-number">3.</span> <span class="nav-text">论文环境搭建：在ARM架构下复现Spectre攻击</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%AF%91gem5"><span class="nav-number">3.1.</span> <span class="nav-text">编译gem5</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%91%E8%8E%93%E6%B4%BE4B%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">3.2.</span> <span class="nav-text">树莓派4B配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%92%8C%E5%86%85%E6%A0%B8"><span class="nav-number">3.3.</span> <span class="nav-text">操作系统和内核</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%B7%A5%E4%BD%9C%E9%95%9C%E5%83%8F"><span class="nav-number">3.4.</span> <span class="nav-text">创建工作镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">3.5.</span> <span class="nav-text">修改配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E7%B3%BB%E7%BB%9F"><span class="nav-number">3.6.</span> <span class="nav-text">启动系统</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gem5%E5%AE%98%E6%96%B9%E6%8E%A8%E8%8D%90ARM%E6%9E%B6%E6%9E%84fs%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="nav-number">4.</span> <span class="nav-text">gem5官方推荐ARM架构fs环境搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E7%B3%BB%E7%BB%9F%E5%92%8C%E5%86%85%E6%A0%B8"><span class="nav-number">4.1.</span> <span class="nav-text">下载系统和内核</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E5%AF%BC%E7%B3%BB%E7%BB%9F"><span class="nav-number">4.2.</span> <span class="nav-text">引导系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%82%E8%BD%BD%E9%95%9C%E5%83%8F"><span class="nav-number">4.3.</span> <span class="nav-text">挂载镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8CSpectre%E6%94%BB%E5%87%BB"><span class="nav-number">4.4.</span> <span class="nav-text">执行Spectre攻击</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">5.</span> <span class="nav-text">参考文献</span></a></li></ol>
+    </div>
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            
+<footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+                <span>2022</span> -
+            
+            2023
+            
+                &nbsp;<i class="fas fa-heart icon-animate"></i>
+                &nbsp;<a href="/">iamywang</a>
+            
+        </div>
+        
+            <script async 
+                    src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                
+                
+                    总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.6.1</a>
+        </div>
+        
+        
+            <div class="deploy-info info-item">
+                
+                    本站由 <span class="tooltip" data-content="GitHub Pages"><img src="/images/deploy-provider/github.png"></span> 提供部署服务
+                
+            </div>
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item flex-center toggle-show-toc">
+                <i class="fas fa-list"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="tools-item flex-center go-to-comments">
+                <i class="fas fa-comment"></i>
+                <span class="post-comments-count"></span>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+            <li class="tools-item rss flex-center">
+                <a class="flex-center"
+                   href="/atom.xml"
+                   target="_blank"
+                >
+                    <i class="fas fa-rss"></i>
+                </a>
+            </li>
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="zoom-in-image-mask">
+    <img class="zoom-in-image">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="close-popup-btn">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/dark-light-toggle.js"></script>
+
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/code-block.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/lazyload.js"></script>
+
+
+<div class="post-scripts">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/post-helper.js"></script>
+        
+            <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/libs/anime.min.js"></script>
+        
+        
+            <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/toc.js"></script>
+        
+    
+</div>
+
+
+
+</body>
+</html>

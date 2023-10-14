@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="iamywang">
+    
+    <title>
+        
+            gem5（4）——利用gem5自定义系统配置在SE模式下进行模拟 |
+        
+        没事我就挠脑袋
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.jpg">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/font/css/fontawesome.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/font/css/regular.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/font/css/solid.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/font/css/brands.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {}
+    KEEP.hexo_config = {"hostname":"iamywang.github.io","root":"/","language":"zh-CN","path":"search.json"}
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true},"style":{"primary_color":"#0f59a4","logo":"/images/avatar.jpg","favicon":"/images/logo.jpg","avatar":"/images/avatar.jpg","font_size":null,"font_family":null,"hover":{"shadow":true,"scale":true},"first_screen":{"enable":true,"header_transparent":true,"background_img":"/images/bg.svg","description":"一个对计算机体系结构、侧信道安全与足球充满兴趣的程序员。 || All or Nothing.","font_color":null,"hitokoto":false},"scroll":{"progress_bar":true,"percent":false}},"local_search":{"enable":true,"preload":true},"code_copy":{},"code_block":{"tools":{"enable":true,"style":"default"},"highlight_theme":"default"},"side_tools":{},"pjax":{"enable":false},"lazyload":{"enable":true},"comment":{"enable":true,"use":"gitalk","valine":{"appid":null,"appkey":null,"server_urls":null,"placeholder":null},"gitalk":{"github_id":"iamywang","github_admins":null,"repository":"iamywang.github.io","client_id":"ba4b1883b3d135eff41c","client_secret":"332966f462b6832cf08c586a0061f6af8d774b26","proxy":null},"twikoo":{"env_id":null,"region":null,"version":"1.6.8"},"waline":{"server_url":null,"reaction":false,"version":2}},"post":{"author_label":{"enable":false,"auto":true,"custom_label_list":["Trainee","Engineer","Architect"]},"word_count":{"enable":true,"wordcount":true,"min2read":true},"img_align":"left","copyright_info":true},"version":"3.6.1"}
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"}
+    KEEP.language_code_block = {"copy":"复制代码","copied":"已复制","fold":"折叠代码块","folded":"已折叠"}
+    KEEP.language_copy_copyright = {"copy":"复制版权信息","copied":"已复制","title":"原文标题","author":"原文作者","link":"原文链接"}
+  </script>
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            
+<header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/">
+                    <img src="/images/avatar.jpg">
+                </a>
+            
+            <a class="logo-title" href="/">
+               没事我就挠脑袋
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                文章
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                分类
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                标签
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/links"
+                            >
+                                友链
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                关于
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">文章</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">分类</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">标签</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/links">友链</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">关于</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            <div class="article-title">
+                <span class="title-hover-animation">gem5（4）——利用gem5自定义系统配置在SE模式下进行模拟</span>
+            </div>
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/images/avatar.jpg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">iamywang</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            
+<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        
+            <i class="fa-regular fa-calendar-plus"></i>&nbsp;
+        
+        <span class="pc">2022-09-12 20:12:00</span>
+        <span class="mobile">2022-09-12 20:12</span>
+    </span>
+    
+        <span class="article-update-date article-meta-item">
+        <i class="fas fa-file-pen"></i>&nbsp;
+        <span class="pc">2022-09-12 20:12:00</span>
+    </span>
+    
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">体系结构</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">体系结构</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/gem5/">gem5</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/CPU/">CPU</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/Cache/">Cache</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fas fa-file-word"></i>&nbsp;<span>935 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>4 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content keep-markdown-body">
+                
+
+                <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>参考learning gem5的part I部分，对gem5的配置文件的编写进行学习。<br>在这次的配置中，主要涉及到内存、Cache的配置，与之前复现的那篇论文相比，没有实现TLB。<br>此外，我还发现learning gem5中的很多参数已经与最新版本的gem5有一定的区别，尽管bus.slave和bus.master等参数在新版本（v22）中仍然可用，但是我还是将他们替换成新版本（v22）推荐的cpu_side_ports和mem_side_ports。</p>
+<h2 id="自定义配置并运行"><a href="#自定义配置并运行" class="headerlink" title="自定义配置并运行"></a>自定义配置并运行</h2><h3 id="主要步骤"><a href="#主要步骤" class="headerlink" title="主要步骤"></a>主要步骤</h3><p>第一步，导入所需的依赖包以及初始化系统：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入gem5的objects</span></span><br><span class="line"><span class="keyword">import</span> m5</span><br><span class="line"><span class="keyword">from</span> m5.objects <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化系统</span></span><br><span class="line">system = System()</span><br></pre></td></tr></table></figure>
+
+<p>第二步，配置系统时钟频率和内存大小，我配置的时钟频率为1GHz，内存大小为2G：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置系统的时钟频率为1GHz</span></span><br><span class="line">system.clk_domain = SrcClockDomain()</span><br><span class="line">system.clk_domain.clock = <span class="string">&#x27;1GHz&#x27;</span></span><br><span class="line">system.clk_domain.voltage_domain = VoltageDomain()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置系统的内存大小为2GB</span></span><br><span class="line">system.mem_mode = <span class="string">&#x27;timing&#x27;</span></span><br><span class="line">system.mem_ranges = [AddrRange(<span class="string">&#x27;2048MB&#x27;</span>)]</span><br></pre></td></tr></table></figure>
+
+<p>第三步，创建CPU、内存控制器、中断控制器等，并进行端口连接：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建一个CPU</span></span><br><span class="line">system.cpu = TimingSimpleCPU()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建一个内存控制器</span></span><br><span class="line">system.membus = SystemXBar()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将CPU的端口连接到内存控制器</span></span><br><span class="line">system.cpu.icache_port = system.membus.cpu_side_ports</span><br><span class="line">system.cpu.dcache_port = system.membus.cpu_side_ports</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建一个中断控制器</span></span><br><span class="line">system.cpu.createInterruptController()</span><br><span class="line">system.cpu.interrupts[<span class="number">0</span>].pio = system.membus.mem_side_ports</span><br><span class="line">system.cpu.interrupts[<span class="number">0</span>].int_requestor = system.membus.cpu_side_ports</span><br><span class="line">system.cpu.interrupts[<span class="number">0</span>].int_responder = system.membus.mem_side_ports</span><br><span class="line"></span><br><span class="line">system.system_port = system.membus.cpu_side_ports</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建一个内存控制器</span></span><br><span class="line">system.mem_ctrl = MemCtrl()</span><br><span class="line">system.mem_ctrl.dram = DDR3_1600_8x8()</span><br><span class="line">system.mem_ctrl.dram.<span class="built_in">range</span> = system.mem_ranges[<span class="number">0</span>]</span><br><span class="line">system.mem_ctrl.port = system.membus.mem_side_ports</span><br></pre></td></tr></table></figure>
+
+<p>第四步，创建进程并设置运行参数，我选择了gem5中自带的hello world程序进行测试：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建一个进程</span></span><br><span class="line">process = Process()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置进程的命令行参数</span></span><br><span class="line">process.cmd = [<span class="string">&#x27;/home/jammy/gem5/tests/test-progs/hello/bin/x86/linux/hello&#x27;</span>]</span><br><span class="line">system.workload = SEWorkload.init_compatible(<span class="string">&#x27;/home/jammy/gem5/tests/test-progs/hello/bin/x86/linux/hello&#x27;</span>)</span><br><span class="line">system.cpu.workload = process</span><br><span class="line">system.cpu.createThreads()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建一个根对象</span></span><br><span class="line">root = Root(full_system = <span class="literal">False</span>, system = system)</span><br></pre></td></tr></table></figure>
+
+<p>第五步，初始化以及运行：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 初始化gem5</span></span><br><span class="line">m5.instantiate()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行gem5</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;Beginning simulation!&quot;</span>)</span><br><span class="line">exit_event = m5.simulate()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印运行结果</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;Exiting @ tick &#123;&#125; because &#123;&#125;&#x27;</span></span><br><span class="line">        .<span class="built_in">format</span>(m5.curTick(), exit_event.getCause()))</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置结果"><a href="#配置结果" class="headerlink" title="配置结果"></a>配置结果</h3><p>输出的配置结果如下，可以看到一个简单的CPU与内存等的连接图：</p>
+<p><img  
+                     lazyload
+                     alt="image"
+                     data-src="/images/gem5-4/2.png"
+                      alt="配置1"
+                ></p>
+<h3 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h3><p>运行结果如下，可以看出输出了Hello World：</p>
+<p><img  
+                     lazyload
+                     alt="image"
+                     data-src="/images/gem5-4/1.png"
+                      alt="运行结果1"
+                ></p>
+<h2 id="添加Cache并运行"><a href="#添加Cache并运行" class="headerlink" title="添加Cache并运行"></a>添加Cache并运行</h2><h3 id="添加L1-Cache"><a href="#添加L1-Cache" class="headerlink" title="添加L1 Cache"></a>添加L1 Cache</h3><p>L1指令缓存类，实现了简单的参数以及与CPU连接的函数：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">L1ICache</span>(<span class="title class_ inherited__">L1Cache</span>):</span><br><span class="line">    size = <span class="string">&#x27;16kB&#x27;</span></span><br><span class="line">    assoc = <span class="number">2</span></span><br><span class="line">    tag_latency = <span class="number">2</span></span><br><span class="line">    data_latency = <span class="number">2</span></span><br><span class="line">    response_latency = <span class="number">2</span></span><br><span class="line">    mshrs = <span class="number">4</span></span><br><span class="line">    tgts_per_mshr = <span class="number">20</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">connectCPU</span>(<span class="params">self, cpu</span>):</span><br><span class="line">        self.cpu_side = cpu.icache_port</span><br></pre></td></tr></table></figure>
+
+<p>L1数据缓存类，实现了简单的参数以及与CPU连接的函数：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">L1DCache</span>(<span class="title class_ inherited__">L1Cache</span>):</span><br><span class="line">    size = <span class="string">&#x27;64kB&#x27;</span></span><br><span class="line">    assoc = <span class="number">2</span></span><br><span class="line">    tag_latency = <span class="number">2</span></span><br><span class="line">    data_latency = <span class="number">2</span></span><br><span class="line">    response_latency = <span class="number">2</span></span><br><span class="line">    mshrs = <span class="number">4</span></span><br><span class="line">    tgts_per_mshr = <span class="number">20</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">connectCPU</span>(<span class="params">self, cpu</span>):</span><br><span class="line">        self.cpu_side = cpu.dcache_port</span><br></pre></td></tr></table></figure>
+
+<p>创建L1 Cache并连接L2总线：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建L1Cache</span></span><br><span class="line">system.cpu.icache = L1ICache()</span><br><span class="line">system.cpu.dcache = L1DCache()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将CPU连接到L1</span></span><br><span class="line">system.cpu.icache.connectCPU(system.cpu)</span><br><span class="line">system.cpu.dcache.connectCPU(system.cpu)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建一个L2总线</span></span><br><span class="line">system.l2bus = L2XBar()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将L1与L2总线连接</span></span><br><span class="line">system.cpu.icache.connectBus(system.l2bus)</span><br><span class="line">system.cpu.dcache.connectBus(system.l2bus)</span><br></pre></td></tr></table></figure>
+
+<h3 id="添加L2-Cache"><a href="#添加L2-Cache" class="headerlink" title="添加L2 Cache"></a>添加L2 Cache</h3><p>L2缓存类，只实现了简单的latency等参数，以及两个总线连接的函数：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">L2Cache</span>(<span class="title class_ inherited__">Cache</span>):</span><br><span class="line">    size = <span class="string">&#x27;256kB&#x27;</span></span><br><span class="line">    assoc = <span class="number">8</span></span><br><span class="line">    tag_latency = <span class="number">20</span></span><br><span class="line">    data_latency = <span class="number">20</span></span><br><span class="line">    response_latency = <span class="number">20</span></span><br><span class="line">    mshrs = <span class="number">20</span></span><br><span class="line">    tgts_per_mshr = <span class="number">12</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">connectCPUSideBus</span>(<span class="params">self, bus</span>):</span><br><span class="line">        self.cpu_side = bus.mem_side_ports</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">connectMemSideBus</span>(<span class="params">self, bus</span>):</span><br><span class="line">        self.mem_side = bus.cpu_side_ports</span><br></pre></td></tr></table></figure>
+
+<p>创建L2 Cache并连接总线：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建L2 Cache</span></span><br><span class="line">system.l2cache = L2Cache()</span><br><span class="line">system.l2cache.connectCPUSideBus(system.l2bus)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建一个内存总线</span></span><br><span class="line">system.membus = SystemXBar()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将L2 Cache与内存总线连接</span></span><br><span class="line">system.l2cache.connectMemSideBus(system.membus)</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置结果-1"><a href="#配置结果-1" class="headerlink" title="配置结果"></a>配置结果</h3><p>输出的配置结果如下，与前面的简单配置相比，更加复杂，不过逻辑还是很清晰：</p>
+<p><img  
+                     lazyload
+                     alt="image"
+                     data-src="/images/gem5-4/3.png"
+                      alt="配置2"
+                ></p>
+<h3 id="运行结果-1"><a href="#运行结果-1" class="headerlink" title="运行结果"></a>运行结果</h3><p>运行结果如下：</p>
+<p><img  
+                     lazyload
+                     alt="image"
+                     data-src="/images/gem5-4/4.png"
+                      alt="运行结果2"
+                ></p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ol>
+<li><a class="link"   target="_blank" rel="noopener" href="http://learning.gem5.org/book/part1/index.html" >http://learning.gem5.org/book/part1/index.html<i class="fas fa-external-link-alt"></i></a></li>
+<li><a class="link"   target="_blank" rel="noopener" href="http://learning.gem5.org/book/presentation_notes/part1.html" >http://learning.gem5.org/book/presentation_notes/part1.html<i class="fas fa-external-link-alt"></i></a></li>
+<li><a class="link"   target="_blank" rel="noopener" href="http://learning.gem5.org/book/part1/cache_config.html" >http://learning.gem5.org/book/part1/cache_config.html<i class="fas fa-external-link-alt"></i></a></li>
+</ol>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    
+<div class="article-copyright-info-container">
+    <ul class="copyright-info-content">
+        <li class="post-title">
+            <span class="type">本文标题</span>：<span class="content">gem5（4）——利用gem5自定义系统配置在SE模式下进行模拟</span>
+        </li>
+        <li class="post-author">
+            <span class="type">本文作者</span>：<span class="content">iamywang</span>
+        </li>
+        <li class="post-time">
+            <span class="type">创建时间</span>：<span class="content">2022-09-12 20:12:00</span>
+        </li>
+        <li class="post-link">
+            <span class="type">本文链接</span>：<span class="content">2022/09/12/gem5-4/</span>
+        </li>
+        <li class="post-license">
+            <span class="type">版权声明</span>：<span class="content">本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！</span>
+        </li>
+    </ul>
+    <div class="copy-copyright-info flex-center tooltip" data-content="复制版权信息" data-offset-y="-2px">
+        <i class="fa-solid fa-copy"></i>
+    </div>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/tags/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">#体系结构</a>&nbsp;
+                        </li>
+                    
+                        <li class="tag-item">
+                            <a href="/tags/gem5/">#gem5</a>&nbsp;
+                        </li>
+                    
+                        <li class="tag-item">
+                            <a href="/tags/CPU/">#CPU</a>&nbsp;
+                        </li>
+                    
+                        <li class="tag-item">
+                            <a href="/tags/Cache/">#Cache</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                               rel="prev"
+                               href="/2022/09/13/gem5-5/"
+                            >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                                <span class="title flex-center">
+                                <span class="post-nav-title-item">gem5（5）——扩展gem5功能初探并实现简单的MemoryObject</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                               rel="next"
+                               href="/2022/09/08/gem5-3/"
+                            >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">gem5（3）——gem5相关论文整理</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                                <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+            
+                <div class="comment-container">
+                    
+<div class="comments-container">
+    <div id="comments-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments"></i>&nbsp;评论
+    </div>
+    
+        
+            
+
+    <div class="gitalk-comment-container">
+        <div id="gitalk-container"></div>
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.css">
+        <script  src="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+        <script >
+          function loadGitalk() {
+            let __gitalk__pathname = decodeURI(location.pathname);
+            const __gitalk__pathnameLength = __gitalk__pathname.length;
+            const __gitalk__pathnameMaxLength = 50;
+            if (__gitalk__pathnameLength > __gitalk__pathnameMaxLength) {
+              __gitalk__pathname = __gitalk__pathname.substring(0, __gitalk__pathnameMaxLength - 3) + '...';
+            }
+
+            try {
+              Gitalk && new Gitalk({
+                clientID: 'ba4b1883b3d135eff41c',
+                clientSecret: '332966f462b6832cf08c586a0061f6af8d774b26',
+                repo: 'iamywang.github.io',
+                owner: 'iamywang',
+                admin: 'iamywang',
+                id: __gitalk__pathname,
+                proxy: '',
+                language: 'zh-CN'
+              }).render('gitalk-container');
+            } catch (e) {
+              window.Gitalk = null;
+            }
+          }
+
+          if ('false' === 'true') {
+            const loadGitalkTimeout = setTimeout(() => {
+              loadGitalk();
+              clearTimeout(loadGitalkTimeout);
+            }, 1000);
+          } else {
+            window.addEventListener('DOMContentLoaded', loadGitalk);
+          }
+        </script>
+    </div>
+
+
+
+        
+    
+</div>
+
+                </div>
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E9%85%8D%E7%BD%AE%E5%B9%B6%E8%BF%90%E8%A1%8C"><span class="nav-number">2.</span> <span class="nav-text">自定义配置并运行</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E6%AD%A5%E9%AA%A4"><span class="nav-number">2.1.</span> <span class="nav-text">主要步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%BB%93%E6%9E%9C"><span class="nav-number">2.2.</span> <span class="nav-text">配置结果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C"><span class="nav-number">2.3.</span> <span class="nav-text">运行结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0Cache%E5%B9%B6%E8%BF%90%E8%A1%8C"><span class="nav-number">3.</span> <span class="nav-text">添加Cache并运行</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0L1-Cache"><span class="nav-number">3.1.</span> <span class="nav-text">添加L1 Cache</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0L2-Cache"><span class="nav-number">3.2.</span> <span class="nav-text">添加L2 Cache</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%BB%93%E6%9E%9C-1"><span class="nav-number">3.3.</span> <span class="nav-text">配置结果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C-1"><span class="nav-number">3.4.</span> <span class="nav-text">运行结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol>
+    </div>
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            
+<footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+                <span>2022</span> -
+            
+            2023
+            
+                &nbsp;<i class="fas fa-heart icon-animate"></i>
+                &nbsp;<a href="/">iamywang</a>
+            
+        </div>
+        
+            <script async 
+                    src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                
+                
+                    总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.6.1</a>
+        </div>
+        
+        
+            <div class="deploy-info info-item">
+                
+                    本站由 <span class="tooltip" data-content="GitHub Pages"><img src="/images/deploy-provider/github.png"></span> 提供部署服务
+                
+            </div>
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item flex-center toggle-show-toc">
+                <i class="fas fa-list"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="tools-item flex-center go-to-comments">
+                <i class="fas fa-comment"></i>
+                <span class="post-comments-count"></span>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+            <li class="tools-item rss flex-center">
+                <a class="flex-center"
+                   href="/atom.xml"
+                   target="_blank"
+                >
+                    <i class="fas fa-rss"></i>
+                </a>
+            </li>
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="zoom-in-image-mask">
+    <img class="zoom-in-image">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="close-popup-btn">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/dark-light-toggle.js"></script>
+
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/code-block.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/lazyload.js"></script>
+
+
+<div class="post-scripts">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/post-helper.js"></script>
+        
+            <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/libs/anime.min.js"></script>
+        
+        
+            <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/toc.js"></script>
+        
+    
+</div>
+
+
+
+</body>
+</html>
