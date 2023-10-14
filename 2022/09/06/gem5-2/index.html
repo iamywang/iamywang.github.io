@@ -16,15 +16,18 @@
     
 <link rel="stylesheet" href="/css/style.css">
 
-    <link rel="shortcut icon" href="/images/logo.jpg">
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/font/css/fontawesome.min.css">
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/font/css/regular.min.css">
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/font/css/solid.min.css">
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/font/css/brands.min.css">
-    <script id="hexo-configurations">
-    let KEEP = window.KEEP || {}
+    
+        <link rel="shortcut icon" href="/images/logo.jpg">
+    
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.8.4/source/font/css/fontawesome.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.8.4/source/font/css/regular.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.8.4/source/font/css/solid.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.8.4/source/font/css/brands.min.css">
+    
+    <script class="keep-theme-configurations">
+    const KEEP = window.KEEP || {}
     KEEP.hexo_config = {"hostname":"iamywang.github.io","root":"/","language":"zh-CN","path":"search.json"}
-    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true},"style":{"primary_color":"#0f59a4","logo":"/images/avatar.jpg","favicon":"/images/logo.jpg","avatar":"/images/avatar.jpg","font_size":null,"font_family":null,"hover":{"shadow":true,"scale":true},"first_screen":{"enable":true,"header_transparent":true,"background_img":"/images/bg.svg","description":"一个对计算机体系结构、侧信道安全与足球充满兴趣的程序员。 || All or Nothing.","font_color":null,"hitokoto":false},"scroll":{"progress_bar":true,"percent":false}},"local_search":{"enable":true,"preload":true},"code_copy":{},"code_block":{"tools":{"enable":true,"style":"default"},"highlight_theme":"default"},"side_tools":{},"pjax":{"enable":false},"lazyload":{"enable":true},"comment":{"enable":true,"use":"gitalk","valine":{"appid":null,"appkey":null,"server_urls":null,"placeholder":null},"gitalk":{"github_id":"iamywang","github_admins":null,"repository":"iamywang.github.io","client_id":"26feb95465193b82487e","client_secret":"52087dc36c8bc13caa1845b46ea88a6bf157c5da","proxy":null},"twikoo":{"env_id":null,"region":null,"version":"1.6.8"},"waline":{"server_url":null,"reaction":false,"version":2}},"post":{"author_label":{"enable":false,"auto":true,"custom_label_list":["Trainee","Engineer","Architect"]},"word_count":{"enable":true,"wordcount":true,"min2read":true},"img_align":"left","copyright_info":true},"version":"3.6.1"}
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true,"layout":"left"},"style":{"primary_color":"#0f59a4","logo":"/images/avatar.jpg","favicon":"/images/logo.jpg","avatar":"/images/avatar.jpg","first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"一个对计算机体系结构、侧信道安全与足球充满兴趣的程序员。 || All or Nothing.","hitokoto":false},"scroll":{"progress_bar":true,"percent":false}},"local_search":{"enable":true,"preload":true},"code_block":{"tools":{"enable":true,"style":"default"},"highlight_theme":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"comment":{"enable":true,"use":"gitalk","valine":{"appid":null,"appkey":null,"server_urls":null,"placeholder":null},"gitalk":{"github_id":"iamywang","github_admins":null,"repository":"iamywang.github.io","client_id":"26feb95465193b82487e","client_secret":"52087dc36c8bc13caa1845b46ea88a6bf157c5da","proxy":null},"twikoo":{"env_id":null,"region":null,"version":"1.6.21"},"waline":{"server_url":null,"reaction":false,"version":2},"giscus":{"repo":null,"repo_id":null,"category":"Announcements","category_id":null,"reactions_enabled":false}},"post":{"author_label":{"enable":false,"auto":true,"custom_label_list":["Trainee","Engineer","Architect"]},"word_count":{"wordcount":true,"min2read":true},"datetime_format":"YYYY-MM-DD HH:mm:ss","copyright_info":true,"share":true,"reward":{"enable":false,"img_link":null,"text":null}},"website_count":{"busuanzi_count":{"enable":true,"site_uv":true,"site_pv":true,"page_pv":true}},"version":"3.8.4"}
     KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"}
     KEEP.language_code_block = {"copy":"复制代码","copied":"已复制","fold":"折叠代码块","folded":"已折叠"}
     KEEP.language_copy_copyright = {"copy":"复制版权信息","copied":"已复制","title":"原文标题","author":"原文作者","link":"原文链接"}
@@ -43,29 +46,30 @@
 </div>
 
 
-<main class="page-container">
+<main class="page-container border-box">
 
+    <!-- home first screen  -->
     
 
-    <div class="page-main-content">
-
+    <!-- page content -->
+    <div class="page-main-content border-box">
         <div class="page-main-content-top">
             
 <header class="header-wrapper">
 
-    <div class="header-content">
-        <div class="left">
+    <div class="border-box header-content">
+        <div class="left border-box">
             
-                <a class="logo-image" href="/">
+                <a class="logo-image border-box" href="/">
                     <img src="/images/avatar.jpg">
                 </a>
             
-            <a class="logo-title" href="/">
+            <a class="site-name border-box" href="/">
                没事我就挠脑袋
             </a>
         </div>
 
-        <div class="right">
+        <div class="right border-box">
             <div class="pc">
                 <ul class="menu-list">
                     
@@ -81,7 +85,7 @@
                             <a class=""
                                href="/archives"
                             >
-                                文章
+                                归档
                             </a>
                         </li>
                     
@@ -145,7 +149,7 @@
             
                 <li class="drawer-menu-item flex-center">
                     <a class=""
-                       href="/archives">文章</a>
+                       href="/archives">归档</a>
                 </li>
             
                 <li class="drawer-menu-item flex-center">
@@ -178,109 +182,121 @@
 
         </div>
 
-        <div class="page-main-content-middle">
+        <div class="page-main-content-middle border-box">
 
-            <div class="main-content">
+            <div class="main-content border-box">
 
                 
-                    <div class="fade-in-down-animation">
-    <div class="post-page-container">
-        <div class="article-content-container">
 
-            <div class="article-title">
-                <span class="title-hover-animation">gem5（2）——利用gem5模拟Spectre攻击</span>
-            </div>
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container border-box">
+
+        <div class="article-content-container border-box">
 
             
-                <div class="article-header">
-                    <div class="avatar">
-                        <img src="/images/avatar.jpg">
-                    </div>
-                    <div class="info">
-                        <div class="author">
-                            <span class="name">iamywang</span>
-                            
-                        </div>
-                        <div class="meta-info">
-                            
-<div class="article-meta-info">
-    <span class="article-date article-meta-item">
-        
-            <i class="fa-regular fa-calendar-plus"></i>&nbsp;
-        
-        <span class="pc">2022-09-06 16:30:00</span>
-        <span class="mobile">2022-09-06 16:30</span>
-    </span>
-    
-        <span class="article-update-date article-meta-item">
-        <i class="fas fa-file-pen"></i>&nbsp;
-        <span class="pc">2023-04-11 20:00:00</span>
-    </span>
-    
-    
-        <span class="article-categories article-meta-item">
-            <i class="fas fa-folder"></i>&nbsp;
-            <ul>
-                
-                    <li>
-                        <a href="/categories/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">体系结构</a>&nbsp;
-                    </li>
-                
-            </ul>
-        </span>
-    
-    
-        <span class="article-tags article-meta-item">
-            <i class="fas fa-tags"></i>&nbsp;
-            <ul>
-                
-                    <li>
-                        <a href="/tags/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">体系结构</a>&nbsp;
-                    </li>
-                
-                    <li>
-                        | <a href="/tags/gem5/">gem5</a>&nbsp;
-                    </li>
-                
-                    <li>
-                        | <a href="/tags/Spectre%E6%94%BB%E5%87%BB/">Spectre攻击</a>&nbsp;
-                    </li>
-                
-                    <li>
-                        | <a href="/tags/CPU%E5%AE%89%E5%85%A8/">CPU安全</a>&nbsp;
-                    </li>
-                
-            </ul>
-        </span>
-    
 
-    
-    
-        <span class="article-wordcount article-meta-item">
-            <i class="fas fa-file-word"></i>&nbsp;<span>1.7k 字</span>
-        </span>
-    
-    
-        <span class="article-min2read article-meta-item">
-            <i class="fas fa-clock"></i>&nbsp;<span>8 分钟</span>
-        </span>
-    
-    
-        <span class="article-pv article-meta-item">
-            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
-        </span>
+            <div class="article-content-bottom border-box">
+                
+                    <div class="article-title">
+                        gem5（2）——利用gem5模拟Spectre攻击
+                    </div>
+                
+
+                
+                    <div class="article-header border-box">
+                        
+                            <div class="avatar-box border-box">
+                                <img src="/images/avatar.jpg">
+                            </div>
+                        
+                        <div class="info-box">
+                            <div class="author">
+                                <span class="name">iamywang</span>
+                                
+                            </div>
+                            <div class="meta-info border-box">
+                                
+
+<div class="article-meta-info-container border-box post">
+    <div class="article-meta-info border-box">
+        
+
+
+        
+            <span class="meta-info-item article-create-date">
+                <i class="icon fa-solid fa-calendar-check"></i>&nbsp;
+                <span class="pc">2022-09-06 16:30:00</span>
+                <span class="mobile">2022-09-06 16:30</span>
+            </span>
+
+            <span class="meta-info-item article-update-date">
+                <i class="icon fa-solid fa-file-pen"></i>&nbsp;
+                <span class="pc" data-updated="Tue Apr 11 2023 20:00:00 GMT+0800">2023-04-11 20:00:00</span>
+            </span>
+        
+
+        
+            <span class="meta-info-item article-category border-box"><i class="icon fas fa-folder"></i>&nbsp;
+                <ul class="article-category-ul">
+                    
+                            <li class="category-item"><a href="/categories/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">体系结构</a></li>
+                        
+                    
+                </ul>
+            </span>
+        
+
+        
+            <span class="article-tag meta-info-item border-box">
+                <i class="icon fas fa-tags"></i>&nbsp;
+                <ul class="article-tag-ul">
+                    
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">体系结构</a></li>
+                        
+                    
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/gem5/">gem5</a></li>
+                        
+                    
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/Spectre%E6%94%BB%E5%87%BB/">Spectre攻击</a></li>
+                        
+                    
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/CPU%E5%AE%89%E5%85%A8/">CPU安全</a></li>
+                        
+                    
+                </ul>
+            </span>
+        
+
+        
+        
+            <span class="meta-info-item article-wordcount">
+                <i class="icon fas fa-file-word"></i>&nbsp;<span>1.7k 字</span>
+            </span>
+        
+        
+            <span class="meta-info-item article-min2read">
+                <i class="icon fas fa-clock"></i>&nbsp;<span>8 分钟</span>
+            </span>
+        
+        
+            <span class="meta-info-item article-pv">
+                <i class="icon fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    </div>
+
     
 </div>
 
+                            </div>
                         </div>
                     </div>
-                </div>
-            
-
-            <div class="article-content keep-markdown-body">
                 
 
-                <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>从去年开始，一直在学习Meltdown攻击和Spectre攻击，包括攻击原理的学习、攻击的复现（在x86和ARM两种架构下复现）、利用符号执行（基于LLVM的KLEE）进行检测等。</p>
+                <div class="article-content keep-markdown-body">
+                    
+
+                    <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>从去年开始，一直在学习Meltdown攻击和Spectre攻击，包括攻击原理的学习、攻击的复现（在x86和ARM两种架构下复现）、利用符号执行（基于LLVM的KLEE）进行检测等。</p>
 <p>Meltdown攻击是通过绕过CPU的权限检查机制，将内核态的数据读取到用户态，从而实现数据泄露。Spectre攻击是通过利用CPU的分支预测机制，让CPU错误预测执行，从而实现数据泄露。</p>
 <p>这两种攻击都是通过利用CPU的特性来实现的，而gem5是一个CPU模拟器，并且提供了这两种攻击所利用到的乱序执行、分支预测特性以及Cache，因此理论上可以利用gem5来模拟这两种攻击。</p>
 <h3 id="主要工作"><a href="#主要工作" class="headerlink" title="主要工作"></a>主要工作</h3><p>在查阅相关资料时，发现2021年的一篇文章[1]，利用gem5模拟了Spectre攻击，因此决定在学习gem5的过程中对这篇论文进行复现。</p>
@@ -434,105 +450,163 @@
 <li>Kocher, P., Horn, J., Fogh, A., Genkin, D., Gruss, D., Haas, W., … &amp; Yarom, Y. (2019, May). Spectre Attacks: Exploiting Speculative Execution. In 2019 IEEE Symposium on Security and Privacy (SP) (pp. 1-19). IEEE.</li>
 </ol>
 
+                </div>
+
+                
+                        
+<div class="article-copyright-info-container border-box">
+    <div class="copyright-info-content border-box">
+        <div class="copyright-info-top border-box">
+            <div class="post-title border-box text-ellipsis">
+                gem5（2）——利用gem5模拟Spectre攻击
             </div>
 
-            
-                <div class="post-copyright-info">
-                    
-<div class="article-copyright-info-container">
-    <ul class="copyright-info-content">
-        <li class="post-title">
-            <span class="type">本文标题</span>：<span class="content">gem5（2）——利用gem5模拟Spectre攻击</span>
-        </li>
-        <li class="post-author">
-            <span class="type">本文作者</span>：<span class="content">iamywang</span>
-        </li>
-        <li class="post-time">
-            <span class="type">创建时间</span>：<span class="content">2022-09-06 16:30:00</span>
-        </li>
-        <li class="post-link">
-            <span class="type">本文链接</span>：<span class="content">2022/09/06/gem5-2/</span>
-        </li>
-        <li class="post-license">
-            <span class="type">版权声明</span>：<span class="content">本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！</span>
-        </li>
-    </ul>
-    <div class="copy-copyright-info flex-center tooltip" data-content="复制版权信息" data-offset-y="-2px">
+            <div class="post-link border-box text-ellipsis">
+                2022/09/06/gem5-2/
+            </div>
+        </div>
+
+        <div class="copyright-info-bottom border-box">
+            <div class="post-author bottom-item">
+                <div class="type">
+                    作者
+                </div>
+                <div class="content">iamywang</div>
+            </div>
+
+            <div class="post-time bottom-item">
+                <div class="type">
+                    发布于
+                </div>
+                <div class="content">2022-09-06 16:30</div>
+            </div>
+
+
+            <div class="post-license bottom-item">
+                <div class="type">
+                    许可
+                </div>
+                <div class="content tooltip" data-tooltip-content="CC BY-NC-SA 4.0">
+                    <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans">
+                        <i class="fa-brands fa-creative-commons"></i>
+                        <i class="fa-brands fa-creative-commons-by"></i>
+                        <i class="fa-brands fa-creative-commons-nc"></i>
+                        <i class="fa-brands fa-creative-commons-sa"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <i class="copyright-bg fa-solid fa-copyright"></i>
+    </div>
+    <div class="copy-copyright-info flex-center tooltip" data-tooltip-content="复制版权信息" data-tooltip-offset-y="-2px">
         <i class="fa-solid fa-copy"></i>
     </div>
 </div>
 
+                
+
+                <div class="post-bottom-tags-and-share border-box">
+                    <div>
+                        
+                            <ul class="post-tags-box border-box">
+                                
+                                    <li class="tag-item border-box">
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">体系结构</a>
+                                    </li>
+                                
+                                    <li class="tag-item border-box">
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/gem5/">gem5</a>
+                                    </li>
+                                
+                                    <li class="tag-item border-box">
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/Spectre%E6%94%BB%E5%87%BB/">Spectre攻击</a>
+                                    </li>
+                                
+                                    <li class="tag-item border-box">
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/CPU%E5%AE%89%E5%85%A8/">CPU安全</a>
+                                    </li>
+                                
+                            </ul>
+                        
+                    </div>
+                    <div>
+                        
+                            <div class="post-share-container border-box">
+    <ul class="share-list-wrap border-box">
+        <li class="qq share-item border-box flex-center tooltip"
+            data-tooltip-content="分享到 QQ"
+        >
+            <i class="fa-brands fa-qq"></i>
+        </li>
+        <li class="wechat share-item border-box flex-center tooltip tooltip-img"
+            data-tooltip-content="分享到微信"
+            data-tooltip-img-tip="微信扫一扫"
+            data-tooltip-img-style="background-color: #fff; top: -10px; padding: 0.6rem 0.6rem 0.1rem 0.6rem;"
+        >
+            <i class="fa-brands fa-weixin"></i>
+        </li>
+        <li class="weibo share-item border-box flex-center tooltip"
+            data-tooltip-content="分享到微博"
+        >
+            <i class="fa-brands fa-weibo"></i>
+        </li>
+    </ul>
+</div>
+
+                        
+                    </div>
                 </div>
-            
 
-            
-                <ul class="post-tags-box">
-                    
-                        <li class="tag-item">
-                            <a href="/tags/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">#体系结构</a>&nbsp;
-                        </li>
-                    
-                        <li class="tag-item">
-                            <a href="/tags/gem5/">#gem5</a>&nbsp;
-                        </li>
-                    
-                        <li class="tag-item">
-                            <a href="/tags/Spectre%E6%94%BB%E5%87%BB/">#Spectre攻击</a>&nbsp;
-                        </li>
-                    
-                        <li class="tag-item">
-                            <a href="/tags/CPU%E5%AE%89%E5%85%A8/">#CPU安全</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            
+                
 
-            
-                <div class="article-nav">
-                    
-                        <div class="article-prev">
-                            <a class="prev"
-                               rel="prev"
-                               href="/2022/09/07/moon-cake-22/"
-                            >
-                            <span class="left arrow-icon flex-center">
-                              <i class="fas fa-chevron-left"></i>
-                            </span>
-                                <span class="title flex-center">
-                                <span class="post-nav-title-item">中秋月饼</span>
-                                <span class="post-nav-item">上一篇</span>
-                            </span>
-                            </a>
-                        </div>
-                    
-                    
-                        <div class="article-next">
-                            <a class="next"
-                               rel="next"
-                               href="/2022/09/05/gem5-1/"
-                            >
-                            <span class="title flex-center">
-                                <span class="post-nav-title-item">gem5（1）——环境搭建</span>
-                                <span class="post-nav-item">下一篇</span>
-                            </span>
-                                <span class="right arrow-icon flex-center">
-                              <i class="fas fa-chevron-right"></i>
-                            </span>
-                            </a>
-                        </div>
-                    
-                </div>
-            
+                
+                    <div class="article-nav">
+                        
+                            <div class="article-prev">
+                                <a class="prev"
+                                   rel="prev"
+                                   href="/2022/09/07/moon-cake-22/"
+                                   title="中秋月饼"
+                                >
+                                    <span class="left arrow-icon flex-center">
+                                      <i class="fas fa-chevron-left"></i>
+                                    </span>
+                                            <span class="title flex-center">
+                                        <span class="post-nav-title-item text-ellipsis">中秋月饼</span>
+                                        <span class="post-nav-item">上一篇</span>
+                                    </span>
+                                </a>
+                            </div>
+                        
+                        
+                            <div class="article-next">
+                                <a class="next"
+                                   rel="next"
+                                   href="/2022/09/05/gem5-1/"
+                                   title="gem5（1）——环境搭建"
+                                >
+                                    <span class="title flex-center">
+                                        <span class="post-nav-title-item text-ellipsis">gem5（1）——环境搭建</span>
+                                        <span class="post-nav-item">下一篇</span>
+                                    </span>
+                                            <span class="right arrow-icon flex-center">
+                                      <i class="fas fa-chevron-right"></i>
+                                    </span>
+                                </a>
+                            </div>
+                        
+                    </div>
+                
 
-            
-                <div class="comment-container">
+                
                     
-<div class="comments-container">
-    <div id="comments-anchor"></div>
-    <div class="comment-area-title">
-        <i class="fas fa-comments"></i>&nbsp;评论
-    </div>
-    
+
+
+    <div class="comments-container border-box">
+        <div id="comments-anchor" class="comment-area-title border-box">
+            <i class="fas fa-comments"></i>&nbsp;评论
+        </div>
         
             
 
@@ -577,19 +651,21 @@
     </div>
 
 
-
         
-    
-</div>
+    </div>
 
-                </div>
-            
+
+
+
+
+                
+            </div>
         </div>
 
         
-            <div class="toc-content-container">
-                <div class="post-toc-wrap">
-    <div class="post-toc">
+            <div class="pc-post-toc left-toc">
+                <div class="post-toc-wrap border-box">
+    <div class="post-toc border-box">
         <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E5%B7%A5%E4%BD%9C"><span class="nav-number">1.2.</span> <span class="nav-text">主要工作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2023-4-11-%E5%88%A9%E7%94%A8X86%E6%9E%B6%E6%9E%84%E7%9A%84gem5%E6%A8%A1%E6%8B%9F%E5%99%A8%E5%A4%8D%E7%8E%B0Spectre%E6%94%BB%E5%87%BB"><span class="nav-number">2.</span> <span class="nav-text">(2023.4.11) 利用X86架构的gem5模拟器复现Spectre攻击</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E8%84%9A%E6%9C%AC"><span class="nav-number">2.1.</span> <span class="nav-text">配置脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SE%E6%A8%A1%E5%BC%8F%E4%B8%8B%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C"><span class="nav-number">2.2.</span> <span class="nav-text">SE模式下运行结果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#o3-pipeline"><span class="nav-number">2.3.</span> <span class="nav-text">o3 pipeline</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BA%E6%96%87%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%EF%BC%9A%E5%9C%A8ARM%E6%9E%B6%E6%9E%84%E4%B8%8B%E5%A4%8D%E7%8E%B0Spectre%E6%94%BB%E5%87%BB"><span class="nav-number">3.</span> <span class="nav-text">论文环境搭建：在ARM架构下复现Spectre攻击</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%AF%91gem5"><span class="nav-number">3.1.</span> <span class="nav-text">编译gem5</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%91%E8%8E%93%E6%B4%BE4B%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">3.2.</span> <span class="nav-text">树莓派4B配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%92%8C%E5%86%85%E6%A0%B8"><span class="nav-number">3.3.</span> <span class="nav-text">操作系统和内核</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%B7%A5%E4%BD%9C%E9%95%9C%E5%83%8F"><span class="nav-number">3.4.</span> <span class="nav-text">创建工作镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">3.5.</span> <span class="nav-text">修改配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E7%B3%BB%E7%BB%9F"><span class="nav-number">3.6.</span> <span class="nav-text">启动系统</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gem5%E5%AE%98%E6%96%B9%E6%8E%A8%E8%8D%90ARM%E6%9E%B6%E6%9E%84fs%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="nav-number">4.</span> <span class="nav-text">gem5官方推荐ARM架构fs环境搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E7%B3%BB%E7%BB%9F%E5%92%8C%E5%86%85%E6%A0%B8"><span class="nav-number">4.1.</span> <span class="nav-text">下载系统和内核</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E5%AF%BC%E7%B3%BB%E7%BB%9F"><span class="nav-number">4.2.</span> <span class="nav-text">引导系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%82%E8%BD%BD%E9%95%9C%E5%83%8F"><span class="nav-number">4.3.</span> <span class="nav-text">挂载镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8CSpectre%E6%94%BB%E5%87%BB"><span class="nav-number">4.4.</span> <span class="nav-text">执行Spectre攻击</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">5.</span> <span class="nav-text">参考文献</span></a></li></ol>
     </div>
 </div>
@@ -605,62 +681,74 @@
 
         </div>
 
-        <div class="page-main-content-bottom">
+        <div class="page-main-content-bottom border-box">
             
-<footer class="footer">
-    <div class="info-container">
-        <div class="copyright-info info-item">
-            &copy;
-            
-                <span>2022</span> -
-            
-            2023
-            
-                &nbsp;<i class="fas fa-heart icon-animate"></i>
-                &nbsp;<a href="/">iamywang</a>
-            
-        </div>
+<footer class="footer border-box">
+    <div class="border-box website-info-box default">
         
-            <script async 
-                    src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-            <div class="website-count info-item">
+            <div class="copyright-info info-item default">
+                &copy;&nbsp;<span>2022</span>&nbsp;-&nbsp;2023
                 
-                    访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
-                
-                
-                    总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    &nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;&nbsp;<a href="/">iamywang</a>
                 
             </div>
-        
-        <div class="theme-info info-item">
-            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.6.1</a>
-        </div>
-        
-        
-            <div class="deploy-info info-item">
-                
-                    本站由 <span class="tooltip" data-content="GitHub Pages"><img src="/images/deploy-provider/github.png"></span> 提供部署服务
-                
+
+            <div class="theme-info info-item default">
+                由&nbsp;<a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;驱动&nbsp;&&nbsp;主题&nbsp;<a class="keep-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep</a>
             </div>
+
+            
+
+            
+                <div class="deploy-info info-item default">
+                    
+                        本站由 <span class="tooltip" data-tooltip-content="GitHub Pages"><img src="/images/deploy-provider/github.png"></span> 提供部署服务
+                        
+                </div>
+            
         
+
+        <div class="count-item info-item default">
+            
+                <span class="count-box border-box word">
+                    <span class="item-type border-box">总字数</span>
+                    <span class="item-value border-box word">11.7k</span>
+                </span>
+            
+
+            
+                <span class="count-box border-box uv">
+                    <span class="item-type border-box">访客数</span>
+                    <span class="item-value border-box uv" id="busuanzi_value_site_uv"></span>
+                </span>
+            
+
+            
+                <span class="count-box border-box pv">
+                    <span class="item-type border-box">访问量</span>
+                    <span class="item-value border-box pv" id="busuanzi_value_site_pv"></span>
+                </span>
+            
+        </div>
     </div>
 </footer>
 
         </div>
     </div>
 
+    <!-- post tools -->
     
-        <div class="post-tools">
-            <div class="post-tools-container">
-    <ul class="tools-list">
-        <!-- TOC aside toggle -->
+        <div class="post-tools left-toc">
+            <div class="post-tools-container border-box">
+    <ul class="tools-list border-box">
+        <!-- PC TOC show toggle -->
         
             <li class="tools-item flex-center toggle-show-toc">
                 <i class="fas fa-list"></i>
             </li>
         
 
-        <!-- go comment -->
+        <!-- PC go comment -->
         
             <li class="tools-item flex-center go-to-comments">
                 <i class="fas fa-comment"></i>
@@ -673,9 +761,10 @@
         </div>
     
 
-    <div class="right-bottom-side-tools">
-        <div class="side-tools-container">
-    <ul class="side-tools-list">
+    <!-- side tools -->
+    <div class="side-tools">
+        <div class="side-tools-container border-box ">
+    <ul class="side-tools-list side-tools-show-handle border-box">
         <li class="tools-item tool-font-adjust-plus flex-center">
             <i class="fas fa-search-plus"></i>
         </li>
@@ -700,32 +789,44 @@
             </li>
         
 
-        
-            <li class="tools-item tool-scroll-to-top flex-center">
-                <i class="fas fa-arrow-up"></i>
-            </li>
-        
-
         <li class="tools-item tool-scroll-to-bottom flex-center">
             <i class="fas fa-arrow-down"></i>
         </li>
     </ul>
 
-    <ul class="exposed-tools-list">
+    <ul class="exposed-tools-list border-box">
+        
+            <li class="tools-item toggle-show-toc-tablet flex-center">
+                <i class="fas fa-list"></i>
+            </li>
+        
+
+        
+            <li class="tools-item go-to-comments-tablet flex-center">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+
         <li class="tools-item tool-toggle-show flex-center">
             <i class="fas fa-cog fa-spin"></i>
         </li>
-        
+
+        <li class="tools-item tool-scroll-to-top flex-center show-arrow">
+            <i class="arrow fas fa-arrow-up"></i>
+            <span class="percent"></span>
+        </li>
     </ul>
 </div>
 
     </div>
 
+    <!-- image mask -->
     <div class="zoom-in-image-mask">
     <img class="zoom-in-image">
 </div>
 
 
+    <!-- local search -->
     
         <div class="search-pop-overlay">
     <div class="popup search-popup">
@@ -757,37 +858,73 @@
 
     
 
+    <!-- tablet toc -->
+    
+        <div class="tablet-post-toc-mask">
+            <div class="tablet-post-toc">
+                <div class="post-toc-wrap border-box">
+    <div class="post-toc border-box">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E5%B7%A5%E4%BD%9C"><span class="nav-number">1.2.</span> <span class="nav-text">主要工作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2023-4-11-%E5%88%A9%E7%94%A8X86%E6%9E%B6%E6%9E%84%E7%9A%84gem5%E6%A8%A1%E6%8B%9F%E5%99%A8%E5%A4%8D%E7%8E%B0Spectre%E6%94%BB%E5%87%BB"><span class="nav-number">2.</span> <span class="nav-text">(2023.4.11) 利用X86架构的gem5模拟器复现Spectre攻击</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E8%84%9A%E6%9C%AC"><span class="nav-number">2.1.</span> <span class="nav-text">配置脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SE%E6%A8%A1%E5%BC%8F%E4%B8%8B%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C"><span class="nav-number">2.2.</span> <span class="nav-text">SE模式下运行结果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#o3-pipeline"><span class="nav-number">2.3.</span> <span class="nav-text">o3 pipeline</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BA%E6%96%87%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%EF%BC%9A%E5%9C%A8ARM%E6%9E%B6%E6%9E%84%E4%B8%8B%E5%A4%8D%E7%8E%B0Spectre%E6%94%BB%E5%87%BB"><span class="nav-number">3.</span> <span class="nav-text">论文环境搭建：在ARM架构下复现Spectre攻击</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%AF%91gem5"><span class="nav-number">3.1.</span> <span class="nav-text">编译gem5</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%91%E8%8E%93%E6%B4%BE4B%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">3.2.</span> <span class="nav-text">树莓派4B配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%92%8C%E5%86%85%E6%A0%B8"><span class="nav-number">3.3.</span> <span class="nav-text">操作系统和内核</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%B7%A5%E4%BD%9C%E9%95%9C%E5%83%8F"><span class="nav-number">3.4.</span> <span class="nav-text">创建工作镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">3.5.</span> <span class="nav-text">修改配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E7%B3%BB%E7%BB%9F"><span class="nav-number">3.6.</span> <span class="nav-text">启动系统</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gem5%E5%AE%98%E6%96%B9%E6%8E%A8%E8%8D%90ARM%E6%9E%B6%E6%9E%84fs%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="nav-number">4.</span> <span class="nav-text">gem5官方推荐ARM架构fs环境搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E7%B3%BB%E7%BB%9F%E5%92%8C%E5%86%85%E6%A0%B8"><span class="nav-number">4.1.</span> <span class="nav-text">下载系统和内核</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E5%AF%BC%E7%B3%BB%E7%BB%9F"><span class="nav-number">4.2.</span> <span class="nav-text">引导系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%82%E8%BD%BD%E9%95%9C%E5%83%8F"><span class="nav-number">4.3.</span> <span class="nav-text">挂载镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8CSpectre%E6%94%BB%E5%87%BB"><span class="nav-number">4.4.</span> <span class="nav-text">执行Spectre攻击</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">5.</span> <span class="nav-text">参考文献</span></a></li></ol>
+    </div>
+</div>
+
+            </div>
+        </div>
+    
 </main>
 
 
 
-<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/dark-light-toggle.js"></script>
+<!-- common -->
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.8.4/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.8.4/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.8.4/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.8.4/source/js/dark-light-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.8.4/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.8.4/source/js/libs/anime.min.js"></script>
+
+<!-- local-search -->
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.8.4/source/js/local-search.js"></script>
 
 
+<!-- code-block -->
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.8.4/source/js/code-block.js"></script>
 
 
-    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/local-search.js"></script>
+<!-- lazyload -->
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.8.4/source/js/lazyload.js"></script>
 
 
-
-    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/code-block.js"></script>
-
-
-
-    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/lazyload.js"></script>
-
-
-<div class="post-scripts">
+<div class="">
     
-        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/post-helper.js"></script>
+        <!-- post-helper -->
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.8.4/source/js/post/post-helper.js"></script>
+
+        <!-- toc -->
         
-            <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/libs/anime.min.js"></script>
+            <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.8.4/source/js/post/toc.js"></script>
         
+
+        <!-- copyright-info -->
         
-            <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/toc.js"></script>
+            <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.8.4/source/js/post/copyright-info.js"></script>
         
+
+        <!-- share -->
+        
+            <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.8.4/source/js/post/share.js"></script>
+        
+    
+
+    <!-- category-page -->
+    
+
+    <!-- links-page -->
     
 </div>
+
+<!-- mermaid -->
+
+
+<!-- pjax -->
 
 
 

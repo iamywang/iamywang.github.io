@@ -14,15 +14,18 @@
     
 <link rel="stylesheet" href="/css/style.css">
 
-    <link rel="shortcut icon" href="/images/logo.jpg">
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/font/css/fontawesome.min.css">
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/font/css/regular.min.css">
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/font/css/solid.min.css">
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/font/css/brands.min.css">
-    <script id="hexo-configurations">
-    let KEEP = window.KEEP || {}
+    
+        <link rel="shortcut icon" href="/images/logo.jpg">
+    
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.8.4/source/font/css/fontawesome.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.8.4/source/font/css/regular.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.8.4/source/font/css/solid.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.8.4/source/font/css/brands.min.css">
+    
+    <script class="keep-theme-configurations">
+    const KEEP = window.KEEP || {}
     KEEP.hexo_config = {"hostname":"iamywang.github.io","root":"/","language":"zh-CN","path":"search.json"}
-    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true},"style":{"primary_color":"#0f59a4","logo":"/images/avatar.jpg","favicon":"/images/logo.jpg","avatar":"/images/avatar.jpg","font_size":null,"font_family":null,"hover":{"shadow":true,"scale":true},"first_screen":{"enable":true,"header_transparent":true,"background_img":"/images/bg.svg","description":"一个对计算机体系结构、侧信道安全与足球充满兴趣的程序员。 || All or Nothing.","font_color":null,"hitokoto":false},"scroll":{"progress_bar":true,"percent":false}},"local_search":{"enable":true,"preload":true},"code_copy":{},"code_block":{"tools":{"enable":true,"style":"default"},"highlight_theme":"default"},"side_tools":{},"pjax":{"enable":false},"lazyload":{"enable":true},"comment":{"enable":true,"use":"gitalk","valine":{"appid":null,"appkey":null,"server_urls":null,"placeholder":null},"gitalk":{"github_id":"iamywang","github_admins":null,"repository":"iamywang.github.io","client_id":"26feb95465193b82487e","client_secret":"52087dc36c8bc13caa1845b46ea88a6bf157c5da","proxy":null},"twikoo":{"env_id":null,"region":null,"version":"1.6.8"},"waline":{"server_url":null,"reaction":false,"version":2}},"post":{"author_label":{"enable":false,"auto":true,"custom_label_list":["Trainee","Engineer","Architect"]},"word_count":{"enable":true,"wordcount":true,"min2read":true},"img_align":"left","copyright_info":true},"version":"3.6.1"}
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true,"layout":"left"},"style":{"primary_color":"#0f59a4","logo":"/images/avatar.jpg","favicon":"/images/logo.jpg","avatar":"/images/avatar.jpg","first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"一个对计算机体系结构、侧信道安全与足球充满兴趣的程序员。 || All or Nothing.","hitokoto":false},"scroll":{"progress_bar":true,"percent":false}},"local_search":{"enable":true,"preload":true},"code_block":{"tools":{"enable":true,"style":"default"},"highlight_theme":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"comment":{"enable":true,"use":"gitalk","valine":{"appid":null,"appkey":null,"server_urls":null,"placeholder":null},"gitalk":{"github_id":"iamywang","github_admins":null,"repository":"iamywang.github.io","client_id":"26feb95465193b82487e","client_secret":"52087dc36c8bc13caa1845b46ea88a6bf157c5da","proxy":null},"twikoo":{"env_id":null,"region":null,"version":"1.6.21"},"waline":{"server_url":null,"reaction":false,"version":2},"giscus":{"repo":null,"repo_id":null,"category":"Announcements","category_id":null,"reactions_enabled":false}},"post":{"author_label":{"enable":false,"auto":true,"custom_label_list":["Trainee","Engineer","Architect"]},"word_count":{"wordcount":true,"min2read":true},"datetime_format":"YYYY-MM-DD HH:mm:ss","copyright_info":true,"share":true,"reward":{"enable":false,"img_link":null,"text":null}},"website_count":{"busuanzi_count":{"enable":true,"site_uv":true,"site_pv":true,"page_pv":true}},"version":"3.8.4"}
     KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"}
     KEEP.language_code_block = {"copy":"复制代码","copied":"已复制","fold":"折叠代码块","folded":"已折叠"}
     KEEP.language_copy_copyright = {"copy":"复制版权信息","copied":"已复制","title":"原文标题","author":"原文作者","link":"原文链接"}
@@ -41,127 +44,142 @@
 </div>
 
 
-<main class="page-container">
+<main class="page-container border-box">
 
+    <!-- home first screen  -->
     
         
-<div class="first-screen-container flex-center fade-in-down-animation">
-    <div class="content flex-center">
-        
-            <div class="description hitokoto">
-                
-                    <div class="desc-item">一个对计算机体系结构、侧信道安全与足球充满兴趣的程序员。</div>
-                
-                    <div class="desc-item">All or Nothing.</div>
-                
-            </div>
-        
-        
-        
-            <div class="s-icon-list">
-                
+<div class="first-screen-container border-box flex-center fade-in-down-animation">
+    <div class="first-screen-content border-box">
+        <div class="top-placeholder border-box"></div>
+
+        <div class="middle-placeholder border-box">
+            
+                <div class="description border-box">
                     
                         
-                        <div class="tooltip s-icon-item "
-                             data-content="GitHub"
-                             data-name="github"
-                             
-                        >
                             
+                                <div class="desc-item border-box"><span class="desc">一个对计算机体系结构、侧信道安全与足球充满兴趣的程序员。</span><span class="cursor">｜</span></div>
+                            
+                        
+                            
+                                <div class="desc-item border-box"><span class="desc">All or Nothing.</span><span class="cursor">｜</span></div>
+                            
+                        
+                    
+                </div>
+            
+
+            
+        </div>
+
+        <div class="bottom-placeholder border-box">
+            
+                <div class="sc-icon-list">
+                    
+                        
+                            
+                            <div class="tooltip sc-icon-item "
+                                 data-tooltip-content="GitHub"
+                                 data-tooltip-img-name="github"
+                                    
+                            >
                                 
-                                    <a target="_blank" href="https://github.com/iamywang">
-                                        <i class="fab fa-github"></i>
+                                    
+                                        <a target="_blank" href="https://github.com/iamywang">
+                                            <i class="fab fa-github"></i>
+                                        </a>
+                                    
+                                
+                            </div>
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                            
+                            <div class="tooltip sc-icon-item "
+                                 data-tooltip-content="推特"
+                                 data-tooltip-img-name="twitter"
+                                    
+                            >
+                                
+                                    
+                                        <a target="_blank" href="https://twitter.com/iamywang">
+                                            <i class="fab fa-twitter"></i>
+                                        </a>
+                                    
+                                
+                            </div>
+                        
+                    
+                        
+                    
+                        
+                            
+                            <div class="tooltip sc-icon-item "
+                                 data-tooltip-content="Email"
+                                 data-tooltip-img-name="email"
+                                    
+                            >
+                                
+                                    <a href="mailto:wangquancheng@whu.edu.cn">
+                                        <i class="fas fa-envelope"></i>
                                     </a>
                                 
-                            
-                        </div>
-                    
-                
-                    
-                
-                    
-                
-                    
-                
-                    
-                
+                            </div>
+                        
                     
                         
-                        <div class="tooltip s-icon-item "
-                             data-content="推特"
-                             data-name="twitter"
-                             
-                        >
                             
+                            <div class="tooltip sc-icon-item "
+                                 data-tooltip-content="谷歌"
+                                 data-tooltip-img-name="google"
+                                    
+                            >
                                 
-                                    <a target="_blank" href="https://twitter.com/iamywang">
-                                        <i class="fab fa-twitter"></i>
-                                    </a>
+                                    
+                                        <a target="_blank" href="https://scholar.google.com/citations?user=D1O2EssAAAAJ&hl=en">
+                                            <i class="fab fa-google"></i>
+                                        </a>
+                                    
                                 
-                            
-                        </div>
-                    
-                
-                    
-                
-                    
+                            </div>
                         
-                        <div class="tooltip s-icon-item "
-                             data-content="Email"
-                             data-name="email"
-                             
-                        >
-                            
-                                <a href="mailto:wangquancheng@whu.edu.cn">
-                                    <i class="fas fa-envelope"></i>
-                                </a>
-                            
-                        </div>
                     
-                
-                    
-                        
-                        <div class="tooltip s-icon-item "
-                             data-content="谷歌"
-                             data-name="google"
-                             
-                        >
-                            
-                                
-                                    <a target="_blank" href="https://scholar.google.com/citations?user=D1O2EssAAAAJ&hl=en">
-                                        <i class="fab fa-google"></i>
-                                    </a>
-                                
-                            
-                        </div>
-                    
-                
-            </div>
-        
+                </div>
+            
+        </div>
     </div>
 </div>
 
     
 
-    <div class="page-main-content is-home">
-
+    <!-- page content -->
+    <div class="page-main-content border-box is-home">
         <div class="page-main-content-top">
             
 <header class="header-wrapper transparent-1">
 
-    <div class="header-content has-first-screen">
-        <div class="left">
+    <div class="border-box header-content has-first-screen">
+        <div class="left border-box">
             
-                <a class="logo-image" href="/">
+                <a class="logo-image border-box" href="/">
                     <img src="/images/avatar.jpg">
                 </a>
             
-            <a class="logo-title" href="/">
+            <a class="site-name border-box" href="/">
                没事我就挠脑袋
             </a>
         </div>
 
-        <div class="right">
+        <div class="right border-box">
             <div class="pc">
                 <ul class="menu-list">
                     
@@ -177,7 +195,7 @@
                             <a class=""
                                href="/archives"
                             >
-                                文章
+                                归档
                             </a>
                         </li>
                     
@@ -241,7 +259,7 @@
             
                 <li class="drawer-menu-item flex-center">
                     <a class=""
-                       href="/archives">文章</a>
+                       href="/archives">归档</a>
                 </li>
             
                 <li class="drawer-menu-item flex-center">
@@ -274,27 +292,30 @@
 
         </div>
 
-        <div class="page-main-content-middle">
+        <div class="page-main-content-middle border-box">
 
-            <div class="main-content">
+            <div class="main-content border-box">
 
                 
+
                     <div class="home-content-container fade-in-down-animation">
-    <ul class="home-article-list">
+    <ul class="home-article-list border-box">
         
             <li class="home-article-item">
 
                 
 
-                <h3 class="home-article-title">
-                    <a href="/2023/07/18/dating-2307/">
-                        2023、盛夏、约会
-                    </a>
-                </h3>
-
-                <div class="home-article-content keep-markdown-body">
+                <div class="home-article-item-bottom border-box">
                     
-                        旅途：从WUHAN到JINAN
+                    <h3 class="home-article-title border-box">
+                        <a href="/2023/07/18/dating-2307/">
+                            2023、盛夏、约会
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content keep-markdown-body">
+                        
+                            旅途：从WUHAN到JINAN
 
 
 美食：豆腐脑、油条、胡辣汤
@@ -311,392 +332,496 @@
 
 
 
-                    
-                </div>
-
-                <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span>
-            <i class="fas fa-history"></i>&nbsp;
-            <span class="home-article-date" data-updated="Tue Jul 18 2023 19:30:00 GMT+0800">
-                2023-07-18
-            </span>
-        </span>
-        
-            <span class="home-article-category"><i class="fas fa-folder"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/categories/%E6%9D%82%E8%B0%88/">杂谈</a>&nbsp;
-                        </li>
-                    
-                    
-                </ul>
-            </span>
-        
-        
-    </div>
-
-    <a class="read-more" href="/2023/07/18/dating-2307/">阅读全文&nbsp;<i class="fas fa-angle-right"></i></a>
-</div>
-
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                <h3 class="home-article-title">
-                    <a href="/2023/07/13/first-paper/">
-                        道阻且长——谨以此文纪念自己的第一篇学术论文
-                    </a>
-                </h3>
-
-                <div class="home-article-content keep-markdown-body">
-                    
-                        前言2023年7月13日晚上，历时一年之余，经历拒稿-&gt;拒稿-&gt;大修-&gt;大修-&gt;小修的洗礼，终于拿到第一篇学术论文的录用通知。在此，我想将自己的经历记录下来，以此勉励自己。同时，我也非常感谢对我的论文提供帮助的两位老师、六次审...
-                    
-                </div>
-
-                <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span>
-            <i class="fas fa-history"></i>&nbsp;
-            <span class="home-article-date" data-updated="Thu Jul 13 2023 23:15:00 GMT+0800">
-                2023-07-13
-            </span>
-        </span>
-        
-            <span class="home-article-category"><i class="fas fa-folder"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/categories/%E7%A7%91%E7%A0%94/">科研</a>&nbsp;
-                        </li>
-                    
-                    
-                </ul>
-            </span>
-        
-        
-    </div>
-
-    <a class="read-more" href="/2023/07/13/first-paper/">阅读全文&nbsp;<i class="fas fa-angle-right"></i></a>
-</div>
-
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                <h3 class="home-article-title">
-                    <a href="/2023/06/04/football-23/">
-                        2023、故乡、足球
-                    </a>
-                </h3>
-
-                <div class="home-article-content keep-markdown-body">
-                    
                         
-
-
-
+                    </div>
 
                     
-                </div>
 
-                <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span>
-            <i class="fas fa-history"></i>&nbsp;
-            <span class="home-article-date" data-updated="Sun Jun 04 2023 20:00:00 GMT+0800">
-                2023-06-04
-            </span>
-        </span>
+<div class="article-meta-info-container border-box home">
+    <div class="article-meta-info border-box">
         
-            <span class="home-article-category"><i class="fas fa-folder"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/categories/%E6%9D%82%E8%B0%88/">杂谈</a>&nbsp;
-                        </li>
-                    
-                    
-                </ul>
+            <span class="meta-info-item border-box">
+                <i class="icon fas fa-history"></i>&nbsp;<span class="home-article-history" data-updated="Tue Jul 18 2023 19:30:00 GMT+0800">2023-07-18 19:30:00</span>
             </span>
         
+
+
         
-    </div>
 
-    <a class="read-more" href="/2023/06/04/football-23/">阅读全文&nbsp;<i class="fas fa-angle-right"></i></a>
-</div>
-
-            </li>
         
-            <li class="home-article-item">
-
-                
-
-                <h3 class="home-article-title">
-                    <a href="/2023/05/08/dating-2/">
-                        2023、五一错峰、约会
-                    </a>
-                </h3>
-
-                <div class="home-article-content keep-markdown-body">
+            <span class="meta-info-item article-category border-box"><i class="icon fas fa-folder"></i>&nbsp;
+                <ul class="article-category-ul">
                     
+                            <li class="category-item"><a href="/categories/%E6%9D%82%E8%B0%88/">杂谈</a></li>
                         
-
-
-
-
-
-
-
-
-
-                    
-                </div>
-
-                <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span>
-            <i class="fas fa-history"></i>&nbsp;
-            <span class="home-article-date" data-updated="Mon May 08 2023 20:55:00 GMT+0800">
-                2023-05-08
-            </span>
-        </span>
-        
-            <span class="home-article-category"><i class="fas fa-folder"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/categories/%E6%9D%82%E8%B0%88/">杂谈</a>&nbsp;
-                        </li>
-                    
                     
                 </ul>
             </span>
         
+
+        
+
+        
+        
+        
         
     </div>
 
-    <a class="read-more" href="/2023/05/08/dating-2/">阅读全文&nbsp;<i class="fas fa-angle-right"></i></a>
+    
+        <a class="home-read-more" href="/2023/07/18/dating-2307/">阅读全文&nbsp;<i class="icon fas fa-angles-right"></i></a>
+    
 </div>
 
+                </div>
             </li>
         
             <li class="home-article-item">
 
                 
 
-                <h3 class="home-article-title">
-                    <a href="/2023/03/23/rop-1/">
-                        ROP/JOP/COP（1）——攻击基本原理、现有芯片级对策
-                    </a>
-                </h3>
-
-                <div class="home-article-content keep-markdown-body">
+                <div class="home-article-item-bottom border-box">
                     
-                        前言从计算机体系结构的角度来说，内存安全违规（memory safety violation）一般分为两大类：
+                    <h3 class="home-article-title border-box">
+                        <a href="/2023/07/13/first-paper/">
+                            道阻且长——谨以此文纪念自己的第一篇学术论文
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content keep-markdown-body">
+                        
+                            前言2023年7月13日晚上，历时一年之余，经历拒稿-&gt;拒稿-&gt;大修-&gt;大修-&gt;小修的洗礼，终于拿到第一篇学术论文的录用通知。在此，我想将自己的经历记录下来，以此勉励自己。同时，我也非常感谢对我的论文提供帮助的两位老师、六次审...
+                        
+                    </div>
+
+                    
+
+<div class="article-meta-info-container border-box home">
+    <div class="article-meta-info border-box">
+        
+            <span class="meta-info-item border-box">
+                <i class="icon fas fa-history"></i>&nbsp;<span class="home-article-history" data-updated="Thu Jul 13 2023 23:15:00 GMT+0800">2023-07-13 23:15:00</span>
+            </span>
+        
+
+
+        
+
+        
+            <span class="meta-info-item article-category border-box"><i class="icon fas fa-folder"></i>&nbsp;
+                <ul class="article-category-ul">
+                    
+                            <li class="category-item"><a href="/categories/%E7%A7%91%E7%A0%94/">科研</a></li>
+                        
+                    
+                </ul>
+            </span>
+        
+
+        
+
+        
+        
+        
+        
+    </div>
+
+    
+        <a class="home-read-more" href="/2023/07/13/first-paper/">阅读全文&nbsp;<i class="icon fas fa-angles-right"></i></a>
+    
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <div class="home-article-item-bottom border-box">
+                    
+                    <h3 class="home-article-title border-box">
+                        <a href="/2023/06/04/football-23/">
+                            2023、故乡、足球
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content keep-markdown-body">
+                        
+                            
+
+
+
+
+                        
+                    </div>
+
+                    
+
+<div class="article-meta-info-container border-box home">
+    <div class="article-meta-info border-box">
+        
+            <span class="meta-info-item border-box">
+                <i class="icon fas fa-history"></i>&nbsp;<span class="home-article-history" data-updated="Sun Jun 04 2023 20:00:00 GMT+0800">2023-06-04 20:00:00</span>
+            </span>
+        
+
+
+        
+
+        
+            <span class="meta-info-item article-category border-box"><i class="icon fas fa-folder"></i>&nbsp;
+                <ul class="article-category-ul">
+                    
+                            <li class="category-item"><a href="/categories/%E6%9D%82%E8%B0%88/">杂谈</a></li>
+                        
+                    
+                </ul>
+            </span>
+        
+
+        
+
+        
+        
+        
+        
+    </div>
+
+    
+        <a class="home-read-more" href="/2023/06/04/football-23/">阅读全文&nbsp;<i class="icon fas fa-angles-right"></i></a>
+    
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <div class="home-article-item-bottom border-box">
+                    
+                    <h3 class="home-article-title border-box">
+                        <a href="/2023/05/08/dating-2/">
+                            2023、五一错峰、约会
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content keep-markdown-body">
+                        
+                            
+
+
+
+
+
+
+
+
+
+                        
+                    </div>
+
+                    
+
+<div class="article-meta-info-container border-box home">
+    <div class="article-meta-info border-box">
+        
+            <span class="meta-info-item border-box">
+                <i class="icon fas fa-history"></i>&nbsp;<span class="home-article-history" data-updated="Mon May 08 2023 20:55:00 GMT+0800">2023-05-08 20:55:00</span>
+            </span>
+        
+
+
+        
+
+        
+            <span class="meta-info-item article-category border-box"><i class="icon fas fa-folder"></i>&nbsp;
+                <ul class="article-category-ul">
+                    
+                            <li class="category-item"><a href="/categories/%E6%9D%82%E8%B0%88/">杂谈</a></li>
+                        
+                    
+                </ul>
+            </span>
+        
+
+        
+
+        
+        
+        
+        
+    </div>
+
+    
+        <a class="home-read-more" href="/2023/05/08/dating-2/">阅读全文&nbsp;<i class="icon fas fa-angles-right"></i></a>
+    
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <div class="home-article-item-bottom border-box">
+                    
+                    <h3 class="home-article-title border-box">
+                        <a href="/2023/03/23/rop-1/">
+                            ROP/JOP/COP（1）——攻击基本原理、现有芯片级对策
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content keep-markdown-body">
+                        
+                            前言从计算机体系结构的角度来说，内存安全违规（memory safety violation）一般分为两大类：
 
 时间违规（temporal violation）：典型代表为Use-After-Free（UAF）漏洞，即在释放内存后，再次对该内存进行...
-                    
-                </div>
-
-                <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span>
-            <i class="fas fa-history"></i>&nbsp;
-            <span class="home-article-date" data-updated="Thu Mar 23 2023 10:00:00 GMT+0800">
-                2023-03-23
-            </span>
-        </span>
-        
-            <span class="home-article-category"><i class="fas fa-folder"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/categories/%E5%86%85%E5%AD%98%E5%AE%89%E5%85%A8/">内存安全</a>&nbsp;
-                        </li>
-                    
-                    
-                </ul>
-            </span>
-        
-        
-    </div>
-
-    <a class="read-more" href="/2023/03/23/rop-1/">阅读全文&nbsp;<i class="fas fa-angle-right"></i></a>
-</div>
-
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                <h3 class="home-article-title">
-                    <a href="/2022/10/02/dating-1/">
-                        2022、国庆节、约会
-                    </a>
-                </h3>
-
-                <div class="home-article-content keep-markdown-body">
-                    
                         
-
-
-
-
-
-
+                    </div>
 
                     
-                </div>
 
-                <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span>
-            <i class="fas fa-history"></i>&nbsp;
-            <span class="home-article-date" data-updated="Sun Oct 02 2022 22:45:00 GMT+0800">
-                2022-10-02
-            </span>
-        </span>
+<div class="article-meta-info-container border-box home">
+    <div class="article-meta-info border-box">
         
-            <span class="home-article-category"><i class="fas fa-folder"></i>&nbsp;
-                <ul>
+            <span class="meta-info-item border-box">
+                <i class="icon fas fa-history"></i>&nbsp;<span class="home-article-history" data-updated="Thu Mar 23 2023 10:00:00 GMT+0800">2023-03-23 10:00:00</span>
+            </span>
+        
+
+
+        
+
+        
+            <span class="meta-info-item article-category border-box"><i class="icon fas fa-folder"></i>&nbsp;
+                <ul class="article-category-ul">
                     
-                        <li>
-                            
-                            <a href="/categories/%E6%9D%82%E8%B0%88/">杂谈</a>&nbsp;
-                        </li>
-                    
+                            <li class="category-item"><a href="/categories/%E5%86%85%E5%AD%98%E5%AE%89%E5%85%A8/">内存安全</a></li>
+                        
                     
                 </ul>
             </span>
         
+
+        
+
+        
+        
+        
         
     </div>
 
-    <a class="read-more" href="/2022/10/02/dating-1/">阅读全文&nbsp;<i class="fas fa-angle-right"></i></a>
+    
+        <a class="home-read-more" href="/2023/03/23/rop-1/">阅读全文&nbsp;<i class="icon fas fa-angles-right"></i></a>
+    
 </div>
 
+                </div>
             </li>
         
             <li class="home-article-item">
 
                 
 
-                <h3 class="home-article-title">
-                    <a href="/2022/09/13/gem5-5/">
-                        gem5（5）——扩展gem5功能初探并实现简单的MemoryObject
-                    </a>
-                </h3>
-
-                <div class="home-article-content keep-markdown-body">
+                <div class="home-article-item-bottom border-box">
                     
-                        引言参考learning gem5的part II部分进行gem5的学习。
+                    <h3 class="home-article-title border-box">
+                        <a href="/2022/10/02/dating-1/">
+                            2022、国庆节、约会
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content keep-markdown-body">
+                        
+                            
+
+
+
+
+
+
+
+                        
+                    </div>
+
+                    
+
+<div class="article-meta-info-container border-box home">
+    <div class="article-meta-info border-box">
+        
+            <span class="meta-info-item border-box">
+                <i class="icon fas fa-history"></i>&nbsp;<span class="home-article-history" data-updated="Sun Oct 02 2022 22:45:00 GMT+0800">2022-10-02 22:45:00</span>
+            </span>
+        
+
+
+        
+
+        
+            <span class="meta-info-item article-category border-box"><i class="icon fas fa-folder"></i>&nbsp;
+                <ul class="article-category-ul">
+                    
+                            <li class="category-item"><a href="/categories/%E6%9D%82%E8%B0%88/">杂谈</a></li>
+                        
+                    
+                </ul>
+            </span>
+        
+
+        
+
+        
+        
+        
+        
+    </div>
+
+    
+        <a class="home-read-more" href="/2022/10/02/dating-1/">阅读全文&nbsp;<i class="icon fas fa-angles-right"></i></a>
+    
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <div class="home-article-item-bottom border-box">
+                    
+                    <h3 class="home-article-title border-box">
+                        <a href="/2022/09/13/gem5-5/">
+                            gem5（5）——扩展gem5功能初探并实现简单的MemoryObject
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content keep-markdown-body">
+                        
+                            引言参考learning gem5的part II部分进行gem5的学习。
 主要工作：
 
 自定义实现了一个简单的SimpleObject，并将其成功在gem5中执行；
 将SimpleObject扩展为MemoryObject，并将其分别与CPU的i-...
-                    
-                </div>
+                        
+                    </div>
 
-                <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span>
-            <i class="fas fa-history"></i>&nbsp;
-            <span class="home-article-date" data-updated="Tue Sep 13 2022 10:55:00 GMT+0800">
-                2022-09-13
-            </span>
-        </span>
+                    
+
+<div class="article-meta-info-container border-box home">
+    <div class="article-meta-info border-box">
         
-            <span class="home-article-category"><i class="fas fa-folder"></i>&nbsp;
-                <ul>
+            <span class="meta-info-item border-box">
+                <i class="icon fas fa-history"></i>&nbsp;<span class="home-article-history" data-updated="Tue Sep 13 2022 10:55:00 GMT+0800">2022-09-13 10:55:00</span>
+            </span>
+        
+
+
+        
+
+        
+            <span class="meta-info-item article-category border-box"><i class="icon fas fa-folder"></i>&nbsp;
+                <ul class="article-category-ul">
                     
-                        <li>
-                            
-                            <a href="/categories/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">体系结构</a>&nbsp;
-                        </li>
-                    
+                            <li class="category-item"><a href="/categories/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">体系结构</a></li>
+                        
                     
                 </ul>
             </span>
         
+
+        
+
+        
+        
+        
         
     </div>
 
-    <a class="read-more" href="/2022/09/13/gem5-5/">阅读全文&nbsp;<i class="fas fa-angle-right"></i></a>
+    
+        <a class="home-read-more" href="/2022/09/13/gem5-5/">阅读全文&nbsp;<i class="icon fas fa-angles-right"></i></a>
+    
 </div>
 
+                </div>
             </li>
         
             <li class="home-article-item">
 
                 
 
-                <h3 class="home-article-title">
-                    <a href="/2022/09/12/gem5-4/">
-                        gem5（4）——利用gem5自定义系统配置在SE模式下进行模拟
-                    </a>
-                </h3>
-
-                <div class="home-article-content keep-markdown-body">
+                <div class="home-article-item-bottom border-box">
                     
-                        引言参考learning gem5的part I部分，对gem5的配置文件的编写进行学习。在这次的配置中，主要涉及到内存、Cache的配置，与之前复现的那篇论文相比，没有实现TLB。此外，我还发现learning gem5中的很多参数已经与最新版本的...
-                    
-                </div>
+                    <h3 class="home-article-title border-box">
+                        <a href="/2022/09/12/gem5-4/">
+                            gem5（4）——利用gem5自定义系统配置在SE模式下进行模拟
+                        </a>
+                    </h3>
 
-                <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span>
-            <i class="fas fa-history"></i>&nbsp;
-            <span class="home-article-date" data-updated="Mon Sep 12 2022 20:12:00 GMT+0800">
-                2022-09-12
-            </span>
-        </span>
+                    <div class="home-article-content keep-markdown-body">
+                        
+                            引言参考learning gem5的part I部分，对gem5的配置文件的编写进行学习。在这次的配置中，主要涉及到内存、Cache的配置，与之前复现的那篇论文相比，没有实现TLB。此外，我还发现learning gem5中的很多参数已经与最新版本的...
+                        
+                    </div>
+
+                    
+
+<div class="article-meta-info-container border-box home">
+    <div class="article-meta-info border-box">
         
-            <span class="home-article-category"><i class="fas fa-folder"></i>&nbsp;
-                <ul>
+            <span class="meta-info-item border-box">
+                <i class="icon fas fa-history"></i>&nbsp;<span class="home-article-history" data-updated="Mon Sep 12 2022 20:12:00 GMT+0800">2022-09-12 20:12:00</span>
+            </span>
+        
+
+
+        
+
+        
+            <span class="meta-info-item article-category border-box"><i class="icon fas fa-folder"></i>&nbsp;
+                <ul class="article-category-ul">
                     
-                        <li>
-                            
-                            <a href="/categories/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">体系结构</a>&nbsp;
-                        </li>
-                    
+                            <li class="category-item"><a href="/categories/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">体系结构</a></li>
+                        
                     
                 </ul>
             </span>
         
+
+        
+
+        
+        
+        
         
     </div>
 
-    <a class="read-more" href="/2022/09/12/gem5-4/">阅读全文&nbsp;<i class="fas fa-angle-right"></i></a>
+    
+        <a class="home-read-more" href="/2022/09/12/gem5-4/">阅读全文&nbsp;<i class="icon fas fa-angles-right"></i></a>
+    
 </div>
 
+                </div>
             </li>
         
             <li class="home-article-item">
 
                 
 
-                <h3 class="home-article-title">
-                    <a href="/2022/09/08/gem5-3/">
-                        gem5（3）——gem5相关论文整理
-                    </a>
-                </h3>
-
-                <div class="home-article-content keep-markdown-body">
+                <div class="home-article-item-bottom border-box">
                     
-                        论文列表
+                    <h3 class="home-article-title border-box">
+                        <a href="/2022/09/08/gem5-3/">
+                            gem5（3）——gem5相关论文整理
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content keep-markdown-body">
+                        
+                            论文列表
 
 
 序号
@@ -712,101 +837,141 @@ ASPLOS 2022
 
 2
 Pinned loads: Taming speculative loads ...
-                    
-                </div>
+                        
+                    </div>
 
-                <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span>
-            <i class="fas fa-history"></i>&nbsp;
-            <span class="home-article-date" data-updated="Thu Sep 08 2022 11:00:00 GMT+0800">
-                2022-09-08
-            </span>
-        </span>
+                    
+
+<div class="article-meta-info-container border-box home">
+    <div class="article-meta-info border-box">
         
-            <span class="home-article-category"><i class="fas fa-folder"></i>&nbsp;
-                <ul>
+            <span class="meta-info-item border-box">
+                <i class="icon fas fa-history"></i>&nbsp;<span class="home-article-history" data-updated="Thu Sep 08 2022 11:00:00 GMT+0800">2022-09-08 11:00:00</span>
+            </span>
+        
+
+
+        
+
+        
+            <span class="meta-info-item article-category border-box"><i class="icon fas fa-folder"></i>&nbsp;
+                <ul class="article-category-ul">
                     
-                        <li>
-                            
-                            <a href="/categories/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">体系结构</a>&nbsp;
-                        </li>
-                    
+                            <li class="category-item"><a href="/categories/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">体系结构</a></li>
+                        
                     
                 </ul>
             </span>
         
+
+        
+
+        
+        
+        
         
     </div>
 
-    <a class="read-more" href="/2022/09/08/gem5-3/">阅读全文&nbsp;<i class="fas fa-angle-right"></i></a>
+    
+        <a class="home-read-more" href="/2022/09/08/gem5-3/">阅读全文&nbsp;<i class="icon fas fa-angles-right"></i></a>
+    
 </div>
 
+                </div>
             </li>
         
             <li class="home-article-item">
 
                 
 
-                <h3 class="home-article-title">
-                    <a href="/2022/09/07/moon-cake-22/">
-                        中秋月饼
-                    </a>
-                </h3>
-
-                <div class="home-article-content keep-markdown-body">
+                <div class="home-article-item-bottom border-box">
                     
-                        今年学校给的中秋月饼：
+                    <h3 class="home-article-title border-box">
+                        <a href="/2022/09/07/moon-cake-22/">
+                            中秋月饼
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content keep-markdown-body">
+                        
+                            今年学校给的中秋月饼：
 江城明月夜，何以为家，珞珈即家。
 
 
 
-                    
-                </div>
+                        
+                    </div>
 
-                <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span>
-            <i class="fas fa-history"></i>&nbsp;
-            <span class="home-article-date" data-updated="Wed Sep 07 2022 20:00:00 GMT+0800">
-                2022-09-07
-            </span>
-        </span>
+                    
+
+<div class="article-meta-info-container border-box home">
+    <div class="article-meta-info border-box">
         
-            <span class="home-article-category"><i class="fas fa-folder"></i>&nbsp;
-                <ul>
+            <span class="meta-info-item border-box">
+                <i class="icon fas fa-history"></i>&nbsp;<span class="home-article-history" data-updated="Wed Sep 07 2022 20:00:00 GMT+0800">2022-09-07 20:00:00</span>
+            </span>
+        
+
+
+        
+
+        
+            <span class="meta-info-item article-category border-box"><i class="icon fas fa-folder"></i>&nbsp;
+                <ul class="article-category-ul">
                     
-                        <li>
-                            
-                            <a href="/categories/%E6%9D%82%E8%B0%88/">杂谈</a>&nbsp;
-                        </li>
-                    
+                            <li class="category-item"><a href="/categories/%E6%9D%82%E8%B0%88/">杂谈</a></li>
+                        
                     
                 </ul>
             </span>
         
+
+        
+
+        
+        
+        
         
     </div>
 
-    <a class="read-more" href="/2022/09/07/moon-cake-22/">阅读全文&nbsp;<i class="fas fa-angle-right"></i></a>
+    
+        <a class="home-read-more" href="/2022/09/07/moon-cake-22/">阅读全文&nbsp;<i class="icon fas fa-angles-right"></i></a>
+    
 </div>
 
+                </div>
             </li>
         
     </ul>
-
-    <div class="home-paginator">
-        <div class="paginator">
     
+    <div class="paginator border-box flex-center">
+        <div class="btn-wrap">
+            <a class="jump-btn"
+               href="/"
+            ><i class="fa-solid fa-chevron-left"></i></a>
+        </div>
 
-    
-        <a class="next btn"
-           href="/page/2/"
-        >下一页</a>
-    
-</div>
 
+        <div class="page-number-box border-box flex-center">
+            <input class="page-number-input border-box base-color-size"
+                   type="number"
+                   value="1"
+                   min="1"
+                   max="2"
+            ><span class="delimiter base-color-size">/</span><span class="base-color-size">2</span>
+        </div>
+
+
+        <div class="btn-wrap allowed">
+            <a class="jump-btn"
+               href="/page/2/"
+            ><i class="fa-solid fa-chevron-right"></i></a>
+        </div>
     </div>
+
+
+
+
 </div>
 
 
@@ -815,55 +980,68 @@ Pinned loads: Taming speculative loads ...
 
         </div>
 
-        <div class="page-main-content-bottom">
+        <div class="page-main-content-bottom border-box">
             
-<footer class="footer">
-    <div class="info-container">
-        <div class="copyright-info info-item">
-            &copy;
-            
-                <span>2022</span> -
-            
-            2023
-            
-                &nbsp;<i class="fas fa-heart icon-animate"></i>
-                &nbsp;<a href="/">iamywang</a>
-            
-        </div>
+<footer class="footer border-box">
+    <div class="border-box website-info-box default">
         
-            <script async 
-                    src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-            <div class="website-count info-item">
+            <div class="copyright-info info-item default">
+                &copy;&nbsp;<span>2022</span>&nbsp;-&nbsp;2023
                 
-                    访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
-                
-                
-                    总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    &nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;&nbsp;<a href="/">iamywang</a>
                 
             </div>
-        
-        <div class="theme-info info-item">
-            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.6.1</a>
-        </div>
-        
-        
-            <div class="deploy-info info-item">
-                
-                    本站由 <span class="tooltip" data-content="GitHub Pages"><img src="/images/deploy-provider/github.png"></span> 提供部署服务
-                
+
+            <div class="theme-info info-item default">
+                由&nbsp;<a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;驱动&nbsp;&&nbsp;主题&nbsp;<a class="keep-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep</a>
             </div>
+
+            
+
+            
+                <div class="deploy-info info-item default">
+                    
+                        本站由 <span class="tooltip" data-tooltip-content="GitHub Pages"><img src="/images/deploy-provider/github.png"></span> 提供部署服务
+                        
+                </div>
+            
         
+
+        <div class="count-item info-item default">
+            
+                <span class="count-box border-box word">
+                    <span class="item-type border-box">总字数</span>
+                    <span class="item-value border-box word">11.7k</span>
+                </span>
+            
+
+            
+                <span class="count-box border-box uv">
+                    <span class="item-type border-box">访客数</span>
+                    <span class="item-value border-box uv" id="busuanzi_value_site_uv"></span>
+                </span>
+            
+
+            
+                <span class="count-box border-box pv">
+                    <span class="item-type border-box">访问量</span>
+                    <span class="item-value border-box pv" id="busuanzi_value_site_pv"></span>
+                </span>
+            
+        </div>
     </div>
 </footer>
 
         </div>
     </div>
 
+    <!-- post tools -->
     
 
-    <div class="right-bottom-side-tools">
-        <div class="side-tools-container">
-    <ul class="side-tools-list">
+    <!-- side tools -->
+    <div class="side-tools">
+        <div class="side-tools-container border-box side-tools-show-handle">
+    <ul class="side-tools-list side-tools-show-handle border-box">
         <li class="tools-item tool-font-adjust-plus flex-center">
             <i class="fas fa-search-plus"></i>
         </li>
@@ -888,32 +1066,36 @@ Pinned loads: Taming speculative loads ...
             </li>
         
 
-        
-            <li class="tools-item tool-scroll-to-top flex-center">
-                <i class="fas fa-arrow-up"></i>
-            </li>
-        
-
         <li class="tools-item tool-scroll-to-bottom flex-center">
             <i class="fas fa-arrow-down"></i>
         </li>
     </ul>
 
-    <ul class="exposed-tools-list">
+    <ul class="exposed-tools-list border-box">
+        
+
+        
+
         <li class="tools-item tool-toggle-show flex-center">
             <i class="fas fa-cog fa-spin"></i>
         </li>
-        
+
+        <li class="tools-item tool-scroll-to-top flex-center show-arrow">
+            <i class="arrow fas fa-arrow-up"></i>
+            <span class="percent"></span>
+        </li>
     </ul>
 </div>
 
     </div>
 
+    <!-- image mask -->
     <div class="zoom-in-image-mask">
     <img class="zoom-in-image">
 </div>
 
 
+    <!-- local search -->
     
         <div class="search-pop-overlay">
     <div class="popup search-popup">
@@ -945,30 +1127,45 @@ Pinned loads: Taming speculative loads ...
 
     
 
+    <!-- tablet toc -->
+    
 </main>
 
 
 
 
-<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/dark-light-toggle.js"></script>
+<!-- common -->
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.8.4/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.8.4/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.8.4/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.8.4/source/js/dark-light-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.8.4/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.8.4/source/js/libs/anime.min.js"></script>
+
+<!-- local-search -->
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.8.4/source/js/local-search.js"></script>
 
 
+<!-- code-block -->
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.8.4/source/js/code-block.js"></script>
 
 
-    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/local-search.js"></script>
+<!-- lazyload -->
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.8.4/source/js/lazyload.js"></script>
 
 
+<div class="">
+    
 
-    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/code-block.js"></script>
+    <!-- category-page -->
+    
 
-
-
-    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.6.1/source/js/lazyload.js"></script>
-
-
-<div class="post-scripts">
+    <!-- links-page -->
     
 </div>
+
+<!-- mermaid -->
+
+
+<!-- pjax -->
 
 
 
