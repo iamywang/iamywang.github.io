@@ -9,7 +9,7 @@
     
     <title>
         
-            中秋月饼 |
+            HPCA 2024论文——分支预测器安全漏洞的建模、推导与自动分析 |
         
         没事我就挠脑袋
     </title>
@@ -206,7 +206,7 @@
             <div class="article-content-bottom border-box">
                 
                     <div class="article-title">
-                        中秋月饼
+                        HPCA 2024论文——分支预测器安全漏洞的建模、推导与自动分析
                     </div>
                 
 
@@ -233,13 +233,13 @@
         
             <span class="meta-info-item article-create-date">
                 <i class="icon fa-solid fa-calendar-check"></i>&nbsp;
-                <span class="pc">2022-09-07 20:00:00</span>
-                <span class="mobile">2022-09-07 20:00</span>
+                <span class="pc">2023-10-23 00:00:00</span>
+                <span class="mobile">2023-10-23 00:00</span>
             </span>
 
             <span class="meta-info-item article-update-date">
                 <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                <span class="pc" data-updated="Wed Sep 07 2022 20:00:00 GMT+0800">2022-09-07 20:00:00</span>
+                <span class="pc" data-updated="Mon Oct 23 2023 00:00:00 GMT+0800">2023-10-23 00:00:00</span>
             </span>
         
 
@@ -247,7 +247,7 @@
             <span class="meta-info-item article-category border-box"><i class="icon fas fa-folder"></i>&nbsp;
                 <ul class="article-category-ul">
                     
-                            <li class="category-item"><a href="/categories/%E6%9D%82%E8%B0%88/">杂谈</a></li>
+                            <li class="category-item"><a href="/categories/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">体系结构</a></li>
                         
                     
                 </ul>
@@ -259,10 +259,19 @@
                 <i class="icon fas fa-tags"></i>&nbsp;
                 <ul class="article-tag-ul">
                     
-                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E6%9D%82%E8%B0%88/">杂谈</a></li>
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">体系结构</a></li>
                         
                     
-                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E6%9C%88%E9%A5%BC/">月饼</a></li>
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/HPCA/">HPCA</a></li>
+                        
+                    
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B%E5%99%A8/">分支预测器</a></li>
+                        
+                    
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E4%BE%A7%E4%BF%A1%E9%81%93%E6%94%BB%E5%87%BB/">侧信道攻击</a></li>
+                        
+                    
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E5%BB%BA%E6%A8%A1%E9%AA%8C%E8%AF%81/">建模验证</a></li>
                         
                     
                 </ul>
@@ -272,7 +281,7 @@
         
         
             <span class="meta-info-item article-wordcount">
-                <i class="icon fas fa-file-word"></i>&nbsp;<span>23 字</span>
+                <i class="icon fas fa-file-word"></i>&nbsp;<span>564 字</span>
             </span>
         
         
@@ -298,20 +307,14 @@
                 <div class="article-content keep-markdown-body">
                     
 
-                    <p>今年学校给的中秋月饼：</p>
-<p>江城明月夜，何以为家，珞珈即家。</p>
-<p><img  
-                     lazyload
-                     alt="image"
-                     data-src="/images/moon-cake-22/1.jpg"
-                      alt="月饼1"
-                ></p>
-<p><img  
-                     lazyload
-                     alt="image"
-                     data-src="/images/moon-cake-22/2.jpg"
-                      alt="月饼2"
-                ></p>
+                    <h2 id="文章简介"><a href="#文章简介" class="headerlink" title="文章简介"></a>文章简介</h2><p>本文是我在HPCA 2024上发表的一篇论文，题目为《Modeling, Derivation, and Automated Analysis of Branch Predictor Security Vulnerabilities》。本文的主要贡献是：</p>
+<ul>
+<li>提出了一种符号化的分支预测器建模方法，可以用于分析分支预测器的安全漏洞。</li>
+<li>将该建模方法实现在了一个基于符号执行的自动化安全评估工具中，可以自动化的穷举并判定分支预测器的安全漏洞。</li>
+<li>使用该工具对现有的学术界安全分支预测策略进行了安全性分析，发现了其中仍然存在提升空间。</li>
+</ul>
+<h2 id="论文摘要"><a href="#论文摘要" class="headerlink" title="论文摘要"></a>论文摘要</h2><p>随着针对分支预测器的微架构侧信道攻击愈演愈烈，计算机系统的安全边界和用户的安全关键数据正受到严重威胁。由于这些攻击的根本原因是分支预测器的微架构设计忽略了安全问题，因此在设计阶段就能详尽自动地探讨这些问题的分析框架迫在眉睫。本文提出了一个全面的自动评估框架，用于在微架构设计阶段检查分支预测器的安全保证。本文涉及的技术采用三步建模法，抽象描述了19种分支预测器状态和53种可能影响这些状态的操作。随后，本文开发了一个基于符号执行的框架来研究所有三步组合，并推导出156种针对分支预测器的有效攻击模式，其中包括89种以前的工作从未考虑过的新攻击。最后，本文将提出的框架应用于8种安全分支预测器设计和4种典型的基于硬件的反投机执行攻击的措施，以评估它们的安全能力。结果表明，这些安全分支预测器提供了有效的安全保证，并优于那些基于硬件的针对投机执行攻击的缓解措施，这表明安全分支预测器在缓解分支预测器安全漏洞方面有很好的前景。</p>
+<h2 id="开源代码"><a href="#开源代码" class="headerlink" title="开源代码"></a>开源代码</h2><p><a class="link"   target="_blank" rel="noopener" href="https://github.com/iamywang/bp-security-framework" >https://github.com/iamywang/bp-security-framework<i class="fas fa-external-link-alt"></i></a></p>
 
                 </div>
 
@@ -321,11 +324,11 @@
     <div class="copyright-info-content border-box">
         <div class="copyright-info-top border-box">
             <div class="post-title border-box text-ellipsis">
-                中秋月饼
+                HPCA 2024论文——分支预测器安全漏洞的建模、推导与自动分析
             </div>
 
             <div class="post-link border-box text-ellipsis">
-                2022/09/07/moon-cake-22/
+                2023/10/23/hpca-24/
             </div>
         </div>
 
@@ -341,7 +344,7 @@
                 <div class="type">
                     发布于
                 </div>
-                <div class="content">2022-09-07 20:00</div>
+                <div class="content">2023-10-23 00:00</div>
             </div>
 
 
@@ -375,11 +378,23 @@
                             <ul class="post-tags-box border-box">
                                 
                                     <li class="tag-item border-box">
-                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E6%9D%82%E8%B0%88/">杂谈</a>
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">体系结构</a>
                                     </li>
                                 
                                     <li class="tag-item border-box">
-                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E6%9C%88%E9%A5%BC/">月饼</a>
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/HPCA/">HPCA</a>
+                                    </li>
+                                
+                                    <li class="tag-item border-box">
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B%E5%99%A8/">分支预测器</a>
+                                    </li>
+                                
+                                    <li class="tag-item border-box">
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E4%BE%A7%E4%BF%A1%E9%81%93%E6%94%BB%E5%87%BB/">侧信道攻击</a>
+                                    </li>
+                                
+                                    <li class="tag-item border-box">
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E5%BB%BA%E6%A8%A1%E9%AA%8C%E8%AF%81/">建模验证</a>
                                     </li>
                                 
                             </ul>
@@ -418,31 +433,15 @@
                 
                     <div class="article-nav">
                         
-                            <div class="article-prev">
-                                <a class="prev"
-                                   rel="prev"
-                                   href="/2022/09/08/gem5-3/"
-                                   title="gem5（3）——gem5相关论文整理"
-                                >
-                                    <span class="left arrow-icon flex-center">
-                                      <i class="fas fa-chevron-left"></i>
-                                    </span>
-                                            <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">gem5（3）——gem5相关论文整理</span>
-                                        <span class="post-nav-item">上一篇</span>
-                                    </span>
-                                </a>
-                            </div>
-                        
                         
                             <div class="article-next">
                                 <a class="next"
                                    rel="next"
-                                   href="/2022/09/06/gem5-2/"
-                                   title="gem5（2）——利用gem5模拟Spectre攻击"
+                                   href="/2023/07/18/dating-2307/"
+                                   title="2023、盛夏、约会"
                                 >
                                     <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">gem5（2）——利用gem5模拟Spectre攻击</span>
+                                        <span class="post-nav-title-item text-ellipsis">2023、盛夏、约会</span>
                                         <span class="post-nav-item">下一篇</span>
                                     </span>
                                             <span class="right arrow-icon flex-center">
@@ -545,7 +544,7 @@
             <div class="pc-post-toc left-toc">
                 <div class="post-toc-wrap border-box">
     <div class="post-toc border-box">
-        
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">文章简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BA%E6%96%87%E6%91%98%E8%A6%81"><span class="nav-number">2.</span> <span class="nav-text">论文摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E6%BA%90%E4%BB%A3%E7%A0%81"><span class="nav-number">3.</span> <span class="nav-text">开源代码</span></a></li></ol>
     </div>
 </div>
 
@@ -743,7 +742,7 @@
             <div class="tablet-post-toc">
                 <div class="post-toc-wrap border-box">
     <div class="post-toc border-box">
-        
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">文章简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BA%E6%96%87%E6%91%98%E8%A6%81"><span class="nav-number">2.</span> <span class="nav-text">论文摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E6%BA%90%E4%BB%A3%E7%A0%81"><span class="nav-number">3.</span> <span class="nav-text">开源代码</span></a></li></ol>
     </div>
 </div>
 

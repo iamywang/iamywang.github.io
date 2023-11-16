@@ -6,7 +6,7 @@
   <link href="https://iamywang.github.io/atom.xml" rel="self"/>
   
   <link href="https://iamywang.github.io/"/>
-  <updated>2023-07-18T11:30:00.000Z</updated>
+  <updated>2023-10-22T16:00:00.000Z</updated>
   <id>https://iamywang.github.io/</id>
   
   <author>
@@ -15,6 +15,38 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>HPCA 2024论文——分支预测器安全漏洞的建模、推导与自动分析</title>
+    <link href="https://iamywang.github.io/2023/10/23/hpca-24/"/>
+    <id>https://iamywang.github.io/2023/10/23/hpca-24/</id>
+    <published>2023-10-22T16:00:00.000Z</published>
+    <updated>2023-10-22T16:00:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="文章简介"><a href="#文章简介" class="headerlink" title="文章简介"></a>文章简介</h2><p>本文是我在HPCA 2024上发表的一篇论文，题目为《Modeling, Derivation, and Automated Analysis of Branch Predictor Security Vulnerabilities》。本文的主要贡献是：</p><ul><li>提出了一种符号化的分支预测器建模方法，可以用于分析分支预测器的安全漏洞。</li><li>将该建模方法实现在了一个基于符号执行的自动化安全评估工具中，可以自动化的穷举并判定分支预测器的安全漏洞。</li><li>使用该工具对现有的学术界安全分支预测策略进行了安全性分析，发现了其中仍然存在提升空间。</li></ul><h2 id="论文摘要"><a href="#论文摘要" class="headerlink" title="论文摘要"></a>论文摘要</h2><p>随着针对分支预测器的微架构侧信道攻击愈演愈烈，计算机系统的安全边界和用户的安全关键数据正受到严重威胁。由于这些攻击的根本原因是分支预测器的微架构设计忽略了安全问题，因此在设计阶段就能详尽自动地探讨这些问题的分析框架迫在眉睫。本文提出了一个全面的自动评估框架，用于在微架构设计阶段检查分支预测器的安全保证。本文涉及的技术采用三步建模法，抽象描述了19种分支预测器状态和53种可能影响这些状态的操作。随后，本文开发了一个基于符号执行的框架来研究所有三步组合，并推导出156种针对分支预测器的有效攻击模式，其中包括89种以前的工作从未考虑过的新攻击。最后，本文将提出的框架应用于8种安全分支预测器设计和4种典型的基于硬件的反投机执行攻击的措施，以评估它们的安全能力。结果表明，这些安全分支预测器提供了有效的安全保证，并优于那些基于硬件的针对投机执行攻击的缓解措施，这表明安全分支预测器在缓解分支预测器安全漏洞方面有很好的前景。</p><h2 id="开源代码"><a href="#开源代码" class="headerlink" title="开源代码"></a>开源代码</h2><p><a class="link"   href="https://github.com/iamywang/bp-security-framework" >https://github.com/iamywang/bp-security-framework<i class="fas fa-external-link-alt"></i></a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;文章简介&quot;&gt;&lt;a href=&quot;#文章简介&quot; class=&quot;headerlink&quot; title=&quot;文章简介&quot;&gt;&lt;/a&gt;文章简介&lt;/h2&gt;&lt;p&gt;本文是我在HPCA 2024上发表的一篇论文，题目为《Modeling, Derivation, and Automated</summary>
+      
+    
+    
+    
+    <category term="体系结构" scheme="https://iamywang.github.io/categories/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/"/>
+    
+    
+    <category term="体系结构" scheme="https://iamywang.github.io/tags/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/"/>
+    
+    <category term="HPCA" scheme="https://iamywang.github.io/tags/HPCA/"/>
+    
+    <category term="分支预测器" scheme="https://iamywang.github.io/tags/%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B%E5%99%A8/"/>
+    
+    <category term="侧信道攻击" scheme="https://iamywang.github.io/tags/%E4%BE%A7%E4%BF%A1%E9%81%93%E6%94%BB%E5%87%BB/"/>
+    
+    <category term="建模验证" scheme="https://iamywang.github.io/tags/%E5%BB%BA%E6%A8%A1%E9%AA%8C%E8%AF%81/"/>
+    
+  </entry>
   
   <entry>
     <title>2023、盛夏、约会</title>
