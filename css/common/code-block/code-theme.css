@@ -1,8 +1,9 @@
 :root {
   --toolbar-foreground: #50505c;
   --toolbar-background: #f0f0f0;
-  --code-foreground: #535360;
-  --code-background: #f2f2f2;
+  --code-foreground: #585865;
+  --code-background: rgba(15,89,164,0.15);
+  --code-border-color: #2b8bec;
   --highlight-background: #fafafa;
   --highlight-foreground: #535360;
   --highlight-comment: #8e908c;
@@ -13,16 +14,22 @@
   --highlight-aqua: #3e999f;
   --highlight-blue: #4271ae;
   --highlight-purple: #8959a8;
+  --highlight-deletion: #fdd;
+  --highlight-addition: #dfd;
   --highlight-gutter-color: #585865;
   --highlight-gutter-bg-color: #f2f2f2;
   --mac-toolbar-background-color: #21252b;
+  --shrink-line-foreground: #808091;
+  --shrink-line-background-1: rgba(210,210,210,0.9);
+  --shrink-line-background-2: rgba(225,225,225,0.6);
 }
 @media (prefers-color-scheme: light) {
   :root {
     --toolbar-foreground: #50505c;
     --toolbar-background: #f0f0f0;
-    --code-foreground: #535360;
-    --code-background: #f2f2f2;
+    --code-foreground: #585865;
+    --code-background: rgba(15,89,164,0.15);
+    --code-border-color: #2b8bec;
     --highlight-background: #fafafa;
     --highlight-foreground: #535360;
     --highlight-comment: #8e908c;
@@ -33,17 +40,23 @@
     --highlight-aqua: #3e999f;
     --highlight-blue: #4271ae;
     --highlight-purple: #8959a8;
+    --highlight-deletion: #fdd;
+    --highlight-addition: #dfd;
     --highlight-gutter-color: #585865;
     --highlight-gutter-bg-color: #f2f2f2;
     --mac-toolbar-background-color: #21252b;
+    --shrink-line-foreground: #808091;
+    --shrink-line-background-1: rgba(210,210,210,0.9);
+    --shrink-line-background-2: rgba(225,225,225,0.6);
   }
 }
 @media (prefers-color-scheme: dark) {
   :root {
     --toolbar-foreground: #adbac5;
     --toolbar-background: #313842;
-    --code-foreground: #afbbc6;
-    --code-background: #1f2329;
+    --code-foreground: #b5c1cb;
+    --code-background: rgba(15,89,164,0.15);
+    --code-border-color: #093562;
     --highlight-background: #1f242a;
     --highlight-foreground: #afbbc6;
     --highlight-comment: #969896;
@@ -54,16 +67,22 @@
     --highlight-aqua: #8abeb7;
     --highlight-blue: #81a2be;
     --highlight-purple: #b294bb;
+    --highlight-deletion: #700;
+    --highlight-addition: #005f00;
     --highlight-gutter-color: #b1bdc8;
     --highlight-gutter-bg-color: #1f2329;
     --mac-toolbar-background-color: #1f2021;
+    --shrink-line-foreground: #6c8397;
+    --shrink-line-background-1: rgba(38,38,38,0.9);
+    --shrink-line-background-2: rgba(52,52,52,0.6);
   }
 }
 .light-mode {
   --toolbar-foreground: #50505c;
   --toolbar-background: #f0f0f0;
-  --code-foreground: #535360;
-  --code-background: #f2f2f2;
+  --code-foreground: #585865;
+  --code-background: rgba(15,89,164,0.15);
+  --code-border-color: #2b8bec;
   --highlight-background: #fafafa;
   --highlight-foreground: #535360;
   --highlight-comment: #8e908c;
@@ -74,15 +93,21 @@
   --highlight-aqua: #3e999f;
   --highlight-blue: #4271ae;
   --highlight-purple: #8959a8;
+  --highlight-deletion: #fdd;
+  --highlight-addition: #dfd;
   --highlight-gutter-color: #585865;
   --highlight-gutter-bg-color: #f2f2f2;
   --mac-toolbar-background-color: #21252b;
+  --shrink-line-foreground: #808091;
+  --shrink-line-background-1: rgba(210,210,210,0.9);
+  --shrink-line-background-2: rgba(225,225,225,0.6);
 }
 .dark-mode {
   --toolbar-foreground: #adbac5;
   --toolbar-background: #313842;
-  --code-foreground: #afbbc6;
-  --code-background: #1f2329;
+  --code-foreground: #b5c1cb;
+  --code-background: rgba(15,89,164,0.15);
+  --code-border-color: #093562;
   --highlight-background: #1f242a;
   --highlight-foreground: #afbbc6;
   --highlight-comment: #969896;
@@ -93,7 +118,12 @@
   --highlight-aqua: #8abeb7;
   --highlight-blue: #81a2be;
   --highlight-purple: #b294bb;
+  --highlight-deletion: #700;
+  --highlight-addition: #005f00;
   --highlight-gutter-color: #b1bdc8;
   --highlight-gutter-bg-color: #1f2329;
   --mac-toolbar-background-color: #1f2021;
+  --shrink-line-foreground: #6c8397;
+  --shrink-line-background-1: rgba(38,38,38,0.9);
+  --shrink-line-background-2: rgba(52,52,52,0.6);
 }
