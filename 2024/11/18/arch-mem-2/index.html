@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="iamywang">
+    
+    <title>
+        
+            体系结构与内存安全（2）——侧信道攻击如何威胁内存安全机制 |
+        
+        没事我就挠脑袋
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="shortcut icon" href="/images/logo.jpg">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/fontawesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/regular.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/solid.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/brands.min.css">
+    
+        
+            
+        
+            
+                
+<link rel="stylesheet" href="/css/custom.css">
+
+            
+        
+    
+    <script class="keep-theme-configurations">
+    const KEEP = window.KEEP || {}
+    KEEP.hexo_config = {"hostname":"iamywang.github.io","root":"/","language":"zh-CN","path":"search.json"}
+    KEEP.theme_config = {"base_info":{"primary_color":"#0f59a4","title":"没事我就挠脑袋","author":"iamywang","avatar":"/images/logo.jpg","logo":"/images/logo.jpg","favicon":"/images/logo.jpg"},"menu":{"home":"/ || fa-solid fa-home","archives":"/archives || fa-solid fa-box-archive","categories":"/categories || fa-solid fa-layer-group","tags":"/tags || fa-solid fa-tags","links":"/links || fa-solid fa-link","about":"/about || fa-solid fa-user-graduate"},"first_screen":{"enable":true,"background_img":"/images/bg.svg","background_img_dark":"/images/bg.svg","description":"A Ph.D. Candidate Interested in Computer Architecture and Side-Channels. || 一个对计算机体系结构、侧信道攻击感兴趣的博士生。","hitokoto":false},"social_contact":{"enable":true,"links":{"github":"https://github.com/iamywang","weixin":null,"qq":null,"weibo":null,"zhihu":null,"twitter":null,"x":"https://x.com/iamywang","facebook":"https://www.facebook.com/iamywang10","email":"wangquancheng@whu.edu.cn","orcid":"https://orcid.org/0000-0002-0313-1853","scholar":"https://scholar.google.com/citations?user=KhWFO6sAAAAJ&hl=en"}},"scroll":{"progress_bar":true,"percent":false,"hide_header":true},"home":{"announcement":null,"category":true,"tag":false,"post_datetime":"created"},"post":{"author_badge":{"enable":false,"level_badge":true,"custom_badge":["One","Two","Three"]},"word_count":{"wordcount":true,"min2read":true},"datetime_format":"YYYY-MM-DD HH:mm:ss","copyright_info":true,"share":true,"reward":{"enable":false,"img_link":null,"text":null,"icon":null}},"code_block":{"tools":{"enable":true,"style":"mac"},"highlight_theme":"obsidian"},"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true,"layout":"left"},"website_count":{"busuanzi_count":{"enable":true,"site_uv":true,"site_pv":true,"page_pv":true}},"local_search":{"enable":true,"preload":true},"comment":{"enable":true,"use":"giscus","valine":{"appid":null,"appkey":null,"server_urls":null,"placeholder":null},"gitalk":{"github_id":null,"github_admins":null,"repository":null,"client_id":null,"client_secret":null,"proxy":null},"twikoo":{"env_id":null,"region":null,"version":"1.6.36"},"waline":{"server_url":null,"reaction":false,"version":"3.2.1"},"giscus":{"repo":"iamywang/iamywang.github.io","repo_id":"MDEwOlJlcG9zaXRvcnkxNTY0OTIyOTA=","category":"Announcements","category_id":"DIC_kwDOCVPiAs4CaIL_","reactions_enabled":true},"artalk":{"server":null},"disqus":{"shortname":null}},"rss":{"enable":true},"lazyload":{"enable":true},"cdn":{"enable":true,"provider":"cdnjs"},"pjax":{"enable":true},"footer":{"since":2022,"word_count":true,"site_deploy":{"enable":true,"provider":"github","url":null},"record":{"enable":false,"list":[{"code":null,"link":null}]}},"inject":{"enable":true,"css":[null,"/css/custom.css"],"js":[null]},"root":"","source_data":{"links":[{"title":"朋友们"},{"name":"zu1k","link":"https://zu1k.com/","description":"A boy dreaming of traveling around the world.","avatar":"https://zu1k.com/images/logo.jpg"},{"name":"Sarace","link":"https://blog.huisa.win/","description":"Knowledge comes from books and from experience of the world.","avatar":"https://blog.huisa.win/favicon-256x256.png"}],"icons":{"scholar":{"svg":"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d=\"M390.9 298.5c0 0 0 .1 .1 .1c9.2 19.4 14.4 41.1 14.4 64C405.3 445.1 338.5 512 256 512s-149.3-66.9-149.3-149.3c0-22.9 5.2-44.6 14.4-64h0c1.7-3.6 3.6-7.2 5.6-10.7c4.4-7.6 9.4-14.7 15-21.3c27.4-32.6 68.5-53.3 114.4-53.3c33.6 0 64.6 11.1 89.6 29.9c9.1 6.9 17.4 14.7 24.8 23.5c5.6 6.6 10.6 13.8 15 21.3c2 3.4 3.8 7 5.5 10.5zm26.4-18.8c-30.1-58.4-91-98.4-161.3-98.4s-131.2 40-161.3 98.4L0 202.7 256 0 512 202.7l-94.7 77.1z\"/></svg>","link":"https://scholar.google.com/citations?user=KhWFO6sAAAAJ&hl=en"}}},"version":"4.2.5"}
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"}
+    KEEP.language_code_block = {"copy":"复制代码","copied":"已复制","fold":"折叠代码块","folded":"已折叠"}
+    KEEP.language_copy_copyright = {"copy":"复制版权信息","copied":"已复制","title":"原文标题","author":"原文作者","link":"原文链接"}
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <i class="pjax-progress-icon fas fa-circle-notch fa-spin"></i>
+    
+</div>
+
+
+
+<main class="page-container border-box">
+    <!-- home first screen  -->
+    
+
+    <!-- page content -->
+    <div class="page-main-content border-box">
+        <div class="page-main-content-top">
+            
+<header class="header-wrapper">
+
+    <div class="border-box header-content">
+        <div class="left flex-start border-box">
+            
+                <a class="logo-image border-box" href="/">
+                    <img src="/images/logo.jpg">
+                </a>
+            
+            <a class="site-name border-box" href="/">
+               没事我就挠脑袋
+            </a>
+        </div>
+
+        <div class="right border-box">
+            <div class="pc border-box">
+                <ul class="menu-list border-box">
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/">
+                                
+                                    <i class="menu-text-color menu-icon fa-solid fa-home"></i>
+                                
+                                首页
+                                
+                            </a>
+                            
+                        </li>
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/archives">
+                                
+                                    <i class="menu-text-color menu-icon fa-solid fa-box-archive"></i>
+                                
+                                归档
+                                
+                            </a>
+                            
+                        </li>
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/categories">
+                                
+                                    <i class="menu-text-color menu-icon fa-solid fa-layer-group"></i>
+                                
+                                分类
+                                
+                            </a>
+                            
+                        </li>
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/tags">
+                                
+                                    <i class="menu-text-color menu-icon fa-solid fa-tags"></i>
+                                
+                                标签
+                                
+                            </a>
+                            
+                        </li>
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/links">
+                                
+                                    <i class="menu-text-color menu-icon fa-solid fa-link"></i>
+                                
+                                友链
+                                
+                            </a>
+                            
+                        </li>
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/about">
+                                
+                                    <i class="menu-text-color menu-icon fa-solid fa-user-graduate"></i>
+                                
+                                关于
+                                
+                            </a>
+                            
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="menu-text-color fas search fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile border-box flex-start">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list border-box">
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/">
+                            
+                                <span class="menu-icon-wrap border-box flex-center">
+                                    <i class="drawer-menu-text-color menu-icon fa-solid fa-home"></i>
+                                </span>
+                            
+                            首页
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/archives">
+                            
+                                <span class="menu-icon-wrap border-box flex-center">
+                                    <i class="drawer-menu-text-color menu-icon fa-solid fa-box-archive"></i>
+                                </span>
+                            
+                            归档
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/categories">
+                            
+                                <span class="menu-icon-wrap border-box flex-center">
+                                    <i class="drawer-menu-text-color menu-icon fa-solid fa-layer-group"></i>
+                                </span>
+                            
+                            分类
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/tags">
+                            
+                                <span class="menu-icon-wrap border-box flex-center">
+                                    <i class="drawer-menu-text-color menu-icon fa-solid fa-tags"></i>
+                                </span>
+                            
+                            标签
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/links">
+                            
+                                <span class="menu-icon-wrap border-box flex-center">
+                                    <i class="drawer-menu-text-color menu-icon fa-solid fa-link"></i>
+                                </span>
+                            
+                            友链
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/about">
+                            
+                                <span class="menu-icon-wrap border-box flex-center">
+                                    <i class="drawer-menu-text-color menu-icon fa-solid fa-user-graduate"></i>
+                                </span>
+                            
+                            关于
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle border-box">
+
+            <div class="main-content border-box">
+                
+
+                    
+<div class="fade-in-down-animation">
+    <div class="post-page-container border-box">
+        <div class="post-content-container border-box">
+            
+
+            <div class="post-content-bottom border-box">
+                
+                    <div class="post-title">
+                        体系结构与内存安全（2）——侧信道攻击如何威胁内存安全机制
+                    </div>
+                
+
+                
+                    <div class="post-header border-box">
+                        
+                            <div class="avatar-box border-box">
+                                <img src="/images/logo.jpg">
+                            </div>
+                        
+                        <div class="info-box">
+                            <div class="author border-box">
+                                <span class="name">iamywang</span>
+                                
+                            </div>
+                            <div class="meta-info border-box">
+                                
+
+<div class="post-meta-info-container border-box post">
+    <div class="post-meta-info border-box">
+        
+
+        
+            <span class="meta-info-item post-create-date">
+                <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
+                <span class="datetime">2024-11-18 20:00:00</span>
+            </span>
+
+            
+                <span class="meta-info-item post-update-date">
+                    <i class="icon fa-solid fa-file-pen"></i>&nbsp;
+                    <span class="datetime" data-updated="Mon Nov 18 2024 20:00:00 GMT+0800">2024-11-18 20:00:00</span>
+                </span>
+            
+        
+
+        
+            <span class="meta-info-item post-category border-box"><i class="icon fas fa-folder"></i>&nbsp;
+                <ul class="post-category-ul">
+                    
+                            <li class="category-item"><a href="/categories/%E5%86%85%E5%AD%98%E5%AE%89%E5%85%A8/">内存安全</a></li>
+                        
+                    
+                </ul>
+            </span>
+        
+
+        
+            <span class="post-tag meta-info-item border-box">
+                <ul class="post-tag-ul">
+                    
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">体系结构</a></li>
+                        
+                    
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E5%86%85%E5%AD%98%E5%AE%89%E5%85%A8/">内存安全</a></li>
+                        
+                    
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/">安全机制</a></li>
+                        
+                    
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E4%BE%A7%E4%BF%A1%E9%81%93%E6%94%BB%E5%87%BB/">侧信道攻击</a></li>
+                        
+                    
+                </ul>
+            </span>
+        
+
+        
+        
+            <span class="meta-info-item post-wordcount">
+                <i class="icon fas fa-file-word"></i>&nbsp;<span>4.2k 字</span>
+            </span>
+        
+        
+            <span class="meta-info-item post-min2read">
+                <i class="icon fas fa-clock"></i>&nbsp;<span>15 分钟</span>
+            </span>
+        
+        
+            <span class="meta-info-item post-pv">
+                <i class="icon fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    </div>
+
+    
+</div>
+
+                            </div>
+                        </div>
+                    </div>
+                
+
+                <div class="post-content keep-markdown-body ">
+                    
+
+                    
+                         <h2 id="系统安全机制与相关攻击汇总"><a href="#系统安全机制与相关攻击汇总" class="headerlink" title="系统安全机制与相关攻击汇总"></a>系统安全机制与相关攻击汇总</h2><ul>
+<li><p>内核空间粗粒度KASLR</p>
+<ul>
+<li>防护层次：操作系统</li>
+<li>防护目标：防止攻击者获取准确的操作系统内核代码地址映射</li>
+<li>防护原理：操作系统启动时将内核镜像起始地址添加固定偏移量</li>
+<li>微架构攻击：（1）Prefetch；（2）TLB；（3）BTB；（4）页表；（5）Spectre；（6）AVX；（7）EntryBleed。这类攻击的本质均与TLB有关，只是利用TLB的手段存在差异</li>
+</ul>
+</li>
+<li><p>用户空间粗粒度ASLR</p>
+<ul>
+<li>防护层次：操作系统</li>
+<li>防护目标：防止攻击者获取准确的目标应用程序的代码段、堆栈数据的地址映射</li>
+<li>防护原理：操作系统在程序运行时将程序每个模块的起始地址添加固定偏移量</li>
+<li>微架构攻击：（1）BTB；（2）AVX</li>
+</ul>
+</li>
+<li><p>保护栈溢出的Stack Canary</p>
+<ul>
+<li>编译器</li>
+<li>防护目标：防止攻击者通过缓冲区溢出恶意修改返回地址实现ROP攻击</li>
+<li>防护原理：在返回地址之前写入canary随机数，通过判断随机数是否修改来判断返回地址是否改写</li>
+<li>微架构攻击：SpecHammer（绕过防护）</li>
+</ul>
+</li>
+<li><p>用于防护ROP的Intel CET</p>
+<ul>
+<li>防护层次：处理器+操作系统</li>
+<li>防护目标：防止攻击者通过缓冲区溢出恶意修改返回地址实现ROP攻击</li>
+<li>防护原理：在内存中开辟只读的“影子栈”存放返回地址副本，ret指令执行时进行返回地址的比对</li>
+<li>微架构攻击：暂无，根据英特尔文档描述：return address on stack &#x3D;&#x3D; return address on RSB才会出现推测执行</li>
+</ul>
+</li>
+<li><p>用于防护COP&#x2F;JOP间接分支劫持的Intel IBT</p>
+<ul>
+<li>防护层次：处理器+操作系统</li>
+<li>防护目标：防止攻击者构造COP&#x2F;JOP类型的控制流攻击</li>
+<li>防护原理：通过编译时在函数开始与结尾&#x2F;跳转开始与结尾添加特定标记指令，利用有限状态机（2个状态），确保攻击者即使修改间接跳转地址，也无法构造控制流劫持</li>
+<li>微架构攻击：InSpectre Gadget</li>
+</ul>
+</li>
+<li><p>防护ROP&#x2F;JOP控制流劫持的ARM PAC</p>
+<ul>
+<li>防护层次：处理器+操作系统</li>
+<li>防护目标：防止攻击者构造恶意指针实现ROP和JOP利用链</li>
+<li>防护原理：利用64位地址的高16位作为指针认证码（哈希），通过验证48位地址是否有效来判断控制流是否被攻击者恶意控制</li>
+<li>微架构攻击：PACMAN（绕过防护），已有后续的防护对策XPAC指令</li>
+</ul>
+</li>
+<li><p>防护缓冲区溢出和Use-After-Free的ARM MTE</p>
+<ul>
+<li>防护层次：处理器+操作系统</li>
+<li>防护目标：防止攻击者利用缓冲区溢出和Use-After-Free越界读写内存</li>
+<li>防护原理：一张专门存储MTE标记的硬件表，4位存储MTE标记，并将不同的内存分配区域设定不同的标记，通过判断标记来判断访问的内存是否合法</li>
+<li>微架构攻击：（1）TikTag v1（绕过防护）；（2）TikTag v2（绕过防护）。ARM没有给出新的防护对策</li>
+</ul>
+</li>
+</ul>
+<h2 id="针对KASLR的EntryBleed攻击（绕过防护）"><a href="#针对KASLR的EntryBleed攻击（绕过防护）" class="headerlink" title="针对KASLR的EntryBleed攻击（绕过防护）"></a>针对KASLR的EntryBleed攻击（绕过防护）</h2><p>（1）主要创新点：</p>
+<p>提出EntryBleed攻击，一种普适的基于微架构侧信道的KASLR（内核地址空间布局随机化）绕过技术，可在启用KPTI（内核页表隔离）机制的现代Linux系统上实现。EntryBleed利用KPTI的设计缺陷和预取（prefetch）指令的时间侧信道特性，快速泄漏内核基地址。</p>
+<p>（2）技术路线：</p>
+<p><img  
+                       lazyload
+                       alt="image"
+                       data-src="/images/arch-mem-2/1.png"
+                        alt="KPTI的设计问题"
+                 ></p>
+<center>图1 KPTI的设计问题</center>
+
+<p>KPTI的设计缺陷：KPTI隔离用户态与内核态页表以应对Meltdown攻击，但为了处理系统调用、异常和中断，内核页表在用户态中保留了部分地址映射，称为“跳板区域”（trampoline region）。跳板区域的地址可以通过预取指令的时间特性泄漏，进而推导整个内核地址布局。<br>1）KPTI隔离切换页表时通常会刷新TLB，但跳板区域的页表映射带有“全局位”（global bit），可避免被刷新。因此，用户态执行系统调用时，TLB会缓存跳板区域的页表映射。返回用户态后，这些缓存仍然保留。<br>2）预取指令可以对用户态无权限访问的地址执行操作而不会触发异常。通过测量预取指令的延迟，攻击者可以区分内核地址是否被映射到TLB中。因此，攻击者能够通过遍历所有可能的跳板地址范围，并使用预取指令测量每个地址的访问时间。<br>3）Linux内核的地址随机化范围有限，因此攻击只需尝试有限的候选地址。由于跳板区域的地址是内核地址空间的一部分，且相对于内核基地址有固定偏移。通过定位跳板地址，攻击者即可推导出内核基地址，从而完全破坏KASLR。</p>
+<p><img  
+                       lazyload
+                       alt="image"
+                       data-src="/images/arch-mem-2/2.png"
+                        alt="EntryBleed的攻击效果"
+                 ></p>
+<center>图2 EntryBleed的攻击效果</center>
+
+<h2 id="针对Stack-Canary的SpecHammer攻击（绕过防护）"><a href="#针对Stack-Canary的SpecHammer攻击（绕过防护）" class="headerlink" title="针对Stack Canary的SpecHammer攻击（绕过防护）"></a>针对Stack Canary的SpecHammer攻击（绕过防护）</h2><p>（1）主要创新点：</p>
+<p>1）结合Spectre和Rowhammer攻击提出SpecHammer技术，通过Rowhammer诱导内存位翻转（bit-flip），扩大Spectre攻击的适用范围。这种攻击绕过Spectre的关键限制，使得攻击者无需直接控制变量即可触发漏洞。<br>2）扩展攻击小工具（gadgets）数量，通过使用Rowhammer修改受害者变量，释放了Spectre的限制，从而将Linux内核中可用的Spectre攻击工具从约100个增加到约20,000个。<br>3）利用“双重工具”（double gadget）泄漏敏感信息，如堆栈保护值（stack canary）；利用“三重工具”（triple gadget）实现对内存地址的任意读取。<br>4）改进Rowhammer技术，提高位翻转率，将现有方法的翻转率提高了248~525倍（DDR3）和16倍（DDR4），使攻击在现代DRAM设备上更加实际。</p>
+<p>（2）技术路线：</p>
+<p>双重工具攻击（Double Gadget Attack）：使用Rowhammer翻转数组索引变量的比特位，使其指向敏感数据（如stack canary）。在推测执行窗口内，利用Spectre漏洞访问受保护数据，通过缓存侧信道（Flush+Reload）泄漏信息。</p>
+<p><img  
+                       lazyload
+                       alt="image"
+                       data-src="/images/arch-mem-2/3.png"
+                        alt="Stack Canary机制基本原理"
+                 ></p>
+<center>图3 Stack Canary机制基本原理</center>
+
+<p><img  
+                       lazyload
+                       alt="image"
+                       data-src="/images/arch-mem-2/4.png"
+                        alt="SpecHammer攻击基本原理（double，攻击者hammer的是x）"
+                 ></p>
+<center>图4 SpecHammer攻击基本原理（double，攻击者hammer的是x）</center>
+
+<p>三重工具攻击（Triple Gadget Attack）：使用三重嵌套数组访问，允许攻击者通过控制数据指针（array offset）读取任意内存地址，包括内核内存。</p>
+<p><img  
+                       lazyload
+                       alt="image"
+                       data-src="/images/arch-mem-2/5.png"
+                        alt="SpecHammer攻击基本原理（triple）"
+                 ></p>
+<center>图5 SpecHammer攻击基本原理（triple）</center>
+
+<p>具体实施中，通过Rowhammer测试找到可利用的物理地址，并确保目标内存页包含所需的位翻转。将目标变量放置在可翻转的内存页上。对于用户态和内核态分别开发了针对堆栈的调整技术。然后，通过训练分支预测器使其错误预测，诱导CPU进入推测路径，并利用翻转后的变量访问敏感数据。最后，通过Flush+Reload或Prime+Probe测量缓存命中，恢复内存中的敏感数据。<br>针对堆栈保护的攻击通过Rowhammer翻转数组索引，将访问范围推到数组边界之外。然后在堆栈区域泄漏stack canary（通常为64位），从而绕过基于堆栈保护的缓冲区溢出防御。</p>
+<h2 id="针对ARM-PAC的PACMAN攻击（绕过防护）"><a href="#针对ARM-PAC的PACMAN攻击（绕过防护）" class="headerlink" title="针对ARM PAC的PACMAN攻击（绕过防护）"></a>针对ARM PAC的PACMAN攻击（绕过防护）</h2><p>（1）主要创新点：</p>
+<p>1）PACMAN利用推测执行结合微架构侧信道攻击，绕过ARM指针认证（Pointer Authentication, PA），从而实现控制流劫持。PACMAN攻击的核心是在不引发崩溃的情况下区分正确和错误的PAC（Pointer Authentication Code）。<br>2）证明PACMAN可从用户态攻击内核态，通过侧信道泄漏跨权限级别的PAC验证结果，并且首次针对Apple M1 SoC发起推测性侧信道攻击。</p>
+<p><img  
+                       lazyload
+                       alt="image"
+                       data-src="/images/arch-mem-2/6.png"
+                        alt="ARM PAC机制工作原理"
+                 ></p>
+<center>图6 ARM PAC机制工作原理</center>
+
+<p>（2）技术路线：</p>
+<p>PACMAN攻击利用“PACMAN小工具”（PACMAN Gadgets）执行两步操作：1）验证操作，在推测路径中调用指针验证指令（如AUT），判断猜测的PAC是否正确；2）传输操作，使用内存加载或分支指令将验证结果通过侧信道传输，泄漏给攻击者。由于整个过程在推测路径上执行，即使PAC验证失败也不会引发程序崩溃。PACMAN通过使用Prime+Probe攻击TLB观察验证结果的微架构影响，能够通过内存加载和分支指令泄漏验证结果。</p>
+<p><img  
+                       lazyload
+                       alt="image"
+                       data-src="/images/arch-mem-2/7.png"
+                        alt="PACMAN攻击基本原理"
+                 ></p>
+<center>图7 PACMAN攻击基本原理</center>
+
+<p>在ARM系统中，PAC长度通常为16位（部分情况下可能更长），测试一个PAC值平均耗时2.69毫秒，16位PAC的全部暴力破解平均耗时2.94分钟。同时，本文还实现了针对PAC保护的内核模块的控制流劫持攻击。攻击通过缓冲区溢出修改PAC保护的指针，并使用PACMAN暴力破解PAC，从而绕过保护并成功执行内核中的恶意代码。</p>
+<p><img  
+                       lazyload
+                       alt="image"
+                       data-src="/images/arch-mem-2/8.png"
+                        alt="PACMAN攻击的效果（a表示数据泄漏，b表示分支泄漏）"
+                 ></p>
+<center>图8 PACMAN攻击的效果（a表示数据泄漏，b表示分支泄漏）</center>
+
+<p><img  
+                       lazyload
+                       alt="image"
+                       data-src="/images/arch-mem-2/9.png"
+                        alt="利用PACMAN发起实际软件攻击的攻击原理"
+                 ></p>
+<center>图9 利用PACMAN发起实际软件攻击的攻击原理</center>
+
+<p><img  
+                       lazyload
+                       alt="image"
+                       data-src="/images/arch-mem-2/10.png"
+                        alt="PACMAN攻击的防护策略XPAC（清零PAC）"
+                 ></p>
+<center>图10 PACMAN攻击的防护策略XPAC（清零PAC）</center>
+
+<h2 id="针对ARM-MTE的TikTag攻击（绕过防护）"><a href="#针对ARM-MTE的TikTag攻击（绕过防护）" class="headerlink" title="针对ARM MTE的TikTag攻击（绕过防护）"></a>针对ARM MTE的TikTag攻击（绕过防护）</h2><p>（1）主要创新点：</p>
+<p>1）提出了两种名为TikTag-v1和TikTag-v2的新型攻击，能够泄漏ARM Memory Tagging Extension (MTE)中的标签值。证明了即使在启用MTE的情况下，利用推测执行可以有效绕过其内存保护机制，从而进行内存损坏漏洞利用。	<br>2）展示了如何利用泄漏的MTE标签绕过随机标记分配机制并实现漏洞利用。TikTag攻击能够成功应用于真实世界场景，包括Google Chrome浏览器和Linux内核。<br>3）系统分析了攻击的根源，包括推测执行中分支预测和存储到加载（store-to-load）转发行为的缺陷。提出了硬件和软件层面的缓解措施。</p>
+<p>（2）技术路线：</p>
+<p><img  
+                       lazyload
+                       alt="image"
+                       data-src="/images/arch-mem-2/11.png"
+                        alt="ARM MTE机制的工作原理"
+                 ></p>
+<center>图11 ARM MTE机制的工作原理</center>
+
+<p><img  
+                       lazyload
+                       alt="image"
+                       data-src="/images/arch-mem-2/12.png"
+                        alt="TikTag攻击基本原理"
+                 ></p>
+<center>图12 TikTag攻击基本原理</center>
+
+<p><img  
+                       lazyload
+                       alt="image"
+                       data-src="/images/arch-mem-2/13.png"
+                        alt="TikTag V1攻击"
+                 ></p>
+<center>图13 TikTag V1攻击</center>
+
+<p>TikTag-v1 攻击原理：利用一个分支指令错误预测，触发后续的CHECK和TEST阶段在推测路径中执行。在标签检查（CHECK）阶段，通过多个内存加载指令触发标签检查（tag check），将攻击者猜测的标签（Tg）与目标内存标签（Tm）比较。在测试阶段（TEST）阶段，访问一个测试指针（test_ptr），其缓存状态（cache hit&#x2F;miss）取决于CHECK中的标签检查结果。在ARM Cortex-X3处理器（Pixel 8设备）上，TikTag-v1可以以95%以上的成功率在4秒内泄漏任意内存地址的MTE标签。</p>
+<p><img  
+                       lazyload
+                       alt="image"
+                       data-src="/images/arch-mem-2/14.png"
+                        alt="TikTag V2攻击"
+                 ></p>
+<center>图14 TikTag V2攻击</center>
+
+<p>TikTag-v2 攻击原理：利用了存储到加载转发行为（store-to-load forwarding）中的时间差异。在CHECK阶段存储一个值到guess_ptr，并随后从同一地址加载值。如果标签匹配（Tg &#x3D;&#x3D; Tm），存储到加载转发会成功，TEST阶段对test_ptr的访问会填充缓存。如果标签不匹配，转发被阻止，test_ptr的缓存不会填充。TikTag-v2能够成功在ARM Cortex-A715处理器有效发起，成功率达95%，平均耗时不到3秒。攻击还可以被用作“地址探测工具”，进一步破坏地址空间布局随机化（ASLR）。</p>
+<p>（3）实验结果与实际应用：</p>
+<p><img  
+                       lazyload
+                       alt="image"
+                       data-src="/images/arch-mem-2/15.png"
+                        alt="TikTag攻击的有效应用场景"
+                 ></p>
+<center>图15 TikTag攻击的有效应用场景</center>
+
+<p>1）Google Chrome浏览器攻击：在V8 JavaScript引擎中构造了TikTag-v2攻击，并利用其泄漏分配器中的MTE标签值。成功利用泄漏的标签值实现对线性溢出和Use-After-Free（UAF）漏洞的攻击，成功率超过97%。</p>
+<p><img  
+                       lazyload
+                       alt="image"
+                       data-src="/images/arch-mem-2/16.png"
+                        alt="TikTag攻击对Chrome浏览器的攻击效果"
+                 ></p>
+<center>图16 TikTag攻击对Chrome浏览器的攻击效果</center>
+
+<p>2）Linux内核攻击：在Linux内核中发现了TikTag-v1小工具，位于snd_timer_user_read函数。攻击利用悬空指针（dangling pointer）泄漏MTE标签。能够以97%的成功率实现UAF漏洞利用，耗时约6.86秒。</p>
+<p><img  
+                       lazyload
+                       alt="image"
+                       data-src="/images/arch-mem-2/17.png"
+                        alt="TikTag攻击对Linux内核的攻击效果"
+                 ></p>
+<center>图17 TikTag攻击对Linux内核的攻击效果</center>
+
+<h2 id="利用绕过KASLR的BlindSide攻击（软件攻击增强）"><a href="#利用绕过KASLR的BlindSide攻击（软件攻击增强）" class="headerlink" title="利用绕过KASLR的BlindSide攻击（软件攻击增强）"></a>利用绕过KASLR的BlindSide攻击（软件攻击增强）</h2><p>（1）主要创新点：</p>
+<p>1）提出“Speculative Probing”技术，借助推测执行的特性，利用单一的内存破坏漏洞，绕过现代操作系统中强大的地址空间随机化（ASLR）和Spectre漏洞缓解机制。这种攻击通过微架构侧信道泄漏信息，不引发崩溃，攻击可以隐蔽地探测内存布局。<br>2）提出“BlindSide”攻击框架，将传统软件漏洞利用（如缓冲区溢出）与推测执行攻击相结合，开创了通过推测路径控制流劫持和数据泄漏的新方法，从而实现在启用最新缓解措施的Linux内核上的攻击。<br>3）实现了多个端到端攻击，包括“推测性数据泄漏”和“Just-in-Time代码重用”攻击，最终获取系统权限。</p>
+<p>（2）技术路线：</p>
+<p><img  
+                       lazyload
+                       alt="image"
+                       data-src="/images/arch-mem-2/18.png"
+                        alt="BlindSide攻击基本原理"
+                 ></p>
+<center>图18 BlindSide攻击基本原理</center>
+
+<p>利用条件分支预测错误，通过内存破坏漏洞修改函数指针，在推测执行路径上劫持控制流至目标内存位置。然后通过缓存侧信道（如Flush+Reload或Prime+Probe），探测被访问的内存区域。能够绕过随机化和缓解措施：首先，绕过粗粒度KASLR，通过代码区域探测推导内核基地址；其次，针对启用了细粒度随机化（如FG-KASLR）的系统，能够利用推测路径上的Spectre小工具进行进一步的内存泄漏；此外，在代码只读（XoM）机制下，还能够通过推测路径直接读取受保护的代码。</p>
+<p><img  
+                       lazyload
+                       alt="image"
+                       data-src="/images/arch-mem-2/19.png"
+                        alt="BlindSide攻击增强现有攻击的效果"
+                 ></p>
+<center>图19 BlindSide攻击增强现有攻击的效果</center>
+
+<h2 id="针对KASLR-ASLR的AVX攻击（微架构攻击增强）"><a href="#针对KASLR-ASLR的AVX攻击（微架构攻击增强）" class="headerlink" title="针对KASLR&#x2F;ASLR的AVX攻击（微架构攻击增强）"></a>针对KASLR&#x2F;ASLR的AVX攻击（微架构攻击增强）</h2><p>（1）主要创新点:</p>
+<p>1）通过利用AVX指令集中的“掩码加载&#x2F;存储”指令的异常抑制和执行时间差异特性，提出了一种能够破坏地址空间布局随机化（ASLR）的时间侧信道攻击。这种攻击能够在不产生异常的情况下推断页面映射和权限信息。<br>2）攻击不仅可以在用户态和内核态ASLR上实现，还可以在云计算环境（如Amazon EC2、Google GCE、Microsoft Azure）以及SGX enclave（安全保护区）中打破ASLR。<br>3）除了破坏ASLR，研究人员还发现该攻击可以检测用户行为，例如蓝牙事件和鼠标移动。</p>
+<p>（2）技术路线：</p>
+<p>本文研究首先发现AVX掩码加载&#x2F;存储指令可以在访问无效或不可访问的页面时抑制异常，从而通过时间差异泄漏页面的状态（映射或未映射）。然后基于时间差异来区分映射页面和未映射页面。通过区分TLB命中和未命中状态，攻击者可以：1）监控内核模块的访问状态，从而推断用户行为；2）基于时间差异来识别页面权限，区分可读、可写页面权限。</p>
+<p><img  
+                       lazyload
+                       alt="image"
+                       data-src="/images/arch-mem-2/20.png"
+                        alt="AVX相关指令的攻击原理"
+                 ></p>
+<center>图20 AVX相关指令的攻击原理</center>
+
+<p><img  
+                       lazyload
+                       alt="image"
+                       data-src="/images/arch-mem-2/21.png"
+                        alt="明显时间差异"
+                 ></p>
+<center>图21 明显时间差异</center>
+
+<p><img  
+                       lazyload
+                       alt="image"
+                       data-src="/images/arch-mem-2/22.png"
+                        alt="攻击效果"
+                 ></p>
+<center>图22 攻击效果</center>
+
+<p>作者在多种CPU上测试，包括Intel和AMD平台，并在启用了KASLR（内核地址空间布局随机化）的系统上成功实施攻击。在Intel i5-12400F上，该攻击在0.28毫秒内成功识别内核的基地址，准确率达到99.6%；在AMD Ryzen 5 5600X上也成功识别了内核基地址，准确率达到99.48%。此外，在SGX enclave中利用该攻击实现了精细粒度的ASLR突破。</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1] Liu W, Ravichandran J, Yan M. EntryBleed: A Universal KASLR Bypass against KPTI on Linux[C]&#x2F;&#x2F;Proceedings of the 12th International Workshop on Hardware and Architectural Support for Security and Privacy. 2023: 10-18.</p>
+<p>[2] Tobah Y, Kwong A, Kang I, et al. Spechammer: Combining spectre and rowhammer for new speculative attacks[C]&#x2F;&#x2F;2022 IEEE Symposium on Security and Privacy (SP). IEEE, 2022: 681-698.</p>
+<p>[3] Ravichandran J, Na W T, Lang J, et al. PACMAN: attacking ARM pointer authentication with speculative execution[C]&#x2F;&#x2F;Proceedings of the 49th Annual International Symposium on Computer Architecture. 2022: 685-698.</p>
+<p>[4] Kim J, Park J, Roh S, et al. TikTag: Breaking ARM’s Memory Tagging Extension with Speculative Execution (to appear)}}[C]&#x2F;&#x2F;Proceedings of the 46th IEEE Symposium on Security and Privacy (Oakland). 2025.</p>
+<p>[5] Göktas E, Razavi K, Portokalidis G, et al. Speculative probing: Hacking blind in the Spectre era[C]&#x2F;&#x2F;Proceedings of the 2020 ACM SIGSAC Conference on Computer and Communications Security. 2020: 1871-1885.</p>
+<p>[6] Choi H, Kim S, Shin S. AVX Timing Side-Channel Attacks against Address Space Layout Randomization[C]&#x2F;&#x2F;2023 60th ACM&#x2F;IEEE Design Automation Conference (DAC). IEEE, 2023: 1-6.</p>
+
+                    
+                </div>
+
+                
+                        
+<div class="post-copyright-info-container border-box">
+    <div class="copyright-info-content border-box">
+        <div class="copyright-info-top border-box">
+            <div class="copyright-post-title border-box text-ellipsis">
+                体系结构与内存安全（2）——侧信道攻击如何威胁内存安全机制
+            </div>
+
+            <div class="copyright-post-link border-box text-ellipsis">
+                2024/11/18/arch-mem-2/
+            </div>
+        </div>
+
+        <div class="copyright-info-bottom border-box">
+            <div class="copyright-post-author bottom-item">
+                <div class="type">
+                    作者
+                </div>
+                <div class="content">iamywang</div>
+            </div>
+
+            <div class="post-time bottom-item">
+                <div class="type">
+                    发布于
+                </div>
+                <div class="content">2024-11-18 20:00</div>
+            </div>
+
+
+            <div class="post-license bottom-item">
+                <div class="type">
+                    许可
+                </div>
+                <div class="content tooltip" data-tooltip-content="CC BY-NC-SA 4.0">
+                    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" target="_blank">
+                        
+                            <i class="fa-brands fa-creative-commons"></i>
+                            <i class="fa-brands fa-creative-commons-by"></i>
+                            <i class="fa-brands fa-creative-commons-nc"></i>
+                            <i class="fa-brands fa-creative-commons-sa"></i>
+                        
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <i class="copyright-bg fa-solid fa-copyright"></i>
+    </div>
+    <div class="copy-copyright-info flex-center tooltip" data-tooltip-content="复制版权信息" data-tooltip-offset-y="-2px">
+        <i class="fa-solid fa-copy"></i>
+    </div>
+</div>
+
+                
+
+                <div class="post-bottom-tags-and-share border-box">
+                    <div>
+                        
+                            <ul class="post-tags-box border-box">
+                                
+                                    <li class="tag-item border-box">
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">体系结构</a>
+                                    </li>
+                                
+                                    <li class="tag-item border-box">
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E5%86%85%E5%AD%98%E5%AE%89%E5%85%A8/">内存安全</a>
+                                    </li>
+                                
+                                    <li class="tag-item border-box">
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/">安全机制</a>
+                                    </li>
+                                
+                                    <li class="tag-item border-box">
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E4%BE%A7%E4%BF%A1%E9%81%93%E6%94%BB%E5%87%BB/">侧信道攻击</a>
+                                    </li>
+                                
+                            </ul>
+                        
+                    </div>
+                    <div>
+                        
+                            <div class="post-share-container border-box">
+    <ul class="share-list-wrap border-box">
+        <li class="qq share-item border-box flex-center tooltip"
+            data-tooltip-content="分享到 QQ"
+        >
+            <i class="fa-brands fa-qq"></i>
+        </li>
+        <li class="wechat share-item border-box flex-center tooltip tooltip-img"
+            data-tooltip-content="分享到微信"
+            data-tooltip-img-tip="微信扫一扫"
+            data-tooltip-img-style="background-color: #fff; top: -10px; padding: 0.6rem 0.6rem 0.1rem 0.6rem;"
+        >
+            <i class="fa-brands fa-weixin"></i>
+        </li>
+        <li class="weibo share-item border-box flex-center tooltip"
+            data-tooltip-content="分享到微博"
+        >
+            <i class="fa-brands fa-weibo"></i>
+        </li>
+    </ul>
+</div>
+
+                        
+                    </div>
+                </div>
+
+                
+
+                
+                    <div class="post-nav border-box">
+                        
+                            <div class="prev-post">
+                                <a class="prev"
+                                   rel="prev"
+                                   href="/2025/03/04/arch-mem-3/"
+                                   title="体系结构与内存安全（3）——利用Spectre-PHT推测执行泄漏内存数据"
+                                >
+                                    <span class="left arrow-icon flex-center">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </span>
+                                    <span class="title flex-center">
+                                        <span class="post-nav-title-item text-ellipsis">体系结构与内存安全（3）——利用Spectre-PHT推测执行泄漏内存数据</span>
+                                        <span class="post-nav-item">上一篇</span>
+                                    </span>
+                                </a>
+                            </div>
+                        
+                        
+                            <div class="next-post">
+                                <a class="next"
+                                   rel="next"
+                                   href="/2024/03/02/paper-2/"
+                                   title="论文介绍（2）——分支预测器安全漏洞的建模、推导与自动分析"
+                                >
+                                    <span class="title flex-center">
+                                        <span class="post-nav-title-item text-ellipsis">论文介绍（2）——分支预测器安全漏洞的建模、推导与自动分析</span>
+                                        <span class="post-nav-item">下一篇</span>
+                                    </span>
+                                    <span class="right arrow-icon flex-center">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </span>
+                                </a>
+                            </div>
+                        
+                    </div>
+                
+
+                
+                    
+
+
+    <div class="comments-container border-box">
+        <div id="comments-anchor" class="comment-area-title border-box">
+            <i class="fas fa-comments"></i>&nbsp;评论
+        </div>
+        <div class="comment-plugin-fail border-box">
+    <span class="fail-tip">评论插件加载失败</span>
+    <button class="reload keep-button">点击重新加载</button>
+</div>
+<div class="comment-plugin-loading flex-center border-box">
+    <i class="loading-icon fa-solid fa-spinner fa-spin"></i>
+    <span class="load-tip">正在加载评论插件</span>
+</div>
+<script data-pjax>
+  window.KeepCommentPlugin = {}
+  window.KeepCommentPlugin.hideLoading = () => {
+    const cplDom = document.querySelector('.comments-container .comment-plugin-loading')
+    cplDom.style.display = 'none'
+  }
+  window.KeepCommentPlugin.loadFailHandle = () => {
+    window.KeepCommentPlugin.hideLoading()
+    const cpfDom = document.querySelector('.comments-container .comment-plugin-fail')
+    cpfDom.style.display = 'flex'
+    cpfDom.querySelector('.reload').addEventListener('click', () => {
+      window.location.reload()
+    })
+  }
+</script>
+
+        
+            
+
+    <div class="giscus-comments-container">
+        <div class="giscus" id="giscus"></div>
+        <script data-pjax
+                onerror="window.KeepCommentPlugin.loadFailHandle()"
+        >
+          if (!window.KeepCommentPlugin?.getGiscusTheme) {
+            window.KeepCommentPlugin.getGiscusTheme = () => {
+              return document.documentElement.classList.contains('dark-mode') ? 'dark_dimmed' : 'light_tritanopia'
+            }
+          }
+
+          if (!window.KeepCommentPlugin?.changeGiscusTheme) {
+            window.KeepCommentPlugin.changeGiscusTheme = () => {
+              const iframe = document.querySelector('iframe.giscus-frame')
+              iframe && iframe.contentWindow.postMessage({
+                giscus: {
+                  setConfig: {
+                    theme: window.KeepCommentPlugin.getGiscusTheme()
+                  }
+                }
+              }, 'https://giscus.app')
+            }
+          }
+
+          if (!window.KeepCommentPlugin?.initGiscus) {
+            window.KeepCommentPlugin.initGiscus = () => {
+              const script = document.createElement('script')
+              script.async = true
+              script.src = 'https://giscus.app/client.js'
+              script.setAttribute('data-repo', 'iamywang/iamywang.github.io')
+              script.setAttribute('data-repo-id', 'MDEwOlJlcG9zaXRvcnkxNTY0OTIyOTA=')
+              script.setAttribute('data-category', 'Announcements')
+              script.setAttribute('data-category-id', 'DIC_kwDOCVPiAs4CaIL_')
+              script.setAttribute('data-reactions-enabled', '1')
+              script.setAttribute('data-lang', 'zh-CN')
+              script.setAttribute('data-mapping', 'pathname')
+              script.setAttribute('data-strict', '0')
+              script.setAttribute('data-emit-metadata', '0')
+              script.setAttribute('data-input-position', 'top')
+              script.setAttribute('crossorigin', 'anonymous')
+              script.setAttribute('loading', 'lazy')
+              script.setAttribute('data-theme', window.KeepCommentPlugin.getGiscusTheme())
+              document.querySelector('.giscus-comments-container').appendChild(script)
+              script.onerror = () => {
+                window.KeepCommentPlugin.loadFailHandle()
+              }
+              script.onload = () => {
+                window.KeepCommentPlugin.hideLoading()
+              }
+              const toggleThemeBtn = document.querySelector('.tool-toggle-theme-mode')
+              toggleThemeBtn && toggleThemeBtn.addEventListener('click', () => {
+                window.KeepCommentPlugin.changeGiscusTheme()
+              })
+            }
+          }
+
+          if ('true' === "true") {
+            setTimeout(() => {
+              window.KeepCommentPlugin.initGiscus()
+            }, 1000)
+          } else {
+            window.addEventListener("DOMContentLoaded", window.KeepCommentPlugin.initGiscus)
+          }
+        </script>
+    </div>
+
+
+        
+    </div>
+
+
+
+
+
+                
+            </div>
+        </div>
+
+        
+            <div class="pc-post-toc left-toc">
+                <div class="post-toc-wrap border-box">
+    <div class="post-toc border-box">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6%E4%B8%8E%E7%9B%B8%E5%85%B3%E6%94%BB%E5%87%BB%E6%B1%87%E6%80%BB"><span class="nav-number">1.</span> <span class="nav-text">系统安全机制与相关攻击汇总</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%92%88%E5%AF%B9KASLR%E7%9A%84EntryBleed%E6%94%BB%E5%87%BB%EF%BC%88%E7%BB%95%E8%BF%87%E9%98%B2%E6%8A%A4%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">针对KASLR的EntryBleed攻击（绕过防护）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%92%88%E5%AF%B9Stack-Canary%E7%9A%84SpecHammer%E6%94%BB%E5%87%BB%EF%BC%88%E7%BB%95%E8%BF%87%E9%98%B2%E6%8A%A4%EF%BC%89"><span class="nav-number">3.</span> <span class="nav-text">针对Stack Canary的SpecHammer攻击（绕过防护）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%92%88%E5%AF%B9ARM-PAC%E7%9A%84PACMAN%E6%94%BB%E5%87%BB%EF%BC%88%E7%BB%95%E8%BF%87%E9%98%B2%E6%8A%A4%EF%BC%89"><span class="nav-number">4.</span> <span class="nav-text">针对ARM PAC的PACMAN攻击（绕过防护）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%92%88%E5%AF%B9ARM-MTE%E7%9A%84TikTag%E6%94%BB%E5%87%BB%EF%BC%88%E7%BB%95%E8%BF%87%E9%98%B2%E6%8A%A4%EF%BC%89"><span class="nav-number">5.</span> <span class="nav-text">针对ARM MTE的TikTag攻击（绕过防护）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E7%BB%95%E8%BF%87KASLR%E7%9A%84BlindSide%E6%94%BB%E5%87%BB%EF%BC%88%E8%BD%AF%E4%BB%B6%E6%94%BB%E5%87%BB%E5%A2%9E%E5%BC%BA%EF%BC%89"><span class="nav-number">6.</span> <span class="nav-text">利用绕过KASLR的BlindSide攻击（软件攻击增强）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%92%88%E5%AF%B9KASLR-ASLR%E7%9A%84AVX%E6%94%BB%E5%87%BB%EF%BC%88%E5%BE%AE%E6%9E%B6%E6%9E%84%E6%94%BB%E5%87%BB%E5%A2%9E%E5%BC%BA%EF%BC%89"><span class="nav-number">7.</span> <span class="nav-text">针对KASLR&#x2F;ASLR的AVX攻击（微架构攻击增强）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">8.</span> <span class="nav-text">参考文献</span></a></li></ol>
+    </div>
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+        </div>
+
+        <div class="page-main-content-bottom border-box">
+            
+<footer class="footer border-box">
+    <div class="copyright-info info-item">
+    &copy;&nbsp;<span>2022</span>&nbsp;-&nbsp;2025
+    
+            &nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;&nbsp;<a href="/">iamywang</a>
+        
+    </div>
+
+    <div class="theme-info info-item">
+        由&nbsp;<a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;驱动&nbsp;&&nbsp;主题&nbsp;<a class="keep-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep</a>
+    </div>
+
+    
+        
+        <div class="deploy-info info-item">
+            
+            本站由 <span class="tooltip" data-tooltip-content="GitHub Pages"><img src="/images/brands/github.png"></span> 提供部署服务
+            
+        </div>
+    
+
+    
+        <div class="count-info info-item">
+            
+                <span class="count-item border-box word">
+                    <span class="item-type border-box">总字数</span>
+                    <span class="item-value border-box word">23.9k</span>
+                </span>
+            
+
+            
+                <span class="count-item border-box uv">
+                    <span class="item-type border-box">访客数</span>
+                    <span class="item-value border-box uv" id="busuanzi_value_site_uv"></span>
+                </span>
+            
+
+            
+                <span class="count-item border-box pv">
+                    <span class="item-type border-box">访问量</span>
+                    <span class="item-value border-box pv" id="busuanzi_value_site_pv"></span>
+                </span>
+            
+        </div>
+    
+
+    
+</footer>
+
+        </div>
+    </div>
+
+    <!-- post tools -->
+    
+        <div class="post-tools left-toc">
+            <div class="post-tools-container border-box">
+    <ul class="post-tools-list border-box">
+        <!-- PC encrypt again -->
+        
+
+        <!-- PC TOC show toggle -->
+        
+            <li class="tools-item flex-center toggle-show-toc">
+                <i class="fas fa-list"></i>
+            </li>
+        
+
+        <!-- PC go comment -->
+        
+            <li class="tools-item flex-center go-to-comments">
+                <i class="fas fa-comment"></i>
+                <span class="post-comments-count"></span>
+            </li>
+        
+
+        <!-- PC full screen -->
+        <li class="tools-item flex-center full-screen">
+            <i class="fa-solid fa-expand"></i>
+        </li>
+    </ul>
+</div>
+
+        </div>
+    
+
+    <!-- side tools -->
+    <div class="side-tools">
+        <div class="side-tools-container border-box ">
+    <ul class="side-tools-list side-tools-show-handle border-box">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <!-- toggle mode -->
+        
+            <li class="tools-item tool-toggle-theme-mode flex-center">
+                <i class="fas fa-moon"></i>
+            </li>
+        
+
+        <!-- rss -->
+        
+            <li class="tools-item rss flex-center">
+                <a class="flex-center"
+                   href="/atom.xml"
+                   target="_blank"
+                >
+                    <i class="fas fa-rss"></i>
+                </a>
+            </li>
+        
+
+        <!-- to bottom -->
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list border-box">
+        
+            <li class="tools-item toggle-show-toc-tablet flex-center">
+                <i class="fas fa-list"></i>
+            </li>
+        
+
+        
+            <li class="tools-item go-to-comments-tablet flex-center">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+        <li class="tools-item tool-scroll-to-top flex-center show-arrow">
+            <i class="arrow fas fa-arrow-up"></i>
+            <span class="percent"></span>
+        </li>
+    </ul>
+</div>
+
+    </div>
+
+    <!-- image mask -->
+    <div class="zoom-in-image-mask">
+    <img class="zoom-in-image">
+</div>
+
+
+    <!-- local search -->
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="close-popup-btn">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+    <!-- tablet toc -->
+    
+        <div class="tablet-post-toc-mask">
+            <div class="tablet-post-toc">
+                <div class="post-toc-wrap border-box">
+    <div class="post-toc border-box">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6%E4%B8%8E%E7%9B%B8%E5%85%B3%E6%94%BB%E5%87%BB%E6%B1%87%E6%80%BB"><span class="nav-number">1.</span> <span class="nav-text">系统安全机制与相关攻击汇总</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%92%88%E5%AF%B9KASLR%E7%9A%84EntryBleed%E6%94%BB%E5%87%BB%EF%BC%88%E7%BB%95%E8%BF%87%E9%98%B2%E6%8A%A4%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">针对KASLR的EntryBleed攻击（绕过防护）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%92%88%E5%AF%B9Stack-Canary%E7%9A%84SpecHammer%E6%94%BB%E5%87%BB%EF%BC%88%E7%BB%95%E8%BF%87%E9%98%B2%E6%8A%A4%EF%BC%89"><span class="nav-number">3.</span> <span class="nav-text">针对Stack Canary的SpecHammer攻击（绕过防护）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%92%88%E5%AF%B9ARM-PAC%E7%9A%84PACMAN%E6%94%BB%E5%87%BB%EF%BC%88%E7%BB%95%E8%BF%87%E9%98%B2%E6%8A%A4%EF%BC%89"><span class="nav-number">4.</span> <span class="nav-text">针对ARM PAC的PACMAN攻击（绕过防护）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%92%88%E5%AF%B9ARM-MTE%E7%9A%84TikTag%E6%94%BB%E5%87%BB%EF%BC%88%E7%BB%95%E8%BF%87%E9%98%B2%E6%8A%A4%EF%BC%89"><span class="nav-number">5.</span> <span class="nav-text">针对ARM MTE的TikTag攻击（绕过防护）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E7%BB%95%E8%BF%87KASLR%E7%9A%84BlindSide%E6%94%BB%E5%87%BB%EF%BC%88%E8%BD%AF%E4%BB%B6%E6%94%BB%E5%87%BB%E5%A2%9E%E5%BC%BA%EF%BC%89"><span class="nav-number">6.</span> <span class="nav-text">利用绕过KASLR的BlindSide攻击（软件攻击增强）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%92%88%E5%AF%B9KASLR-ASLR%E7%9A%84AVX%E6%94%BB%E5%87%BB%EF%BC%88%E5%BE%AE%E6%9E%B6%E6%9E%84%E6%94%BB%E5%87%BB%E5%A2%9E%E5%BC%BA%EF%BC%89"><span class="nav-number">7.</span> <span class="nav-text">针对KASLR&#x2F;ASLR的AVX攻击（微架构攻击增强）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">8.</span> <span class="nav-text">参考文献</span></a></li></ol>
+    </div>
+</div>
+
+            </div>
+        </div>
+    
+</main>
+
+
+
+
+
+<!-- common js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/utils.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/header-shrink.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/back2top.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/toggle-theme.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/code-block.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/main.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/libs/anime.min.js"></script>
+
+<!-- local search -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/local-search.min.js"></script>
+
+
+<!-- lazyload -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/lazyload.min.js"></script>
+
+
+<div class="pjax">
+    <!-- home page -->
+    
+
+    <!-- post page -->
+    
+        <!-- post-helper -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/post/post-helper.min.js"></script>
+
+        <!-- toc -->
+        
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/post/toc.min.js"></script>
+        
+
+        <!-- copyright-info -->
+        
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/post/copyright-info.min.js"></script>
+        
+
+        <!-- share -->
+        
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/post/share.min.js"></script>
+        
+    
+
+    <!-- categories page -->
+    
+
+    <!-- links page -->
+    
+
+    <!-- photos page -->
+    
+
+    <!-- tools page -->
+    
+</div>
+
+<!-- mermaid -->
+
+
+<!-- pjax -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/libs/pjax.min.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            KEEP.utils.pjaxProgressBarStart()
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            KEEP.utils.pjaxProgressBarEnd()
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'))
+            KEEP.initExecute()
+        });
+    });
+</script>
+
+
+
+
+    
+        
+    
+
+</body>
+</html>
