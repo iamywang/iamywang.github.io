@@ -9,7 +9,7 @@
     
     <title>
         
-            ROP/JOP/COP（1）——攻击基本原理、现有芯片级对策 |
+            体系结构与内存安全（1）——ROP等攻击基本原理、现有芯片级对策 |
         
         没事我就挠脑袋
     </title>
@@ -298,7 +298,7 @@
             <div class="post-content-bottom border-box">
                 
                     <div class="post-title">
-                        ROP/JOP/COP（1）——攻击基本原理、现有芯片级对策
+                        体系结构与内存安全（1）——ROP等攻击基本原理、现有芯片级对策
                     </div>
                 
 
@@ -350,19 +350,16 @@
             <span class="post-tag meta-info-item border-box">
                 <ul class="post-tag-ul">
                     
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">体系结构</a></li>
+                        
+                    
                             <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E5%86%85%E5%AD%98%E5%AE%89%E5%85%A8/">内存安全</a></li>
                         
                     
                             <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E6%A0%88%E6%BA%A2%E5%87%BA/">栈溢出</a></li>
                         
                     
-                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E9%9D%A2%E5%90%91%E8%BF%94%E5%9B%9E%E7%BC%96%E7%A8%8B/">面向返回编程</a></li>
-                        
-                    
-                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E9%9D%A2%E5%90%91%E8%B7%B3%E8%BD%AC%E7%BC%96%E7%A8%8B/">面向跳转编程</a></li>
-                        
-                    
-                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E9%9D%A2%E5%90%91%E8%B0%83%E7%94%A8%E7%BC%96%E7%A8%8B/">面向调用编程</a></li>
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E5%86%85%E5%AD%98%E6%BC%8F%E6%B4%9E/">内存漏洞</a></li>
                         
                     
                 </ul>
@@ -409,10 +406,10 @@
 <p><img  
                        lazyload
                        alt="image"
-                       data-src="/images/rop-1/1.png"
+                       data-src="/images/arch-mem-1/1.png"
                         alt="ROP"
                  ></p>
-<p>以下是一个较为详细的ppt：<a href="https://iamywang.github.io/images/rop-1/memory-safety.pdf">memory-safety.pdf</a></p>
+<p>以下是一个较为详细的ppt：<a href="https://iamywang.github.io/images/arch-mem-1/memory-safety.pdf">memory-safety.pdf</a></p>
 <h2 id="ROP-JOP-COP"><a href="#ROP-JOP-COP" class="headerlink" title="ROP&#x2F;JOP&#x2F;COP"></a>ROP&#x2F;JOP&#x2F;COP</h2><h3 id="ROP"><a href="#ROP" class="headerlink" title="ROP"></a>ROP</h3><p>在x86中，ret指令指令的执行可以看做：<br>（1）pop：从栈中弹出一个返回地址；<br>（2）jmp：跳转到该返回地址处执行。</p>
 <p>此外，函数调用的参数传递是通过寄存器（eax、ebx、ecx、edx等）来完成的，比如：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">execve(<span class="string">&quot;/bin/sh&quot;</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>);</span><br></pre></td></tr></table></figure>
@@ -428,21 +425,21 @@
 <p><img  
                        lazyload
                        alt="image"
-                       data-src="/images/rop-1/2.png"
+                       data-src="/images/arch-mem-1/2.png"
                         alt="PACMAN"
                  ></p>
 <h3 id="论文：ZeRO（ISCA-2021）"><a href="#论文：ZeRO（ISCA-2021）" class="headerlink" title="论文：ZeRØ（ISCA 2021）"></a>论文：ZeRØ（ISCA 2021）</h3><p>ZeRØ提出了独特的内存指令和新颖的元数据编码方案来保护代码和数据指针，仅仅只需要微小的微架构变化。ZeRØ在SPEC CPU2017基准上的性能开销为零，VLSI测量显示了低功率和面积开销。</p>
 <p><img  
                        lazyload
                        alt="image"
-                       data-src="/images/rop-1/3.png"
+                       data-src="/images/arch-mem-1/3.png"
                         alt="ZeRØ"
                  ></p>
 <h3 id="论文：No-FAT（ISCA-2021）"><a href="#论文：No-FAT（ISCA-2021）" class="headerlink" title="论文：No-FAT（ISCA 2021）"></a>论文：No-FAT（ISCA 2021）</h3><p>No-FAT将内存分配大小（例如malloc大小）作为一个架构特征，来克服传统内存安全方法的许多棘手问题，例如与不安全软件的兼容性和显著的性能下降。No-FAT在SPEC CPU2017基准测试中产生了8%的开销，VLSI测量显示了低功率和面积开销。</p>
 <p><img  
                        lazyload
                        alt="image"
-                       data-src="/images/rop-1/4.png"
+                       data-src="/images/arch-mem-1/4.png"
                         alt="No-FAT"
                  ></p>
 <h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1] <a target="_blank" rel="noopener" href="https://github.com/JonathanSalwan/ROPgadget">https://github.com/JonathanSalwan/ROPgadget</a></p>
@@ -459,11 +456,11 @@
     <div class="copyright-info-content border-box">
         <div class="copyright-info-top border-box">
             <div class="copyright-post-title border-box text-ellipsis">
-                ROP/JOP/COP（1）——攻击基本原理、现有芯片级对策
+                体系结构与内存安全（1）——ROP等攻击基本原理、现有芯片级对策
             </div>
 
             <div class="copyright-post-link border-box text-ellipsis">
-                2023/03/23/rop-1/
+                2023/03/23/arch-mem-1/
             </div>
         </div>
 
@@ -515,6 +512,10 @@
                             <ul class="post-tags-box border-box">
                                 
                                     <li class="tag-item border-box">
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">体系结构</a>
+                                    </li>
+                                
+                                    <li class="tag-item border-box">
                                         <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E5%86%85%E5%AD%98%E5%AE%89%E5%85%A8/">内存安全</a>
                                     </li>
                                 
@@ -523,15 +524,7 @@
                                     </li>
                                 
                                     <li class="tag-item border-box">
-                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E9%9D%A2%E5%90%91%E8%BF%94%E5%9B%9E%E7%BC%96%E7%A8%8B/">面向返回编程</a>
-                                    </li>
-                                
-                                    <li class="tag-item border-box">
-                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E9%9D%A2%E5%90%91%E8%B7%B3%E8%BD%AC%E7%BC%96%E7%A8%8B/">面向跳转编程</a>
-                                    </li>
-                                
-                                    <li class="tag-item border-box">
-                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E9%9D%A2%E5%90%91%E8%B0%83%E7%94%A8%E7%BC%96%E7%A8%8B/">面向调用编程</a>
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E5%86%85%E5%AD%98%E6%BC%8F%E6%B4%9E/">内存漏洞</a>
                                     </li>
                                 
                             </ul>
@@ -765,7 +758,7 @@
             
                 <span class="count-item border-box word">
                     <span class="item-type border-box">总字数</span>
-                    <span class="item-value border-box word">17k</span>
+                    <span class="item-value border-box word">19.7k</span>
                 </span>
             
 

