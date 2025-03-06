@@ -9,7 +9,7 @@
     
     <title>
         
-            论文介绍（2）——分支预测器安全漏洞的建模、推导与自动分析 |
+            体系结构与内存安全（4）——WOOT&#39;24控制流完整性SoK论文阅读 |
         
         没事我就挠脑袋
     </title>
@@ -298,7 +298,7 @@
             <div class="post-content-bottom border-box">
                 
                     <div class="post-title">
-                        论文介绍（2）——分支预测器安全漏洞的建模、推导与自动分析
+                        体系结构与内存安全（4）——WOOT&#39;24控制流完整性SoK论文阅读
                     </div>
                 
 
@@ -324,13 +324,13 @@
         
             <span class="meta-info-item post-create-date">
                 <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
-                <span class="datetime">2024-03-02 20:00:00</span>
+                <span class="datetime">2025-03-06 17:00:00</span>
             </span>
 
             
                 <span class="meta-info-item post-update-date">
                     <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Sat Mar 02 2024 20:00:00 GMT+0800">2024-03-02 20:00:00</span>
+                    <span class="datetime" data-updated="Thu Mar 06 2025 17:00:00 GMT+0800">2025-03-06 17:00:00</span>
                 </span>
             
         
@@ -339,7 +339,7 @@
             <span class="meta-info-item post-category border-box"><i class="icon fas fa-folder"></i>&nbsp;
                 <ul class="post-category-ul">
                     
-                            <li class="category-item"><a href="/categories/%E7%A7%91%E7%A0%94/">科研</a></li>
+                            <li class="category-item"><a href="/categories/%E5%86%85%E5%AD%98%E5%AE%89%E5%85%A8/">内存安全</a></li>
                         
                     
                 </ul>
@@ -353,16 +353,10 @@
                             <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">体系结构</a></li>
                         
                     
-                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E4%BE%A7%E4%BF%A1%E9%81%93%E6%94%BB%E5%87%BB/">侧信道攻击</a></li>
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E5%86%85%E5%AD%98%E5%AE%89%E5%85%A8/">内存安全</a></li>
                         
                     
-                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E8%AE%BA%E6%96%87/">论文</a></li>
-                        
-                    
-                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B%E5%99%A8/">分支预测器</a></li>
-                        
-                    
-                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E5%BD%A2%E5%BC%8F%E5%8C%96%E9%AA%8C%E8%AF%81/">形式化验证</a></li>
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/">安全机制</a></li>
                         
                     
                 </ul>
@@ -372,12 +366,12 @@
         
         
             <span class="meta-info-item post-wordcount">
-                <i class="icon fas fa-file-word"></i>&nbsp;<span>3.1k 字</span>
+                <i class="icon fas fa-file-word"></i>&nbsp;<span>2.9k 字</span>
             </span>
         
         
             <span class="meta-info-item post-min2read">
-                <i class="icon fas fa-clock"></i>&nbsp;<span>10 分钟</span>
+                <i class="icon fas fa-clock"></i>&nbsp;<span>11 分钟</span>
             </span>
         
         
@@ -399,69 +393,151 @@
                     
 
                     
-                         <h2 id="文章简介"><a href="#文章简介" class="headerlink" title="文章简介"></a>文章简介</h2><p>本文是我在HPCA 2024上发表的一篇论文，题目为《Modeling, Derivation, and Automated Analysis of Branch Predictor Security Vulnerabilities》。本文的主要贡献是：</p>
-<ul>
-<li>我们提出了一种三步建模方法，用于评估微架构设计阶段分支预测器的安全属性。我们的技术抽象地描述了19种分支预测器状态和53种可能影响这些状态的攻击者和受害者的操作。</li>
-<li>我们基于提出的模型开发了一个全面的、自动化的评估框架，利用符号执行来分析所有可能的三步组合，从而推导出156种有效的分支预测器攻击模式，其中包括89种以前未曾发现的新攻击。</li>
-<li>我们将我们的安全分析框架应用于8种现有的安全分支预测器设计和四种典型的硬件对抗推测执行攻击的措施，结果表明安全分支预测器是提高分支预测器安全性的有前景的解决方案。</li>
-</ul>
-<p>引用格式：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@INPROCEEDINGS&#123;wang2024modeling,</span><br><span class="line">  title=&#123;&#123;Modeling, Derivation, and Automated Analysis of Branch Predictor Security Vulnerabilities&#125;&#125;, </span><br><span class="line">  author=&#123;Wang, Quancheng and Tang, Ming and Xu, Ke and Wang, Han&#125;,</span><br><span class="line">  booktitle=&#123;2024 IEEE International Symposium on High-Performance Computer Architecture (HPCA)&#125;, </span><br><span class="line">  year=&#123;2024&#125;,</span><br><span class="line">  pages=&#123;409-423&#125;,</span><br><span class="line">  doi=&#123;10.1109/HPCA57654.2024.00038&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+                         <h2 id="前言：内存破坏漏洞利用与对抗的发展历史"><a href="#前言：内存破坏漏洞利用与对抗的发展历史" class="headerlink" title="前言：内存破坏漏洞利用与对抗的发展历史"></a>前言：内存破坏漏洞利用与对抗的发展历史</h2><p><img  
+                       lazyload
+                       alt="image"
+                       data-src="/images/arch-mem-4/1.png"
+                        alt="危害软件完整性的内存破坏漏洞分类"
+                 ></p>
+<center>图1 危害软件完整性的内存破坏漏洞分类</center>
 
-<h2 id="论文摘要"><a href="#论文摘要" class="headerlink" title="论文摘要"></a>论文摘要</h2><p>随着针对分支预测器的微架构侧信道攻击日益加剧，计算机系统和用户的安全关键数据面临严重威胁。由于这些攻击的根本原因是在分支预测器微架构设计中忽视了安全问题，因此在设计阶段可以彻底和自动地探索这些问题的分析框架是迫在眉睫的。我们提出了一个全面的、自动化的评估框架，用于检查微架构设计阶段分支预测器的安全保证。我们的技术涉及一个三步建模方法，抽象地表征了19个分支预测器状态和53个可能影响这些状态的操作。随后，我们开发了一个基于符号执行的框架，来研究所有三步组合并推导出156种有效的分支预测器攻击模式，其中包括89种在以前的工作中从未考虑过的新攻击。最后，我们将我们的框架应用于8种安全的分支预测器设计和四种典型的基于硬件的对抗推测执行攻击的措施，以评估它们的安全性能。结果表明，这些安全分支预测器提供了有效的安全保证，并且在对抗推测执行攻击的硬件减轻措施方面表现出色，表明安全分支预测器在减轻分支预测器安全漏洞方面具有很好的前景。</p>
-<h2 id="技术路线"><a href="#技术路线" class="headerlink" title="技术路线"></a>技术路线</h2><h3 id="19种分支预测器状态建模"><a href="#19种分支预测器状态建模" class="headerlink" title="19种分支预测器状态建模"></a>19种分支预测器状态建模</h3><p>针对分支预测器的微架构侧信道攻击涉及攻击者和受害者。在我们的威胁模型中，我们使用A和V来表示攻击者和受害者程序，它们都可以执行分支指令并改变分支预测器的状态。攻击者和受害者可以在同一个处理器的同一个逻辑核心上运行，也可以在同一个处理器的两个不同逻辑核心上运行。我们还假设攻击者和受害者可以处于相同的特权级别（例如，用户模式）或不同的特权级别（例如，用户模式和内核模式）。此外，攻击者可以调用受害者的分支指令来误导分支预测器，即恶意操作由V执行但由A控制，或在自己的地址空间中执行分支指令以污染分支预测器，即恶意操作由A执行并控制。</p>
-<p>假设Eval表示分支预测器条目E被值val索引，分支预测器中可能影响条目E状态的三种可能的索引方式如下：<br>（1）pc表示攻击者利用与目标分支val相同的PC值（用于索引的部分，而不是整个地址）来污染条目E。这种类型的索引存在于PHT和BTB中，因此可能导致PHT或BTB条目被污染。<br>（2）his表示条目E被PC值和BHB值的混合值索引，这种操作可能导致BHB值被污染，进而导致PHT或BTB条目被污染。<br>（3）alias表示由于BTB中的哈希冲突或RSB中的堆栈冲突，不同的索引值索引了条目E，并且索引值与val不同，这可能导致BTB或RSB的条目被污染。<br>（4）由于BTB或RSB的容量有限，目标条目E也可能被从分支预测器单元中驱逐，我们用inv来表示这种情况。</p>
-<p>下表列出了分支预测器单元中每个条目的所有19种可能状态。</p>
-<p><img  
-                       lazyload
-                       alt="image"
-                       data-src="/images/paper-2/1.png"
-                        alt="1"
-                 ></p>
-<h3 id="53种分支操作类型建模"><a href="#53种分支操作类型建模" class="headerlink" title="53种分支操作类型建模"></a>53种分支操作类型建模</h3><p>在对分支预测器的状态和攻击者、受害者的操作进行建模后，我们提出了针对分支预测器的三步攻击模型，并使用{Step 1→Step 2→Step 3}表示三步操作的组合。在第一步中，执行一个分支操作来将任何分支预测器（PHT&#x2F;BTB&#x2F;RSB）的条目设置为已知的初始状态（例如，将PHT的条目的饱和计数器设置为taken，或者从BTB中刷新一个块）。然后，在第二步中，执行另一个分支操作来改变分支预测器单元对应条目的初始状态。此外，在第三步中，通过最后一个分支操作或其他隐蔽信道执行一个时间观察操作。攻击者可以从时间观察操作中推断出秘密数据。</p>
-<p><img  
-                       lazyload
-                       alt="image"
-                       data-src="/images/paper-2/2.png"
-                        alt="2"
-                 ></p>
-<p>随后，我们在三步攻击模型中对可能影响分支预测器状态的攻击者和受害者的所有53种可能操作进行建模。我们使用A和V分别表示攻击者和受害者的操作。此外，我们使用A⋆或V⋆来表示攻击者或受害者在此步骤中不操作目标分支预测器条目。然后，我们使用Acc来表示攻击者在第三步中观察隐蔽信道状态的操作，除了分支预测器之外的其他隐蔽信道。然后，假设目标条目对应于安全关键数据（例如，加密密钥），我们使用Aval或Vval来表示将目标条目设置为valid的操作（即访问安全关键数据）。我们还使用Ainv&#x2F;Vinv来表示通过将目标条目从分支预测器中驱逐来将目标条目设置为invalid的操作。此外，我们使用Apc&#x2F;Vpc&#x2F;Ahis&#x2F;Vhis&#x2F;Aalias&#x2F;Valias来表示通过带有索引pc&#x2F;his&#x2F;alias的分支指令将目标条目的状态更改为mispredict的操作。</p>
-<h3 id="三步分支预测器模拟器"><a href="#三步分支预测器模拟器" class="headerlink" title="三步分支预测器模拟器"></a>三步分支预测器模拟器</h3><p>我们开发了一个三步分支预测器模拟器，其中每一步代表攻击者或受害者的可能操作，并基于攻击者在第三步观察到的信息（分支时间或隐蔽信道）分析有效的攻击模式。这个三步分支预测器模拟器是用Rust实现的，其中模拟器的输入是攻击者和受害者在三步攻击模型中的所有53种可能操作，输出是对于每个三步组合是否有效的三步攻击模式。根据我们先前对分支预测器的建模，对于PHT有729种不同的三步组合，对于BTB有4859种三步组合，对于RSB有729种三步组合。因此，在我们的建模标准下，有6317种不同的三步模式。</p>
-<p><img  
-                       lazyload
-                       alt="image"
-                       data-src="/images/paper-2/3.png"
-                        alt="3"
-                 ></p>
-<p>在分支预测器模拟器中，我们为目标分支预测器条目定义了一个当前状态，并假设条目的初始状态是未知的。然后，当执行三步组合的每一步时，根据不同操作类型更新目标条目的状态。例如，如果攻击者执行Apc&#x2F;Vpc，目标条目的状态将更新为mispredict；如果攻击者执行Aval&#x2F;Vval，目标条目的状态将更新为valid；如果攻击者执行Acc&#x2F;A⋆，目标条目的状态将不会更新。</p>
-<p>对于安全关键的分支操作Aval&#x2F;Vval，我们将其扩展为两种不同的状态，一种用于更新分支预测器状态，另一种用于不更新分支预测器状态。此外，如果前两步是安全关键的分支操作Aval&#x2F;Vval，则只扩展后者操作为两种不同的状态。此外，由于我们认为第三步是时间观察步骤，即使操作是Aval&#x2F;Vval，我们也不会在这一步扩展状态。因此，对于包含Aval&#x2F;Vval的三步组合，存在两种不同的三步执行路径，我们使用攻击者观察这两条路径之间的时间差异的能力作为判断是否为有效攻击模式的标准。</p>
-<h2 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h2><p>156种有效攻击模式挖掘与分析：</p>
-<p>根据我们的三步分支预测器模拟器，我们得出总共156种不同的安全漏洞，包括PHT的28个条件分支预测漏洞、BTB的56个间接分支预测漏洞、BTB的30个调用指令预测漏洞、BTB的30个返回地址预测漏洞以及RSB的12个返回地址预测漏洞。下表列出了所有针对分支预测器的156种三步攻击模式。</p>
-<p><img  
-                       lazyload
-                       alt="image"
-                       data-src="/images/paper-2/4.png"
-                        alt="4"
-                 ></p>
-<p>现有安全设计安全属性建模与分析——156种攻击模式：</p>
-<p>然后，我们在三步模型中为现有的安全设计建模攻击者和受害者的操作。在对8种现有的典型安全分支预测器设计进行建模后，我们使用三步分支预测器模拟器评估这些安全设计的安全性。表5显示了不同安全分支预测器在每个分支预测器单元中防护安全漏洞的有效性以及仍然存在的漏洞总数。其中，“&#x2F;”左侧的值表示在该安全设计下该分支预测器单元存在的漏洞数量，“&#x2F;”右侧的值表示之前为该分支预测器单元推导出的漏洞总数。</p>
-<p><img  
-                       lazyload
-                       alt="image"
-                       data-src="/images/paper-2/5.png"
-                        alt="5"
-                 ></p>
-<p>结果表明，PSC在理想情况下可以非常有效地防护PHT的安全漏洞，因为这种机制使攻击者无法确定性地错误训练分支预测器。然后，HyBP可以有效地防护针对BTB的三步攻击组合，并且在所有安全漏洞防护设计中最为有效，可以减轻156种三步攻击组合中的123种。</p>
-<p>现有安全设计安全属性建模与分析——推测执行攻击：</p>
-<p>除了安全分支预测器设计外，研究人员还提出了许多针对推测执行攻击的硬件防御策略。接下来，我们将这些安全分支预测器与这些防御策略在对抗推测执行攻击方面的表现进行比较。根据Hu等人提出的防御策略分类，我们选择了四种在现有防御中引入相对较低性能开销的代表性硬件防御进行评估。</p>
-<p><img  
-                       lazyload
-                       alt="image"
-                       data-src="/images/paper-2/6.png"
-                        alt="6"
-                 ></p>
-<p>然后，我们评估了这四种硬件防御对推测执行攻击的安全漏洞覆盖情况，如上表所示。结果表明，这些硬件防御只能缓解有限数量的推测执行攻击或仅缓解特定的缓存隐蔽信道攻击。相比之下，安全分支预测器设计可以缓解更多的推测执行攻击，例如两级加密、Noisy-XOR-BP、LS-BP和HyBP。因此，与硬件防御相比，安全分支预测器设计是缓解分支预测器安全漏洞的有效且可行的解决方案。</p>
-<h2 id="开源代码"><a href="#开源代码" class="headerlink" title="开源代码"></a>开源代码</h2><p><a target="_blank" rel="noopener" href="https://github.com/iamywang/bp-security-framework">https://github.com/iamywang/bp-security-framework</a></p>
+<p><strong>第一步：利用——代码注入类攻击：</strong></p>
+<p>代码注入类攻击是一类攻击技术，攻击者通过利用软件漏洞（如缓冲区溢出、输入验证不当等）向目标程序的内存中插入并执行恶意代码，从而劫持程序控制流，执行未授权操作。</p>
+<p><strong>第二步：对抗——数据执行保护（DEP）：</strong></p>
+<p>数据执行保护是一种系统级内存保护功能，使系统能够将一个或多个内存页标记为不可执行。将内存区域标记为不可执行意味着代码无法从该内存区域运行，这使得利用缓冲区溢出更加困难。DEP阻止从默认堆、堆栈和内存池等数据页运行代码。如果应用程序尝试从受保护的数据页运行代码，则会发生内存访问冲突异常，如果未处理该异常，调用进程将终止。</p>
+<p><strong>第三步：利用——代码重用类攻击：</strong></p>
+<p>代码重用攻击是一种利用现有程序代码（而非注入新代码）来执行恶意操作的攻击方式。它通常用于绕过数据执行保护（DEP）等安全机制，因为DEP会禁止在数据区执行注入的代码，但不会阻止程序本身的代码执行。</p>
+<p><strong>第四步：对抗——地址随机化（ASLR）与控制流完整性（CFI）：</strong></p>
+<p>为了防御代码重用攻击，现代操作系统和编译器引入了一些安全机制：</p>
+<p>地址空间布局随机化（ASLR）：通过随机化代码段、堆、栈等地址，使攻击者难以预测ROP&#x2F;JOP gadgets的地址。但如果存在信息泄露漏洞，ASLR可能被绕过。</p>
+<p>控制流完整性（Control-Flow Integrity, CFI）：限制函数调用和跳转的目标地址，只允许合法路径上的控制流执行。使ROP、JOP、COP等攻击更难实施。</p>
+<h2 id="WOOT’24：论文的重点研究内容"><a href="#WOOT’24：论文的重点研究内容" class="headerlink" title="WOOT’24：论文的重点研究内容"></a>WOOT’24：论文的重点研究内容</h2><p>这篇论文的题目为：SoK: On the Effectiveness of Control-Flow Integrity in Practice。</p>
+<p><strong>解决了CFI研究中的哪些问题？</strong></p>
+<ul>
+<li>第一，实际生产环境有哪些已经部署的CFI机制；</li>
+<li>第二，这些CFI机制在何处部署以及如何部署；</li>
+<li>第三，它们在对抗攻击方面的有效性以及仍然存在的局限性有哪些？</li>
+</ul>
+<blockquote>
+<ol>
+<li>Which CFI schemes are found in practice?</li>
+<li>Where and how consequently are they deployed?</li>
+<li>What are their capabilities and limitations to prevent attacks?</li>
+</ol>
+</blockquote>
+<p><strong>实际生产环境已经部署哪些CFI？</strong></p>
+<ul>
+<li>编译器：LLVM Clang CFI；</li>
+<li>Windows：WCFG、XFG；</li>
+<li>ARM：PAC（文章没有提到，MTE也已经部署）；</li>
+<li>Intel：CET（同时包含有Shadow Stack以及IBT）。</li>
+</ul>
+<blockquote>
+<ol>
+<li>LLVM Clang CFI, used primarily on Android and the Linux Kernel;</li>
+<li>Windows Control Flow Guard (WCFG) and its successor eXtended Flow Guard (XFG);</li>
+<li>ARMv8 Pointer Authentication (PA) including Branch Target Identification (BTI), utilised by recent Apple Systems on a Chip (SoCs) starting with the A12, S4, and M1 chips, by Android, and by Windows on ARM;</li>
+<li>Intel Control-flow Enforcement Technology (CET), supported on Intel processors starting with the 11th Gen and used by Windows and Linux.</li>
+</ol>
+</blockquote>
+<p><strong>这篇论文的主要贡献是什么？</strong></p>
+<ul>
+<li>作者对实际应用中的主流控制流完整性（CFI）解决方案进行了系统化整理，包括 LLVM 的 CFI 方案以及微软在 Windows 上的闭源实现 WCFG 和 XFG。</li>
+<li>作者通过对 Android 和 Windows 二进制文件的大规模分析，研究了 CFI 的覆盖范围、安全特性及其实践中的有效性。</li>
+<li>作者分析了相同设备的不同版本 Android 固件发布情况，以深入了解其随时间的演进。</li>
+</ul>
+<blockquote>
+<ul>
+<li>We systematize prevalent CFI solutions in practice, including LLVM’s CFI scheme and Microsoft’s closedsource implementations WCFG and XFG on Windows. </li>
+<li>We study CFI coverage, security characteristics, and effectiveness in practice by running a large-scale binary analysis on Android and Windows binaries.</li>
+<li>We analyse Android firmware releases of the same devices to get insights into the development over time.</li>
+</ul>
+</blockquote>
+<p><strong>本篇文档重点关注什么内容？</strong></p>
+<p>考虑到我们的主题是寻找体系结构安全与内存安全机制相关的话题，本篇文档的重点将侧重于以下几个方面：</p>
+<ul>
+<li>这篇论文提到、介绍并分析了哪些已经实际部署的CFI安全机制（即，论文的第一个主要贡献）；</li>
+<li>这些CFI安全机制是否已经能够被体系结构侧信道攻击所绕过（与先前2024&#x2F;11&#x2F;18的博客所对应）；</li>
+<li>在前两者的基础上思考体系结构安全与内存安全之间的关系；</li>
+<li>值得一提的是，这篇论文的威胁模型中提到假定攻击者已经能够绕过ASLR：</li>
+</ul>
+<blockquote>
+<p>The CFI adversary model assumes that by using these capabilities, the adversary can break Address Space Layout Randomisation (ASLR).</p>
+</blockquote>
+<h2 id="WOOT’24：CFI软硬件、前后向分类的基本概念"><a href="#WOOT’24：CFI软硬件、前后向分类的基本概念" class="headerlink" title="WOOT’24：CFI软硬件、前后向分类的基本概念"></a>WOOT’24：CFI软硬件、前后向分类的基本概念</h2><p>按照CFI完整性检查机制是由软件实现的还是需要底层硬件支持，可以划分为：</p>
+<ul>
+<li>基于软件的CFI：例如，LLVM CFI、WCFG、XFG、LLVM影子栈、栈Canary；</li>
+<li>基于硬件的CFI：例如，ARM PAC、ARM BTI、Intel IBT、FineIBT、Intel CET影子栈；</li>
+</ul>
+<p>按照所防护的对象（可以看作控制流转移指令，也就是分支指令）的转移方式，可以划分为：</p>
+<ul>
+<li>前向CFI：前向转移指的是将控制权定向到程序中一个新位置的转移方式，其实就可以看作是<code>call</code>指令和<code>jmp</code>指令；</li>
+<li>后向CFI：后向转移指的是将控制权返回到先前位置的转移方式，其实就可以看作是<code>ret</code>指令。</li>
+</ul>
+<p>因此，前面所提到的这些CFI机制中，前向CFI和后向CFI分别包含：</p>
+<ul>
+<li>前向CFI：LLVM CFI、WCFG、XFG、ARM PAC、ARM BTI、Intel IBT、FineIBT；</li>
+<li>后向CFI：LLVM影子栈、Intel CET影子栈、栈Canary。</li>
+</ul>
+<h2 id="WOOT’24：软件实现的前向CFI"><a href="#WOOT’24：软件实现的前向CFI" class="headerlink" title="WOOT’24：软件实现的前向CFI"></a>WOOT’24：软件实现的前向CFI</h2><p><strong>LLVM CFI：</strong></p>
+<p>LLVM CFI是Clang编译器前端的一部分，支持包括 C++ 在内的 C 语言家族。它能够保护间接函数调用、通过成员函数指针进行的调用、虚函数调用、使用多态类（即声明或继承虚函数的类）进行的非虚函数调用，以及多态类的非法类型转换。</p>
+<p>根据Clang编译器的手册，可选的CFI编译参数有以下几个部分：</p>
+<ul>
+<li><code>-fsanitize=cfi-cast-strict</code>: Enables strict cast checks.</li>
+<li><code>-fsanitize=cfi-derived-cast</code>: Base-to-derived cast to the wrong dynamic type.</li>
+<li><code>-fsanitize=cfi-unrelated-cast</code>: Cast from void* or another unrelated type to the wrong dynamic type.</li>
+<li><code>-fsanitize=cfi-nvcall</code>: Non-virtual call via an object whose vptr is of the wrong dynamic type.</li>
+<li><code>-fsanitize=cfi-vcall</code>: Virtual call via an object whose vptr is of the wrong dynamic type.</li>
+<li><code>-fsanitize=cfi-icall</code>: Indirect call of a function with wrong dynamic type.</li>
+<li><code>-fsanitize=cfi-mfcall</code>: Indirect call via a member function pointer with wrong dynamic type.</li>
+</ul>
+<p>参考链接：<a target="_blank" rel="noopener" href="https://clang.llvm.org/docs/ControlFlowIntegrity.html">https://clang.llvm.org/docs/ControlFlowIntegrity.html</a></p>
+<p><strong>Windows WCFG和XFG（闭源）：</strong></p>
+<p>Microsoft Windows 具有专有的 CFI 实现，并直接集成到操作系统中。该实现称为控制流保护（Control Flow Guard，WCFG），首次发布于 2014 年 11 月。WCFG 施加了一种强制 CFI 策略，要求间接调用必须指向已知的取地址函数或导出函数。这意味着所有目标属于同一个等价类，因此 WCFG 是一种粗粒度的 CFI 方案。对于间接调用（包括使用虚函数表进行的虚函数调用），WCFG 通过调用检查函数进行保护，或直接替换为调用一个分发函数，该函数先执行 WCFG 检查，然后再分发调用。</p>
+<p>微软正在开发 WCFG 的继任者 eXtended Flow Guard（XFG），尽管尚未公开文档，但已在 Windows 预览版本中提供。XFG 采用类似于 LLVM CFI 实现的基于类型的策略，但其 CFI 检查基于嵌入式标签进行。</p>
+<p><strong>体系结构侧信道攻击：</strong></p>
+<p>Spectre攻击能够绕过LLVM CFI：</p>
+<blockquote>
+<p>Research has demonstrated that Spectre v1-like attacks can bypass software-based CFI defenses, such as LLVM-CFI, even in the presence of all default mitigations.</p>
+</blockquote>
+<h2 id="WOOT’24：硬件实现的前向CFI"><a href="#WOOT’24：硬件实现的前向CFI" class="headerlink" title="WOOT’24：硬件实现的前向CFI"></a>WOOT’24：硬件实现的前向CFI</h2><p><strong>参考如下PPT与文档：</strong></p>
+<p><a href="https://iamywang.github.io/images/arch-mem-1/memory-safety.pdf">https://iamywang.github.io/images/arch-mem-1/memory-safety.pdf</a></p>
+<p><a href="https://iamywang.github.io/2024/11/18/arch-mem-2/">https://iamywang.github.io/2024/11/18/arch-mem-2/</a></p>
+<p><strong>体系结构侧信道攻击：</strong></p>
+<p>可以说，基于硬件实现的前向CFI均容易遭受侧信道攻击的威胁，这些论文普遍发表于体系结构或者信息安全领域的顶级会议上：</p>
+<ul>
+<li>ISCA’22：绕过ARM PAC的PACMAN攻击；</li>
+<li>Security’24：绕过IBT和FineIBT的BHI攻击变体；</li>
+<li>Oakland’25：绕过ARM MTE的TikTag攻击。</li>
+</ul>
+<h2 id="WOOT’24：软件实现的后向CFI"><a href="#WOOT’24：软件实现的后向CFI" class="headerlink" title="WOOT’24：软件实现的后向CFI"></a>WOOT’24：软件实现的后向CFI</h2><p><strong>LLVM Shadow Stack：</strong></p>
+<p>LLVM 在 AArch64 架构上实现了一种影子栈（shadow stack）方案。Clang 支持的设计是一种基于信息隐藏的紧凑型影子栈，即影子栈使用寄存器 X18 维护其专有的栈指针，而该寄存器必须对攻击者保持未知状态，以提供保护。这意味着该寄存器不能被溢出到栈上（例如在调用未受保护的代码时），否则攻击者可能通过此途径获取影子栈的位置。</p>
+<p><strong>SafeStack：</strong></p>
+<p>除了影子调用栈（shadow call stack），LLVM 还实现了 SafeStack。SafeStack 的核心思想是在栈上分离安全和不安全的内存对象。被视为安全的内存对象包括返回地址、栈溢出数据（stack spills）以及仅通过帧指针（frame pointer）访问、未被取地址的局部变量。而其他所有对象都会被存储在不安全栈上。</p>
+<p><strong>体系结构侧信道攻击：</strong></p>
+<p>这类软件实现的影子栈自身仍然存在内存安全问题，USENIX Security’16会议以及BlackHat’16会议上分别有针对LLVM影子栈以及SafeStack的漏洞利用工作，实际上意味着利用体系结构侧信道进行绕过的意义不大。</p>
+<h2 id="WOOT’24：硬件实现的后向CFI"><a href="#WOOT’24：硬件实现的后向CFI" class="headerlink" title="WOOT’24：硬件实现的后向CFI"></a>WOOT’24：硬件实现的后向CFI</h2><p><strong>Intel CET：</strong></p>
+<blockquote>
+<p>Intel CET（Control-Flow Enforcement Technology）是Intel新推出的一项新的硬件级对策，其主要目的是防止攻击者通过ROP&#x2F;JOP&#x2F;COP等攻击手段来劫持控制流。<br>对于ROP攻击的防护，其基本思想与影子栈（shadow stack）类似，即由操作系统在内存中复制一份程序的内存栈或者是仅仅保留控制流跳转地址。然后，这个影子栈无法由正常的store、load指令进行控制，只能通过专门的指令来进行控制。因此，即使攻击者覆盖了软件栈上的返回地址，但是由于影子栈中仍然保存着原始的跳转地址，因此检查失败后会通过抛出异常来终止程序的执行。</p>
+</blockquote>
+<p><strong>体系结构侧信道攻击：</strong></p>
+<p>从现有资料中，可以认为，无法对Intel CET影子栈实施推测执行攻击。</p>
+<blockquote>
+<ul>
+<li>Instructions at the target of a RET instruction will not execute, even speculatively, if the RET addresses (either from normal stack or shadow stack) are speculative-only or do not match.</li>
+<li>Speculative execution only occurs when:<ul>
+<li>return address on stack &#x3D;&#x3D; return address on RSB</li>
+</ul>
+</li>
+<li>Never returns to malicious address</li>
+</ul>
+</blockquote>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1] Becker, L., Hollick, M., &amp; Classen, J. (2024). SoK: On the Effectiveness of {Control-Flow} Integrity in Practice. In 18th USENIX WOOT Conference on Offensive Technologies (WOOT 24) (pp. 189-209).</p>
+<p>[2] Ammar, M., Caulfield, A., &amp; Nunes, I. D. O. (2025). Sok: Integrity, attestation, and auditing of program execution. In 2025 IEEE Symposium on Security and Privacy (SP). IEEE Computer Society.</p>
+<p>[3] Ravichandran, J., Na, W. T., Lang, J., &amp; Yan, M. (2022, June). PACMAN: attacking ARM pointer authentication with speculative execution. In Proceedings of the 49th Annual International Symposium on Computer Architecture (pp. 685-698).</p>
+<p>[4] Wiebing, S., de Faveri Tron, A., Bos, H., &amp; Giuffrida, C. (2024). InSpectre Gadget: Inspecting the Residual Attack Surface of Cross-privilege Spectre v2. In 33rd USENIX Security Symposium (USENIX Security 24) (pp. 577-594).</p>
+<p>[5] Kim, J., Park, J., Roh, S., Chung, J., Lee, Y., Kim, T., &amp; Lee, B. (2025). TikTag: Breaking ARM’s Memory Tagging Extension with Speculative Execution. In 2025 IEEE Symposium on Security and Privacy (SP). IEEE Computer Society.</p>
+<p>[6] <a target="_blank" rel="noopener" href="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html">https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html</a></p>
 
                     
                 </div>
@@ -472,11 +548,11 @@
     <div class="copyright-info-content border-box">
         <div class="copyright-info-top border-box">
             <div class="copyright-post-title border-box text-ellipsis">
-                论文介绍（2）——分支预测器安全漏洞的建模、推导与自动分析
+                体系结构与内存安全（4）——WOOT&#39;24控制流完整性SoK论文阅读
             </div>
 
             <div class="copyright-post-link border-box text-ellipsis">
-                2024/03/02/paper-2/
+                2025/03/06/arch-mem-4/
             </div>
         </div>
 
@@ -492,7 +568,7 @@
                 <div class="type">
                     发布于
                 </div>
-                <div class="content">2024-03-02 20:00</div>
+                <div class="content">2025-03-06 17:00</div>
             </div>
 
 
@@ -532,19 +608,11 @@
                                     </li>
                                 
                                     <li class="tag-item border-box">
-                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E4%BE%A7%E4%BF%A1%E9%81%93%E6%94%BB%E5%87%BB/">侧信道攻击</a>
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E5%86%85%E5%AD%98%E5%AE%89%E5%85%A8/">内存安全</a>
                                     </li>
                                 
                                     <li class="tag-item border-box">
-                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E8%AE%BA%E6%96%87/">论文</a>
-                                    </li>
-                                
-                                    <li class="tag-item border-box">
-                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B%E5%99%A8/">分支预测器</a>
-                                    </li>
-                                
-                                    <li class="tag-item border-box">
-                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E5%BD%A2%E5%BC%8F%E5%8C%96%E9%AA%8C%E8%AF%81/">形式化验证</a>
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/">安全机制</a>
                                     </li>
                                 
                             </ul>
@@ -583,31 +651,15 @@
                 
                     <div class="post-nav border-box">
                         
-                            <div class="prev-post">
-                                <a class="prev"
-                                   rel="prev"
-                                   href="/2024/11/18/arch-mem-2/"
-                                   title="体系结构与内存安全（2）——侧信道攻击如何威胁内存安全机制"
-                                >
-                                    <span class="left arrow-icon flex-center">
-                                        <i class="fas fa-chevron-left"></i>
-                                    </span>
-                                    <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">体系结构与内存安全（2）——侧信道攻击如何威胁内存安全机制</span>
-                                        <span class="post-nav-item">上一篇</span>
-                                    </span>
-                                </a>
-                            </div>
-                        
                         
                             <div class="next-post">
                                 <a class="next"
                                    rel="next"
-                                   href="/2024/02/01/paper-1/"
-                                   title="论文介绍（1）——通过智能手机操作系统侧信道窃听用户行为"
+                                   href="/2025/03/04/arch-mem-3/"
+                                   title="体系结构与内存安全（3）——利用Spectre-PHT推测执行泄漏内存数据"
                                 >
                                     <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">论文介绍（1）——通过智能手机操作系统侧信道窃听用户行为</span>
+                                        <span class="post-nav-title-item text-ellipsis">体系结构与内存安全（3）——利用Spectre-PHT推测执行泄漏内存数据</span>
                                         <span class="post-nav-item">下一篇</span>
                                     </span>
                                     <span class="right arrow-icon flex-center">
@@ -736,7 +788,7 @@
             <div class="pc-post-toc left-toc">
                 <div class="post-toc-wrap border-box">
     <div class="post-toc border-box">
-        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">文章简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BA%E6%96%87%E6%91%98%E8%A6%81"><span class="nav-number">2.</span> <span class="nav-text">论文摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%80%E6%9C%AF%E8%B7%AF%E7%BA%BF"><span class="nav-number">3.</span> <span class="nav-text">技术路线</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#19%E7%A7%8D%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B%E5%99%A8%E7%8A%B6%E6%80%81%E5%BB%BA%E6%A8%A1"><span class="nav-number">3.1.</span> <span class="nav-text">19种分支预测器状态建模</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#53%E7%A7%8D%E5%88%86%E6%94%AF%E6%93%8D%E4%BD%9C%E7%B1%BB%E5%9E%8B%E5%BB%BA%E6%A8%A1"><span class="nav-number">3.2.</span> <span class="nav-text">53种分支操作类型建模</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E6%AD%A5%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B%E5%99%A8%E6%A8%A1%E6%8B%9F%E5%99%A8"><span class="nav-number">3.3.</span> <span class="nav-text">三步分支预测器模拟器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="nav-number">4.</span> <span class="nav-text">实验结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E6%BA%90%E4%BB%A3%E7%A0%81"><span class="nav-number">5.</span> <span class="nav-text">开源代码</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80%EF%BC%9A%E5%86%85%E5%AD%98%E7%A0%B4%E5%9D%8F%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8%E4%B8%8E%E5%AF%B9%E6%8A%97%E7%9A%84%E5%8F%91%E5%B1%95%E5%8E%86%E5%8F%B2"><span class="nav-number">1.</span> <span class="nav-text">前言：内存破坏漏洞利用与对抗的发展历史</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WOOT%E2%80%9924%EF%BC%9A%E8%AE%BA%E6%96%87%E7%9A%84%E9%87%8D%E7%82%B9%E7%A0%94%E7%A9%B6%E5%86%85%E5%AE%B9"><span class="nav-number">2.</span> <span class="nav-text">WOOT’24：论文的重点研究内容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WOOT%E2%80%9924%EF%BC%9ACFI%E8%BD%AF%E7%A1%AC%E4%BB%B6%E3%80%81%E5%89%8D%E5%90%8E%E5%90%91%E5%88%86%E7%B1%BB%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">3.</span> <span class="nav-text">WOOT’24：CFI软硬件、前后向分类的基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WOOT%E2%80%9924%EF%BC%9A%E8%BD%AF%E4%BB%B6%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%89%8D%E5%90%91CFI"><span class="nav-number">4.</span> <span class="nav-text">WOOT’24：软件实现的前向CFI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WOOT%E2%80%9924%EF%BC%9A%E7%A1%AC%E4%BB%B6%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%89%8D%E5%90%91CFI"><span class="nav-number">5.</span> <span class="nav-text">WOOT’24：硬件实现的前向CFI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WOOT%E2%80%9924%EF%BC%9A%E8%BD%AF%E4%BB%B6%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%90%8E%E5%90%91CFI"><span class="nav-number">6.</span> <span class="nav-text">WOOT’24：软件实现的后向CFI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WOOT%E2%80%9924%EF%BC%9A%E7%A1%AC%E4%BB%B6%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%90%8E%E5%90%91CFI"><span class="nav-number">7.</span> <span class="nav-text">WOOT’24：硬件实现的后向CFI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">8.</span> <span class="nav-text">参考文献</span></a></li></ol>
     </div>
 </div>
 
@@ -944,7 +996,7 @@
             <div class="tablet-post-toc">
                 <div class="post-toc-wrap border-box">
     <div class="post-toc border-box">
-        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">文章简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BA%E6%96%87%E6%91%98%E8%A6%81"><span class="nav-number">2.</span> <span class="nav-text">论文摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%80%E6%9C%AF%E8%B7%AF%E7%BA%BF"><span class="nav-number">3.</span> <span class="nav-text">技术路线</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#19%E7%A7%8D%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B%E5%99%A8%E7%8A%B6%E6%80%81%E5%BB%BA%E6%A8%A1"><span class="nav-number">3.1.</span> <span class="nav-text">19种分支预测器状态建模</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#53%E7%A7%8D%E5%88%86%E6%94%AF%E6%93%8D%E4%BD%9C%E7%B1%BB%E5%9E%8B%E5%BB%BA%E6%A8%A1"><span class="nav-number">3.2.</span> <span class="nav-text">53种分支操作类型建模</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E6%AD%A5%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B%E5%99%A8%E6%A8%A1%E6%8B%9F%E5%99%A8"><span class="nav-number">3.3.</span> <span class="nav-text">三步分支预测器模拟器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="nav-number">4.</span> <span class="nav-text">实验结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E6%BA%90%E4%BB%A3%E7%A0%81"><span class="nav-number">5.</span> <span class="nav-text">开源代码</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80%EF%BC%9A%E5%86%85%E5%AD%98%E7%A0%B4%E5%9D%8F%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8%E4%B8%8E%E5%AF%B9%E6%8A%97%E7%9A%84%E5%8F%91%E5%B1%95%E5%8E%86%E5%8F%B2"><span class="nav-number">1.</span> <span class="nav-text">前言：内存破坏漏洞利用与对抗的发展历史</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WOOT%E2%80%9924%EF%BC%9A%E8%AE%BA%E6%96%87%E7%9A%84%E9%87%8D%E7%82%B9%E7%A0%94%E7%A9%B6%E5%86%85%E5%AE%B9"><span class="nav-number">2.</span> <span class="nav-text">WOOT’24：论文的重点研究内容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WOOT%E2%80%9924%EF%BC%9ACFI%E8%BD%AF%E7%A1%AC%E4%BB%B6%E3%80%81%E5%89%8D%E5%90%8E%E5%90%91%E5%88%86%E7%B1%BB%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">3.</span> <span class="nav-text">WOOT’24：CFI软硬件、前后向分类的基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WOOT%E2%80%9924%EF%BC%9A%E8%BD%AF%E4%BB%B6%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%89%8D%E5%90%91CFI"><span class="nav-number">4.</span> <span class="nav-text">WOOT’24：软件实现的前向CFI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WOOT%E2%80%9924%EF%BC%9A%E7%A1%AC%E4%BB%B6%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%89%8D%E5%90%91CFI"><span class="nav-number">5.</span> <span class="nav-text">WOOT’24：硬件实现的前向CFI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WOOT%E2%80%9924%EF%BC%9A%E8%BD%AF%E4%BB%B6%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%90%8E%E5%90%91CFI"><span class="nav-number">6.</span> <span class="nav-text">WOOT’24：软件实现的后向CFI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WOOT%E2%80%9924%EF%BC%9A%E7%A1%AC%E4%BB%B6%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%90%8E%E5%90%91CFI"><span class="nav-number">7.</span> <span class="nav-text">WOOT’24：硬件实现的后向CFI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">8.</span> <span class="nav-text">参考文献</span></a></li></ol>
     </div>
 </div>
 
