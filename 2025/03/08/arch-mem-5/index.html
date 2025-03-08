@@ -9,7 +9,7 @@
     
     <title>
         
-            体系结构与内存安全（4）——WOOT&#39;24控制流完整性SoK论文阅读 |
+            体系结构与内存安全（5）——Oakland’25运行时完整性SoK论文阅读 |
         
         没事我就挠脑袋
     </title>
@@ -298,7 +298,7 @@
             <div class="post-content-bottom border-box">
                 
                     <div class="post-title">
-                        体系结构与内存安全（4）——WOOT&#39;24控制流完整性SoK论文阅读
+                        体系结构与内存安全（5）——Oakland’25运行时完整性SoK论文阅读
                     </div>
                 
 
@@ -324,13 +324,13 @@
         
             <span class="meta-info-item post-create-date">
                 <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
-                <span class="datetime">2025-03-06 17:00:00</span>
+                <span class="datetime">2025-03-08 17:00:00</span>
             </span>
 
             
                 <span class="meta-info-item post-update-date">
                     <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Thu Mar 06 2025 17:00:00 GMT+0800">2025-03-06 17:00:00</span>
+                    <span class="datetime" data-updated="Sat Mar 08 2025 17:00:00 GMT+0800">2025-03-08 17:00:00</span>
                 </span>
             
         
@@ -366,12 +366,12 @@
         
         
             <span class="meta-info-item post-wordcount">
-                <i class="icon fas fa-file-word"></i>&nbsp;<span>2.9k 字</span>
+                <i class="icon fas fa-file-word"></i>&nbsp;<span>2.6k 字</span>
             </span>
         
         
             <span class="meta-info-item post-min2read">
-                <i class="icon fas fa-clock"></i>&nbsp;<span>11 分钟</span>
+                <i class="icon fas fa-clock"></i>&nbsp;<span>10 分钟</span>
             </span>
         
         
@@ -393,151 +393,132 @@
                     
 
                     
-                         <h2 id="前言：内存破坏漏洞利用与对抗的发展历史"><a href="#前言：内存破坏漏洞利用与对抗的发展历史" class="headerlink" title="前言：内存破坏漏洞利用与对抗的发展历史"></a>前言：内存破坏漏洞利用与对抗的发展历史</h2><p><img  
-                       lazyload
-                       alt="image"
-                       data-src="/images/arch-mem-4/1.png"
-                        alt="危害软件完整性的内存破坏漏洞分类"
-                 ></p>
-<center>图1 危害软件完整性的内存破坏漏洞分类</center>
-
-<p><strong>第一步：利用——代码注入类攻击：</strong></p>
-<p>代码注入类攻击是一类攻击技术，攻击者通过利用软件漏洞（如缓冲区溢出、输入验证不当等）向目标程序的内存中插入并执行恶意代码，从而劫持程序控制流，执行未授权操作。</p>
-<p><strong>第二步：对抗——数据执行保护（DEP）：</strong></p>
-<p>数据执行保护是一种系统级内存保护功能，使系统能够将一个或多个内存页标记为不可执行。将内存区域标记为不可执行意味着代码无法从该内存区域运行，这使得利用缓冲区溢出更加困难。DEP阻止从默认堆、堆栈和内存池等数据页运行代码。如果应用程序尝试从受保护的数据页运行代码，则会发生内存访问冲突异常，如果未处理该异常，调用进程将终止。</p>
-<p><strong>第三步：利用——代码重用类攻击：</strong></p>
-<p>代码重用攻击是一种利用现有程序代码（而非注入新代码）来执行恶意操作的攻击方式。它通常用于绕过数据执行保护（DEP）等安全机制，因为DEP会禁止在数据区执行注入的代码，但不会阻止程序本身的代码执行。</p>
-<p><strong>第四步：对抗——地址随机化（ASLR）与控制流完整性（CFI）：</strong></p>
-<p>为了防御代码重用攻击，现代操作系统和编译器引入了一些安全机制：</p>
-<p>地址空间布局随机化（ASLR）：通过随机化代码段、堆、栈等地址，使攻击者难以预测ROP&#x2F;JOP gadgets的地址。但如果存在信息泄露漏洞，ASLR可能被绕过。</p>
-<p>控制流完整性（Control-Flow Integrity, CFI）：限制函数调用和跳转的目标地址，只允许合法路径上的控制流执行。使ROP、JOP、COP等攻击更难实施。</p>
-<h2 id="WOOT’24：论文的重点研究内容"><a href="#WOOT’24：论文的重点研究内容" class="headerlink" title="WOOT’24：论文的重点研究内容"></a>WOOT’24：论文的重点研究内容</h2><p>这篇论文的题目为：SoK: On the Effectiveness of Control-Flow Integrity in Practice。</p>
-<p><strong>解决了CFI研究中的哪些问题？</strong></p>
-<ul>
-<li>第一，实际生产环境有哪些已经部署的CFI机制；</li>
-<li>第二，这些CFI机制在何处部署以及如何部署；</li>
-<li>第三，它们在对抗攻击方面的有效性以及仍然存在的局限性有哪些？</li>
-</ul>
+                         <h2 id="Oakland’25：论文的重点研究内容"><a href="#Oakland’25：论文的重点研究内容" class="headerlink" title="Oakland’25：论文的重点研究内容"></a>Oakland’25：论文的重点研究内容</h2><p>这篇论文的题目为：SoK: Integrity, Attestation, and Auditing of Program Execution。</p>
+<p><strong>解决了运行时完整性研究中的哪些问题？</strong></p>
+<p>[Q1] CFA 和 CFI 的目标有何不同？<br>[Q2] CFI 与 CFA 的假设、特性和设计空间分别是什么？它们有哪些相似点和不同点？<br>[Q3] CFA 与远程证明对 CFI 策略的遵循有何不同？CFA 是否能够发现 CFI 无法检测到的攻击（反之亦然）？<br>[Q4] CFI 和 CFA 是否能够在同一平台上共存？</p>
 <blockquote>
-<ol>
-<li>Which CFI schemes are found in practice?</li>
-<li>Where and how consequently are they deployed?</li>
-<li>What are their capabilities and limitations to prevent attacks?</li>
-</ol>
+<p>[Q1] How do CFA and CFI goals differ?<br>[Q2] What are the assumptions, features, and design spaces of CFI vs. CFA, as well as their similarities and differences?<br>[Q3] What makes CFA different from remotely attesting adherence to a CFI policy? Could CFA uncover attacks that CFI would not (and vice-versa)?<br>[Q4] Could CFI and CFA coexist on the same platform?</p>
 </blockquote>
-<p><strong>实际生产环境已经部署哪些CFI？</strong></p>
+<p><strong>这篇论文重点关注哪些运行时完整性技术？</strong></p>
 <ul>
-<li>编译器：LLVM Clang CFI；</li>
-<li>Windows：WCFG、XFG；</li>
-<li>ARM：PAC（文章没有提到，MTE也已经部署）；</li>
-<li>Intel：CET（同时包含有Shadow Stack以及IBT）。</li>
+<li>由于现有的 CFA 方案数量较少且可管理，作者旨在收录所有相关文献（除非存在无意的疏漏）。</li>
+<li>鉴于 CFI 方案的数量众多，作者采用以下标准筛选过去 10 年内的研究成果：<ul>
+<li>发表在知名安全会议（如 USENIX Security、IEEE S&amp;P、CCS 和 NDSS）上的论文。  </li>
+<li>被引用次数超过 100 的论文，表明其在后续研究中的广泛影响。  </li>
+<li>被主流编译器或硬件架构采用的论文或方案。</li>
+</ul>
+</li>
 </ul>
 <blockquote>
-<ol>
-<li>LLVM Clang CFI, used primarily on Android and the Linux Kernel;</li>
-<li>Windows Control Flow Guard (WCFG) and its successor eXtended Flow Guard (XFG);</li>
-<li>ARMv8 Pointer Authentication (PA) including Branch Target Identification (BTI), utilised by recent Apple Systems on a Chip (SoCs) starting with the A12, S4, and M1 chips, by Android, and by Windows on ARM;</li>
-<li>Intel Control-flow Enforcement Technology (CET), supported on Intel processors starting with the 11th Gen and used by Windows and Linux.</li>
-</ol>
+<ul>
+<li>We aim to include all available literature on CFA due to the manageable number of existing proposals (except unintended oversights).</li>
+<li>Given the extensive volume of CFI proposals, we use the following criteria for selection within the past 10 years:<ul>
+<li>Papers published in prestigious security-focused conferences such as USENIX Security, IEEE S&amp;P, CCS, and NDSS.</li>
+<li>Papers with more than 100 citations, indicating their broad influence in subsequent work.</li>
+<li>Papers or proposals adopted in mainstream compilers or hardware architectures.</li>
+</ul>
+</li>
+</ul>
 </blockquote>
 <p><strong>这篇论文的主要贡献是什么？</strong></p>
+<p>在本文中，作者通过系统性分析 CFI 和 CFA 的基本目标及其权衡关系，探讨二者之间的关联与区别：</p>
 <ul>
-<li>作者对实际应用中的主流控制流完整性（CFI）解决方案进行了系统化整理，包括 LLVM 的 CFI 方案以及微软在 Windows 上的闭源实现 WCFG 和 XFG。</li>
-<li>作者通过对 Android 和 Windows 二进制文件的大规模分析，研究了 CFI 的覆盖范围、安全特性及其实践中的有效性。</li>
-<li>作者分析了相同设备的不同版本 Android 固件发布情况，以深入了解其随时间的演进。</li>
+<li>为此，作者首先对现有的运行时防御机制进行系统性回顾，以提供研究背景，并将 CFI 和 CFA 置于更广义的执行完整性防御体系中。</li>
+<li>随后，作者根据设计选择对近年来的 CFI 和 CFA 研究进行分类，权衡其优缺点，以更全面地理解现有方案的局限性。</li>
+<li>最后，作者讨论 CFI 与 CFA 之间的未解关联，并探讨未来的研究方向。</li>
 </ul>
 <blockquote>
 <ul>
-<li>We systematize prevalent CFI solutions in practice, including LLVM’s CFI scheme and Microsoft’s closedsource implementations WCFG and XFG on Windows. </li>
-<li>We study CFI coverage, security characteristics, and effectiveness in practice by running a large-scale binary analysis on Android and Windows binaries.</li>
-<li>We analyse Android firmware releases of the same devices to get insights into the development over time.</li>
+<li>Towards this goal, we present a systematic review of existing runtime defenses to provide context and position CFI and CFA within the broader landscape of execution integrity defenses.</li>
+<li>Subsequently, we classify recent work in CFI and CFA according to design choices, weighing their advantages and disadvantages and aiming to grasp a better understanding of existing limitations.</li>
+<li>Finally, we discuss missing links between CFI and CFA and future research avenues.</li>
 </ul>
 </blockquote>
 <p><strong>本篇文档重点关注什么内容？</strong></p>
 <p>考虑到我们的主题是寻找体系结构安全与内存安全机制相关的话题，本篇文档的重点将侧重于以下几个方面：</p>
 <ul>
-<li>这篇论文提到、介绍并分析了哪些已经实际部署的CFI安全机制（即，论文的第一个主要贡献）；</li>
+<li>这篇论文提到、介绍并分析了哪些已经实际部署的CFI和CFA安全机制；</li>
 <li>这些CFI安全机制是否已经能够被体系结构侧信道攻击所绕过（与先前2024&#x2F;11&#x2F;18的博客所对应）；</li>
-<li>在前两者的基础上思考体系结构安全与内存安全之间的关系；</li>
-<li>值得一提的是，这篇论文的威胁模型中提到假定攻击者已经能够绕过ASLR：</li>
+<li>在前两者的基础上思考体系结构安全与内存安全之间的关系。</li>
 </ul>
+<h2 id="Oakland’25：运行时防护有哪些"><a href="#Oakland’25：运行时防护有哪些" class="headerlink" title="Oakland’25：运行时防护有哪些"></a>Oakland’25：运行时防护有哪些</h2><p><img  
+                       lazyload
+                       alt="image"
+                       data-src="/images/arch-mem-5/1.png"
+                        alt="针对内存破坏漏洞的防御机制"
+                 ></p>
+<center>图1 针对内存破坏漏洞的防御机制</center>
+
+<p><strong>内存破坏漏洞的攻击步骤与安全防护的对应关系：</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">#</th>
+<th align="center">攻击步骤</th>
+<th align="center">安全防护</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td align="center">Memory Vulnerability</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center">Integrity Violation</td>
+<td align="center">Software Compartmentalization</td>
+</tr>
+<tr>
+<td align="center">3</td>
+<td align="center">Exploit Payload</td>
+<td align="center">Software Diversification</td>
+</tr>
+<tr>
+<td align="center">4</td>
+<td align="center">Exploit Dispatch</td>
+<td align="center">Data Integrity（建立在W^X基础上）</td>
+</tr>
+<tr>
+<td align="center">5</td>
+<td align="center">Exploit Execution</td>
+<td align="center">Runtime Attestation（建立在可信根基础上）</td>
+</tr>
+</tbody></table>
+<p><strong>内存破坏漏洞的攻击步骤：</strong></p>
+<ul>
+<li>Memory Vulnerability：在所有运行时攻击中，发现并利用内存破坏漏洞是必不可少的前提条件。对内存地址的非法访问（无论是读取、写入，还是两者兼有）取决于具体的漏洞类型。需要注意的是，仅允许只读访问的漏洞本身不足以破坏目标程序的执行完整性。</li>
+<li>Integrity Violation：利用具备非法写入权限的漏洞，使攻击者能够篡改程序的多个方面，包括 (i) 程序代码（存储在内存中的指令）、(ii) 控制数据（如返回地址和函数指针）以及 (iii) 非控制数据（如数据变量和指针）。</li>
+<li>Exploit Payload：如果先前的防御机制被绕过，攻击者可以注入载荷以操控目标程序的数据流和控制流。通常，载荷注入过程需要对程序的内存布局有一定的了解。</li>
+<li>Exploit Dispatch：为了成功发起复杂的攻击，攻击者需要引导目标程序执行注入的载荷。这一步对于 ROP 等高级代码重用攻击至关重要，其中，攻击者通过操控栈指针，使程序按照预定顺序执行一系列精心挑选的 gadget。每个 gadget 在执行完毕后都会返回到下一个 gadget 的特定内存地址，从而实现预期的攻击行为。</li>
+</ul>
+<p><strong>运行时防护：</strong></p>
+<ul>
+<li>Software Compartmentalization：隔离与分区机制在强制执行访问控制权限方面发挥关键作用，以减轻完整性破坏的风险。这些机制限制了攻击者可访问的目标，通常能够在攻击的早期阶段加以阻断，或防止其向系统的其他部分扩散。例如，访问控制机制 AArch64 的 (Un)Privileged Execution Never 特性显著提高了直接篡改程序代码的难度。代码指针完整性（Code Pointer Integrity, CPI）是一种安全机制，通过将所有代码指针及指向代码的数据指针存储在隔离的内存区域中，以防止其被篡改。</li>
+<li>Software Diversification：对此，软件多样化通过引入随机化来增加不确定性，旨在阻碍可重用漏洞利用的构造。例如，地址空间布局随机化（Address Space Layout Randomization, ASLR）和指令集随机化（Instruction Set Randomization, ISR）是两种轻量级防御机制，通过对内存布局进行随机化，使得载荷注入在控制流劫持和代码注入攻击中的实施变得更加困难。</li>
+<li>Data Integrity：控制流完整性（Control Flow Integrity, CFI）和数据流完整性（Data Flow Integrity, DFI）是两种常见的防御机制，旨在检测并阻止此阶段的控制流劫持攻击和仅数据攻击。这些技术通过制定并强制执行程序执行过程中必须遵循的策略来实现防护。</li>
+<li>Runtime Attestation：因此，运行时认证机制被提出作为最后一道防线，以便以可信的方式远程验证代码和执行完整性。这些机制旨在检测代码篡改或控制流&#x2F;数据流的违规行为。此外，它们还提供了在操作过程中向远程方证明目标程序执行完整性的方法，并在某些情况下，在发生漏洞利用时，能够审计根本原因漏洞。</li>
+</ul>
+<h2 id="Oakland’25：现有的CFI和CFA机制"><a href="#Oakland’25：现有的CFI和CFA机制" class="headerlink" title="Oakland’25：现有的CFI和CFA机制"></a>Oakland’25：现有的CFI和CFA机制</h2><p><img  
+                       lazyload
+                       alt="image"
+                       data-src="/images/arch-mem-5/2.png"
+                        alt="现有的CFI和CFA机制"
+                 ></p>
+<center>图2 现有的CFI和CFA机制</center>
+
+<h2 id="Oakland’25：体系结构侧信道攻击向量"><a href="#Oakland’25：体系结构侧信道攻击向量" class="headerlink" title="Oakland’25：体系结构侧信道攻击向量"></a>Oakland’25：体系结构侧信道攻击向量</h2><p>微架构攻击的出现可能会影响 CFI 和 CFA。尽管这些防御主要针对内存破坏攻击，但某些 Spectre 变体同样可能对它们产生影响。例如，Spectre v1 利用数组访问前边界检查后的错误推测，而 Spectre v2 则利用间接调用或跳转目标的错误预测。两者均采用 Flush+Reload 隐蔽信道来泄漏数据。研究表明，即使在启用了所有默认缓解措施的情况下，类似 Spectre v1 的攻击仍能绕过基于软件的 CFI 防御（如 LLVM-CFI）。虽然已经提出了诸如 SPECCFI 和 MicroCFI 等专门的缓解措施，但 Spectre v2 的威胁依然严重，且尚未得到完全解决。</p>
 <blockquote>
-<p>The CFI adversary model assumes that by using these capabilities, the adversary can break Address Space Layout Randomisation (ASLR).</p>
+<p>The emergence of microarchitectural attacks can affect CFI and CFA. While these defenses focus on memory corruption attacks, certain variants of Spectre [160] can affect them. For instance, Spectre v1 exploits misspeculation following a bounds-check prior to an array access, while Spectre v2 exploits misprediction of the target of an indirect call or jump. Both utilize a Flush+Reload channel [161] to leak data. Research has demonstrated that Spectre v1-like attacks can bypass software-based CFI defenses, such as LLVM-CFI [18], even in the presence of all default mitigations [162]. While specialized mitigations, such as SPECCFI [163] and MicroCFI [164], were proposed, Spectre v2 remains severe and yet to be fully mitigated.</p>
 </blockquote>
-<h2 id="WOOT’24：CFI软硬件、前后向分类的基本概念"><a href="#WOOT’24：CFI软硬件、前后向分类的基本概念" class="headerlink" title="WOOT’24：CFI软硬件、前后向分类的基本概念"></a>WOOT’24：CFI软硬件、前后向分类的基本概念</h2><p>按照CFI完整性检查机制是由软件实现的还是需要底层硬件支持，可以划分为：</p>
-<ul>
-<li>基于软件的CFI：例如，LLVM CFI、WCFG、XFG、LLVM影子栈、栈Canary；</li>
-<li>基于硬件的CFI：例如，ARM PAC、ARM BTI、Intel IBT、FineIBT、Intel CET影子栈；</li>
-</ul>
-<p>按照所防护的对象（可以看作控制流转移指令，也就是分支指令）的转移方式，可以划分为：</p>
-<ul>
-<li>前向CFI：前向转移指的是将控制权定向到程序中一个新位置的转移方式，其实就可以看作是<code>call</code>指令和<code>jmp</code>指令；</li>
-<li>后向CFI：后向转移指的是将控制权返回到先前位置的转移方式，其实就可以看作是<code>ret</code>指令。</li>
-</ul>
-<p>因此，前面所提到的这些CFI机制中，前向CFI和后向CFI分别包含：</p>
-<ul>
-<li>前向CFI：LLVM CFI、WCFG、XFG、ARM PAC、ARM BTI、Intel IBT、FineIBT；</li>
-<li>后向CFI：LLVM影子栈、Intel CET影子栈、栈Canary。</li>
-</ul>
-<h2 id="WOOT’24：软件实现的前向CFI"><a href="#WOOT’24：软件实现的前向CFI" class="headerlink" title="WOOT’24：软件实现的前向CFI"></a>WOOT’24：软件实现的前向CFI</h2><p><strong>LLVM CFI：</strong></p>
-<p>LLVM CFI是Clang编译器前端的一部分，支持包括 C++ 在内的 C 语言家族。它能够保护间接函数调用、通过成员函数指针进行的调用、虚函数调用、使用多态类（即声明或继承虚函数的类）进行的非虚函数调用，以及多态类的非法类型转换。</p>
-<p>根据Clang编译器的手册，可选的CFI编译参数有以下几个部分：</p>
-<ul>
-<li><code>-fsanitize=cfi-cast-strict</code>: Enables strict cast checks.</li>
-<li><code>-fsanitize=cfi-derived-cast</code>: Base-to-derived cast to the wrong dynamic type.</li>
-<li><code>-fsanitize=cfi-unrelated-cast</code>: Cast from void* or another unrelated type to the wrong dynamic type.</li>
-<li><code>-fsanitize=cfi-nvcall</code>: Non-virtual call via an object whose vptr is of the wrong dynamic type.</li>
-<li><code>-fsanitize=cfi-vcall</code>: Virtual call via an object whose vptr is of the wrong dynamic type.</li>
-<li><code>-fsanitize=cfi-icall</code>: Indirect call of a function with wrong dynamic type.</li>
-<li><code>-fsanitize=cfi-mfcall</code>: Indirect call via a member function pointer with wrong dynamic type.</li>
-</ul>
-<p>参考链接：<a target="_blank" rel="noopener" href="https://clang.llvm.org/docs/ControlFlowIntegrity.html">https://clang.llvm.org/docs/ControlFlowIntegrity.html</a></p>
-<p><strong>Windows WCFG和XFG（闭源）：</strong></p>
-<p>Microsoft Windows 具有专有的 CFI 实现，并直接集成到操作系统中。该实现称为控制流保护（Control Flow Guard，WCFG），首次发布于 2014 年 11 月。WCFG 施加了一种强制 CFI 策略，要求间接调用必须指向已知的取地址函数或导出函数。这意味着所有目标属于同一个等价类，因此 WCFG 是一种粗粒度的 CFI 方案。对于间接调用（包括使用虚函数表进行的虚函数调用），WCFG 通过调用检查函数进行保护，或直接替换为调用一个分发函数，该函数先执行 WCFG 检查，然后再分发调用。</p>
-<p>微软正在开发 WCFG 的继任者 eXtended Flow Guard（XFG），尽管尚未公开文档，但已在 Windows 预览版本中提供。XFG 采用类似于 LLVM CFI 实现的基于类型的策略，但其 CFI 检查基于嵌入式标签进行。</p>
-<p><strong>体系结构侧信道攻击：</strong></p>
-<p>Spectre攻击能够绕过LLVM CFI：</p>
+<p>尽管现代的 CFI 防御（例如 Intel CET）已经考虑了 Spectre 威胁模型，并设计时内置了对 Spectre v2 的防护，但近期的攻击（如InSpectre Gadget）揭示了新的可利用 gadget 类型，即使在 CET 的间接分支跟踪（IBT）功能或其最近的细粒度对应机制 FineIBT 启用的情况下，也能成功发起 Spectre v2 攻击。PACMAN 则是另一种近期攻击，其利用推测性执行和内存破坏绕过了 Apple M1 SoCs 上的 ARM 指针认证。</p>
 <blockquote>
-<p>Research has demonstrated that Spectre v1-like attacks can bypass software-based CFI defenses, such as LLVM-CFI, even in the presence of all default mitigations.</p>
+<p>Although contemporary CFI defenses, such as Intel CET [21], consider a post-Spectre threat model and are designed with built-in protection against Spectre v2 [165], recent attacks, such as InSpectre Gadget [166], have uncovered new types of exploitable gadgets that can successfully mount Spectre v2 attacks, even if the CET’s Indirect Branch Tracking (IBT) feature or its recent fine-grained counterpart, FineIBT [22], are active. PACMAN [30] stands out as another recent attack that exploits speculative execution along with memory corruption to bypass ARM Pointer Authentication on Apple M1 SoCs.</p>
 </blockquote>
-<h2 id="WOOT’24：硬件实现的前向CFI"><a href="#WOOT’24：硬件实现的前向CFI" class="headerlink" title="WOOT’24：硬件实现的前向CFI"></a>WOOT’24：硬件实现的前向CFI</h2><p><strong>参考如下PPT与文档：</strong></p>
-<p><a href="https://iamywang.github.io/images/arch-mem-1/memory-safety.pdf">https://iamywang.github.io/images/arch-mem-1/memory-safety.pdf</a></p>
-<p><a href="https://iamywang.github.io/2024/11/18/arch-mem-2/">https://iamywang.github.io/2024/11/18/arch-mem-2/</a></p>
-<p><strong>体系结构侧信道攻击：</strong></p>
-<p>可以说，基于硬件实现的前向CFI均容易遭受侧信道攻击的威胁，这些论文普遍发表于体系结构或者信息安全领域的顶级会议上：</p>
-<ul>
-<li>ISCA’22：绕过ARM PAC的PACMAN攻击；</li>
-<li>Security’24：绕过IBT和FineIBT的BHI攻击变体；</li>
-<li>Oakland’25：绕过ARM MTE的TikTag攻击。</li>
-</ul>
-<h2 id="WOOT’24：软件实现的后向CFI"><a href="#WOOT’24：软件实现的后向CFI" class="headerlink" title="WOOT’24：软件实现的后向CFI"></a>WOOT’24：软件实现的后向CFI</h2><p><strong>LLVM Shadow Stack：</strong></p>
-<p>LLVM 在 AArch64 架构上实现了一种影子栈（shadow stack）方案。Clang 支持的设计是一种基于信息隐藏的紧凑型影子栈，即影子栈使用寄存器 X18 维护其专有的栈指针，而该寄存器必须对攻击者保持未知状态，以提供保护。这意味着该寄存器不能被溢出到栈上（例如在调用未受保护的代码时），否则攻击者可能通过此途径获取影子栈的位置。</p>
-<p><strong>SafeStack：</strong></p>
-<p>除了影子调用栈（shadow call stack），LLVM 还实现了 SafeStack。SafeStack 的核心思想是在栈上分离安全和不安全的内存对象。被视为安全的内存对象包括返回地址、栈溢出数据（stack spills）以及仅通过帧指针（frame pointer）访问、未被取地址的局部变量。而其他所有对象都会被存储在不安全栈上。</p>
-<p><strong>体系结构侧信道攻击：</strong></p>
-<p>这类软件实现的影子栈自身仍然存在内存安全问题，USENIX Security’16会议以及BlackHat’16会议上分别有针对LLVM影子栈以及SafeStack的漏洞利用工作，实际上意味着利用体系结构侧信道进行绕过的意义不大。</p>
-<h2 id="WOOT’24：硬件实现的后向CFI"><a href="#WOOT’24：硬件实现的后向CFI" class="headerlink" title="WOOT’24：硬件实现的后向CFI"></a>WOOT’24：硬件实现的后向CFI</h2><p><strong>Intel CET：</strong></p>
+<p>与 CFI 类似，利用受到侧信道攻击影响的架构组件的 CFA 同样可能面临脆弱性。另一方面，一些与秘密依赖相关的时间侧信道攻击（这些攻击利用软件实现漏洞而非微架构漏洞）依赖于目标程序控制流路径的差异，为基于 $CF_{Log}$ 分析的漏洞利用识别提供了机会。</p>
 <blockquote>
-<p>Intel CET（Control-Flow Enforcement Technology）是Intel新推出的一项新的硬件级对策，其主要目的是防止攻击者通过ROP&#x2F;JOP&#x2F;COP等攻击手段来劫持控制流。<br>对于ROP攻击的防护，其基本思想与影子栈（shadow stack）类似，即由操作系统在内存中复制一份程序的内存栈或者是仅仅保留控制流跳转地址。然后，这个影子栈无法由正常的store、load指令进行控制，只能通过专门的指令来进行控制。因此，即使攻击者覆盖了软件栈上的返回地址，但是由于影子栈中仍然保存着原始的跳转地址，因此检查失败后会通过抛出异常来终止程序的执行。</p>
+<p>Similar to CFI, CFA leveraging architectural components vulnerable to side channels could be equally vulnerable. On the other hand, several secret dependency-related time side channels [167] (that exploit software implementation bugs, rather than micro-architectural bugs) depend on differences in the target program’s control flow path, opening opportunities for exploit identification based on $CF_{Log}$ analysis. To our knowledge, the latter remains unexplored in prior work.</p>
 </blockquote>
-<p><strong>体系结构侧信道攻击：</strong></p>
-<p>从现有资料中，可以认为，无法对Intel CET影子栈实施推测执行攻击。</p>
-<blockquote>
-<ul>
-<li>Instructions at the target of a RET instruction will not execute, even speculatively, if the RET addresses (either from normal stack or shadow stack) are speculative-only or do not match.</li>
-<li>Speculative execution only occurs when:<ul>
-<li>return address on stack &#x3D;&#x3D; return address on RSB</li>
-</ul>
-</li>
-<li>Never returns to malicious address</li>
-</ul>
-</blockquote>
-<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1] Becker, L., Hollick, M., &amp; Classen, J. (2024). SoK: On the Effectiveness of {Control-Flow} Integrity in Practice. In 18th USENIX WOOT Conference on Offensive Technologies (WOOT 24) (pp. 189-209).</p>
-<p>[2] Ammar, M., Caulfield, A., &amp; Nunes, I. D. O. (2025). Sok: Integrity, attestation, and auditing of program execution. In 2025 IEEE Symposium on Security and Privacy (SP). IEEE Computer Society.</p>
-<p>[3] Ravichandran, J., Na, W. T., Lang, J., &amp; Yan, M. (2022, June). PACMAN: attacking ARM pointer authentication with speculative execution. In Proceedings of the 49th Annual International Symposium on Computer Architecture (pp. 685-698).</p>
-<p>[4] Wiebing, S., de Faveri Tron, A., Bos, H., &amp; Giuffrida, C. (2024). InSpectre Gadget: Inspecting the Residual Attack Surface of Cross-privilege Spectre v2. In 33rd USENIX Security Symposium (USENIX Security 24) (pp. 577-594).</p>
-<p>[5] Kim, J., Park, J., Roh, S., Chung, J., Lee, Y., Kim, T., &amp; Lee, B. (2025). TikTag: Breaking ARM’s Memory Tagging Extension with Speculative Execution. In 2025 IEEE Symposium on Security and Privacy (SP). IEEE Computer Society.</p>
-<p>[6] <a target="_blank" rel="noopener" href="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html">https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html</a></p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1] Ammar, M., Caulfield, A., &amp; Nunes, I. D. O. (2025). Sok: Integrity, attestation, and auditing of program execution. In 2025 IEEE Symposium on Security and Privacy (SP). IEEE Computer Society.</p>
 
                     
                 </div>
@@ -548,11 +529,11 @@
     <div class="copyright-info-content border-box">
         <div class="copyright-info-top border-box">
             <div class="copyright-post-title border-box text-ellipsis">
-                体系结构与内存安全（4）——WOOT&#39;24控制流完整性SoK论文阅读
+                体系结构与内存安全（5）——Oakland’25运行时完整性SoK论文阅读
             </div>
 
             <div class="copyright-post-link border-box text-ellipsis">
-                2025/03/06/arch-mem-4/
+                2025/03/08/arch-mem-5/
             </div>
         </div>
 
@@ -568,7 +549,7 @@
                 <div class="type">
                     发布于
                 </div>
-                <div class="content">2025-03-06 17:00</div>
+                <div class="content">2025-03-08 17:00</div>
             </div>
 
 
@@ -651,31 +632,15 @@
                 
                     <div class="post-nav border-box">
                         
-                            <div class="prev-post">
-                                <a class="prev"
-                                   rel="prev"
-                                   href="/2025/03/08/arch-mem-5/"
-                                   title="体系结构与内存安全（5）——Oakland’25运行时完整性SoK论文阅读"
-                                >
-                                    <span class="left arrow-icon flex-center">
-                                        <i class="fas fa-chevron-left"></i>
-                                    </span>
-                                    <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">体系结构与内存安全（5）——Oakland’25运行时完整性SoK论文阅读</span>
-                                        <span class="post-nav-item">上一篇</span>
-                                    </span>
-                                </a>
-                            </div>
-                        
                         
                             <div class="next-post">
                                 <a class="next"
                                    rel="next"
-                                   href="/2025/03/04/arch-mem-3/"
-                                   title="体系结构与内存安全（3）——利用Spectre-PHT推测执行泄漏内存数据"
+                                   href="/2025/03/06/arch-mem-4/"
+                                   title="体系结构与内存安全（4）——WOOT&#39;24控制流完整性SoK论文阅读"
                                 >
                                     <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">体系结构与内存安全（3）——利用Spectre-PHT推测执行泄漏内存数据</span>
+                                        <span class="post-nav-title-item text-ellipsis">体系结构与内存安全（4）——WOOT&#39;24控制流完整性SoK论文阅读</span>
                                         <span class="post-nav-item">下一篇</span>
                                     </span>
                                     <span class="right arrow-icon flex-center">
@@ -804,7 +769,7 @@
             <div class="pc-post-toc left-toc">
                 <div class="post-toc-wrap border-box">
     <div class="post-toc border-box">
-        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80%EF%BC%9A%E5%86%85%E5%AD%98%E7%A0%B4%E5%9D%8F%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8%E4%B8%8E%E5%AF%B9%E6%8A%97%E7%9A%84%E5%8F%91%E5%B1%95%E5%8E%86%E5%8F%B2"><span class="nav-number">1.</span> <span class="nav-text">前言：内存破坏漏洞利用与对抗的发展历史</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WOOT%E2%80%9924%EF%BC%9A%E8%AE%BA%E6%96%87%E7%9A%84%E9%87%8D%E7%82%B9%E7%A0%94%E7%A9%B6%E5%86%85%E5%AE%B9"><span class="nav-number">2.</span> <span class="nav-text">WOOT’24：论文的重点研究内容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WOOT%E2%80%9924%EF%BC%9ACFI%E8%BD%AF%E7%A1%AC%E4%BB%B6%E3%80%81%E5%89%8D%E5%90%8E%E5%90%91%E5%88%86%E7%B1%BB%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">3.</span> <span class="nav-text">WOOT’24：CFI软硬件、前后向分类的基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WOOT%E2%80%9924%EF%BC%9A%E8%BD%AF%E4%BB%B6%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%89%8D%E5%90%91CFI"><span class="nav-number">4.</span> <span class="nav-text">WOOT’24：软件实现的前向CFI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WOOT%E2%80%9924%EF%BC%9A%E7%A1%AC%E4%BB%B6%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%89%8D%E5%90%91CFI"><span class="nav-number">5.</span> <span class="nav-text">WOOT’24：硬件实现的前向CFI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WOOT%E2%80%9924%EF%BC%9A%E8%BD%AF%E4%BB%B6%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%90%8E%E5%90%91CFI"><span class="nav-number">6.</span> <span class="nav-text">WOOT’24：软件实现的后向CFI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WOOT%E2%80%9924%EF%BC%9A%E7%A1%AC%E4%BB%B6%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%90%8E%E5%90%91CFI"><span class="nav-number">7.</span> <span class="nav-text">WOOT’24：硬件实现的后向CFI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">8.</span> <span class="nav-text">参考文献</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Oakland%E2%80%9925%EF%BC%9A%E8%AE%BA%E6%96%87%E7%9A%84%E9%87%8D%E7%82%B9%E7%A0%94%E7%A9%B6%E5%86%85%E5%AE%B9"><span class="nav-number">1.</span> <span class="nav-text">Oakland’25：论文的重点研究内容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Oakland%E2%80%9925%EF%BC%9A%E8%BF%90%E8%A1%8C%E6%97%B6%E9%98%B2%E6%8A%A4%E6%9C%89%E5%93%AA%E4%BA%9B"><span class="nav-number">2.</span> <span class="nav-text">Oakland’25：运行时防护有哪些</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Oakland%E2%80%9925%EF%BC%9A%E7%8E%B0%E6%9C%89%E7%9A%84CFI%E5%92%8CCFA%E6%9C%BA%E5%88%B6"><span class="nav-number">3.</span> <span class="nav-text">Oakland’25：现有的CFI和CFA机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Oakland%E2%80%9925%EF%BC%9A%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E4%BE%A7%E4%BF%A1%E9%81%93%E6%94%BB%E5%87%BB%E5%90%91%E9%87%8F"><span class="nav-number">4.</span> <span class="nav-text">Oakland’25：体系结构侧信道攻击向量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">5.</span> <span class="nav-text">参考文献</span></a></li></ol>
     </div>
 </div>
 
@@ -1012,7 +977,7 @@
             <div class="tablet-post-toc">
                 <div class="post-toc-wrap border-box">
     <div class="post-toc border-box">
-        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80%EF%BC%9A%E5%86%85%E5%AD%98%E7%A0%B4%E5%9D%8F%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8%E4%B8%8E%E5%AF%B9%E6%8A%97%E7%9A%84%E5%8F%91%E5%B1%95%E5%8E%86%E5%8F%B2"><span class="nav-number">1.</span> <span class="nav-text">前言：内存破坏漏洞利用与对抗的发展历史</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WOOT%E2%80%9924%EF%BC%9A%E8%AE%BA%E6%96%87%E7%9A%84%E9%87%8D%E7%82%B9%E7%A0%94%E7%A9%B6%E5%86%85%E5%AE%B9"><span class="nav-number">2.</span> <span class="nav-text">WOOT’24：论文的重点研究内容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WOOT%E2%80%9924%EF%BC%9ACFI%E8%BD%AF%E7%A1%AC%E4%BB%B6%E3%80%81%E5%89%8D%E5%90%8E%E5%90%91%E5%88%86%E7%B1%BB%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">3.</span> <span class="nav-text">WOOT’24：CFI软硬件、前后向分类的基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WOOT%E2%80%9924%EF%BC%9A%E8%BD%AF%E4%BB%B6%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%89%8D%E5%90%91CFI"><span class="nav-number">4.</span> <span class="nav-text">WOOT’24：软件实现的前向CFI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WOOT%E2%80%9924%EF%BC%9A%E7%A1%AC%E4%BB%B6%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%89%8D%E5%90%91CFI"><span class="nav-number">5.</span> <span class="nav-text">WOOT’24：硬件实现的前向CFI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WOOT%E2%80%9924%EF%BC%9A%E8%BD%AF%E4%BB%B6%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%90%8E%E5%90%91CFI"><span class="nav-number">6.</span> <span class="nav-text">WOOT’24：软件实现的后向CFI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WOOT%E2%80%9924%EF%BC%9A%E7%A1%AC%E4%BB%B6%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%90%8E%E5%90%91CFI"><span class="nav-number">7.</span> <span class="nav-text">WOOT’24：硬件实现的后向CFI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">8.</span> <span class="nav-text">参考文献</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Oakland%E2%80%9925%EF%BC%9A%E8%AE%BA%E6%96%87%E7%9A%84%E9%87%8D%E7%82%B9%E7%A0%94%E7%A9%B6%E5%86%85%E5%AE%B9"><span class="nav-number">1.</span> <span class="nav-text">Oakland’25：论文的重点研究内容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Oakland%E2%80%9925%EF%BC%9A%E8%BF%90%E8%A1%8C%E6%97%B6%E9%98%B2%E6%8A%A4%E6%9C%89%E5%93%AA%E4%BA%9B"><span class="nav-number">2.</span> <span class="nav-text">Oakland’25：运行时防护有哪些</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Oakland%E2%80%9925%EF%BC%9A%E7%8E%B0%E6%9C%89%E7%9A%84CFI%E5%92%8CCFA%E6%9C%BA%E5%88%B6"><span class="nav-number">3.</span> <span class="nav-text">Oakland’25：现有的CFI和CFA机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Oakland%E2%80%9925%EF%BC%9A%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E4%BE%A7%E4%BF%A1%E9%81%93%E6%94%BB%E5%87%BB%E5%90%91%E9%87%8F"><span class="nav-number">4.</span> <span class="nav-text">Oakland’25：体系结构侧信道攻击向量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">5.</span> <span class="nav-text">参考文献</span></a></li></ol>
     </div>
 </div>
 
