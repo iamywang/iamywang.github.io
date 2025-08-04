@@ -289,73 +289,31 @@
             <div class="main-content border-box">
                 
 
-                    <div class="fade-in-down-animation">
-    <div class="category-archive-container border-box">
-        <div class="category-name">
-            <i class="fas fa-folder"></i>&nbsp;gem5
-        </div>
-        <div class="category-post-list">
-            
-<div class="archive-list-container border-box">
-    
-        <section class="archive-item border-box">
-            <div class="archive-item-header border-box">
-                <span class="archive-year">2022</span>
-            </div>
-            <ul class="archive-item-body border-box">
-                
-                    <li class="post-item border-box">
-                        <span class="starting-point border-box flex-center"></span>
-                        <span class="post-date border-box">09-13</span>
-                        <a class="post-title border-box text-ellipsis"
-                           href="/2022/09/13/gem5-5/"
-                        >gem5（5）——扩展gem5功能初探并实现简单的MemoryObject</a>
-                    </li>
-                
-                    <li class="post-item border-box">
-                        <span class="starting-point border-box flex-center"></span>
-                        <span class="post-date border-box">09-12</span>
-                        <a class="post-title border-box text-ellipsis"
-                           href="/2022/09/12/gem5-4/"
-                        >gem5（4）——利用gem5自定义系统配置在SE模式下进行模拟</a>
-                    </li>
-                
-                    <li class="post-item border-box">
-                        <span class="starting-point border-box flex-center"></span>
-                        <span class="post-date border-box">09-08</span>
-                        <a class="post-title border-box text-ellipsis"
-                           href="/2022/09/08/gem5-3/"
-                        >gem5（3）——gem5相关论文整理</a>
-                    </li>
-                
-                    <li class="post-item border-box">
-                        <span class="starting-point border-box flex-center"></span>
-                        <span class="post-date border-box">09-06</span>
-                        <a class="post-title border-box text-ellipsis"
-                           href="/2022/09/06/gem5-2/"
-                        >gem5（2）——利用gem5模拟Spectre攻击</a>
-                    </li>
-                
-                    <li class="post-item border-box">
-                        <span class="starting-point border-box flex-center"></span>
-                        <span class="post-date border-box">09-05</span>
-                        <a class="post-title border-box text-ellipsis"
-                           href="/2022/09/05/gem5-1/"
-                        >gem5（1）——环境搭建</a>
-                    </li>
-                
-            </ul>
-        </section>
-    
-</div>
+                    $category-name-font-size = 1.5rem
 
-        </div>
-    </div>
-    
+.category-archive-container {
 
+  keep-container(1, 2rem, 2rem)
 
+  .category-name {
+    margin-bottom var(--component-gap)
+    color var(--text-color-2)
+    font-weight 600
+    font-size $category-name-font-size
 
-</div>
+    i {
+      color var(--text-color-2)
+    }
+
+    +keep-tablet() {
+      font-size $category-name-font-size * 0.9
+    }
+
+    +keep-mobile() {
+      font-size $category-name-font-size * 0.8
+    }
+  }
+}
 
 
                 
