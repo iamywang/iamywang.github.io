@@ -1,3 +1,9 @@
 :root {
     --base-font-family: 'Georgia', '华文中宋', serif;
+    --base-font-size: 16px;
+    --first-screen-font-size: 30px;
+    --first-screen-icon-size: 32px;
+    --post-update-datetime: none;
+    --post-img-align: 0 auto;
+    --page-content-max-width: 1000px;
 }
