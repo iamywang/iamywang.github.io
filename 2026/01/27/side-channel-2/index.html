@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="iamywang">
+    
+    <title>
+        
+            侧信道安全（2）——与处理器相关的CVE漏洞列表 |
+        
+        没事我就挠脑袋
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="shortcut icon" href="/images/logo.jpg">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/fontawesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/regular.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/solid.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/brands.min.css">
+    
+        
+            
+        
+            
+                
+<link rel="stylesheet" href="/css/custom.css">
+
+            
+        
+    
+    <script class="keep-theme-configurations">
+    const KEEP = window.KEEP || {}
+    KEEP.hexo_config = {"hostname":"iamywang.github.io","root":"/","language":"zh-CN","path":"search.json"}
+    KEEP.theme_config = {"base_info":{"primary_color":"#0f59a4","title":"没事我就挠脑袋","author":"iamywang","avatar":"/images/logo.jpg","logo":"/images/logo.jpg","favicon":"/images/logo.jpg"},"menu":{"home":"/ || fa-solid fa-home","archives":"/archives || fa-solid fa-box-archive","categories":"/categories || fa-solid fa-layer-group","tags":"/tags || fa-solid fa-tags","links":"/links || fa-solid fa-link","about":"/about || fa-solid fa-user-graduate"},"first_screen":{"enable":true,"background_img":"/images/bg.svg","background_img_dark":"/images/bg.svg","description":"A Ph.D. Candidate Interested in Computer Architecture and Side-Channels. || 一个对计算机体系结构、侧信道攻击感兴趣的博士生。","hitokoto":false},"social_contact":{"enable":true,"links":{"github":"https://github.com/iamywang","weixin":null,"qq":null,"weibo":null,"zhihu":null,"twitter":null,"x":"https://x.com/iamywang","facebook":"https://www.facebook.com/iamywang10","email":"wangquancheng@whu.edu.cn","orcid":"https://orcid.org/0000-0002-0313-1853","scholar":"https://scholar.google.com/citations?user=KhWFO6sAAAAJ&hl=en"}},"scroll":{"progress_bar":true,"percent":false,"hide_header":true},"home":{"announcement":null,"category":true,"tag":false,"post_datetime":"created"},"post":{"author_badge":{"enable":false,"level_badge":true,"custom_badge":["One","Two","Three"]},"word_count":{"wordcount":true,"min2read":true},"datetime_format":"YYYY-MM-DD HH:mm:ss","copyright_info":true,"share":true,"reward":{"enable":false,"img_link":null,"text":null,"icon":null}},"code_block":{"tools":{"enable":true,"style":"mac"},"highlight_theme":"obsidian"},"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true,"layout":"left"},"website_count":{"busuanzi_count":{"enable":true,"site_uv":true,"site_pv":true,"page_pv":true}},"local_search":{"enable":true,"preload":true},"comment":{"enable":true,"use":"giscus","valine":{"appid":null,"appkey":null,"server_urls":null,"placeholder":null},"gitalk":{"github_id":null,"github_admins":null,"repository":null,"client_id":null,"client_secret":null,"proxy":null},"twikoo":{"env_id":null,"region":null,"version":"1.6.36"},"waline":{"server_url":null,"reaction":false,"version":"3.2.1"},"giscus":{"repo":"iamywang/iamywang.github.io","repo_id":"MDEwOlJlcG9zaXRvcnkxNTY0OTIyOTA=","category":"Announcements","category_id":"DIC_kwDOCVPiAs4CaIL_","reactions_enabled":true},"artalk":{"server":null},"disqus":{"shortname":null}},"rss":{"enable":true},"lazyload":{"enable":true},"cdn":{"enable":true,"provider":"cdnjs"},"pjax":{"enable":true},"footer":{"since":2022,"word_count":true,"site_deploy":{"enable":true,"provider":"github","url":null},"record":{"enable":false,"list":[{"code":null,"link":null}]}},"inject":{"enable":true,"css":[null,"/css/custom.css"],"js":[null]},"root":"","source_data":{"links":[{"title":"朋友们"},{"name":"zu1k","link":"https://zu1k.com/","description":"A boy dreaming of traveling around the world.","avatar":"https://zu1k.com/images/logo.jpg"},{"name":"Sarace","link":"https://blog.huisa.win/","description":"Knowledge comes from books and from experience of the world.","avatar":"https://blog.huisa.win/favicon-256x256.png"}],"icons":{"scholar":{"svg":"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d=\"M390.9 298.5c0 0 0 .1 .1 .1c9.2 19.4 14.4 41.1 14.4 64C405.3 445.1 338.5 512 256 512s-149.3-66.9-149.3-149.3c0-22.9 5.2-44.6 14.4-64h0c1.7-3.6 3.6-7.2 5.6-10.7c4.4-7.6 9.4-14.7 15-21.3c27.4-32.6 68.5-53.3 114.4-53.3c33.6 0 64.6 11.1 89.6 29.9c9.1 6.9 17.4 14.7 24.8 23.5c5.6 6.6 10.6 13.8 15 21.3c2 3.4 3.8 7 5.5 10.5zm26.4-18.8c-30.1-58.4-91-98.4-161.3-98.4s-131.2 40-161.3 98.4L0 202.7 256 0 512 202.7l-94.7 77.1z\"/></svg>","link":"https://scholar.google.com/citations?user=KhWFO6sAAAAJ&hl=en"}}},"version":"4.2.5"}
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"}
+    KEEP.language_code_block = {"copy":"复制代码","copied":"已复制","fold":"折叠代码块","folded":"已折叠"}
+    KEEP.language_copy_copyright = {"copy":"复制版权信息","copied":"已复制","title":"原文标题","author":"原文作者","link":"原文链接"}
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <i class="pjax-progress-icon fas fa-circle-notch fa-spin"></i>
+    
+</div>
+
+
+
+<main class="page-container border-box">
+    <!-- home first screen  -->
+    
+
+    <!-- page content -->
+    <div class="page-main-content border-box">
+        <div class="page-main-content-top">
+            
+<header class="header-wrapper">
+
+    <div class="border-box header-content">
+        <div class="left flex-start border-box">
+            
+                <a class="logo-image border-box" href="/">
+                    <img src="/images/logo.jpg">
+                </a>
+            
+            <a class="site-name border-box" href="/">
+               没事我就挠脑袋
+            </a>
+        </div>
+
+        <div class="right border-box">
+            <div class="pc border-box">
+                <ul class="menu-list border-box">
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/">
+                                
+                                    <i class="menu-text-color menu-icon fa-solid fa-home"></i>
+                                
+                                首页
+                                
+                            </a>
+                            
+                        </li>
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/archives">
+                                
+                                    <i class="menu-text-color menu-icon fa-solid fa-box-archive"></i>
+                                
+                                归档
+                                
+                            </a>
+                            
+                        </li>
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/categories">
+                                
+                                    <i class="menu-text-color menu-icon fa-solid fa-layer-group"></i>
+                                
+                                分类
+                                
+                            </a>
+                            
+                        </li>
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/tags">
+                                
+                                    <i class="menu-text-color menu-icon fa-solid fa-tags"></i>
+                                
+                                标签
+                                
+                            </a>
+                            
+                        </li>
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/links">
+                                
+                                    <i class="menu-text-color menu-icon fa-solid fa-link"></i>
+                                
+                                友链
+                                
+                            </a>
+                            
+                        </li>
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/about">
+                                
+                                    <i class="menu-text-color menu-icon fa-solid fa-user-graduate"></i>
+                                
+                                关于
+                                
+                            </a>
+                            
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="menu-text-color fas search fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile border-box flex-start">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list border-box">
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/">
+                            
+                                <span class="menu-icon-wrap border-box flex-center">
+                                    <i class="drawer-menu-text-color menu-icon fa-solid fa-home"></i>
+                                </span>
+                            
+                            首页
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/archives">
+                            
+                                <span class="menu-icon-wrap border-box flex-center">
+                                    <i class="drawer-menu-text-color menu-icon fa-solid fa-box-archive"></i>
+                                </span>
+                            
+                            归档
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/categories">
+                            
+                                <span class="menu-icon-wrap border-box flex-center">
+                                    <i class="drawer-menu-text-color menu-icon fa-solid fa-layer-group"></i>
+                                </span>
+                            
+                            分类
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/tags">
+                            
+                                <span class="menu-icon-wrap border-box flex-center">
+                                    <i class="drawer-menu-text-color menu-icon fa-solid fa-tags"></i>
+                                </span>
+                            
+                            标签
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/links">
+                            
+                                <span class="menu-icon-wrap border-box flex-center">
+                                    <i class="drawer-menu-text-color menu-icon fa-solid fa-link"></i>
+                                </span>
+                            
+                            友链
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/about">
+                            
+                                <span class="menu-icon-wrap border-box flex-center">
+                                    <i class="drawer-menu-text-color menu-icon fa-solid fa-user-graduate"></i>
+                                </span>
+                            
+                            关于
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle border-box">
+
+            <div class="main-content border-box">
+                
+
+                    
+<div class="fade-in-down-animation">
+    <div class="post-page-container border-box">
+        <div class="post-content-container border-box">
+            
+
+            <div class="post-content-bottom border-box">
+                
+                    <div class="post-title">
+                        侧信道安全（2）——与处理器相关的CVE漏洞列表
+                    </div>
+                
+
+                
+                    <div class="post-header border-box">
+                        
+                            <div class="avatar-box border-box">
+                                <img src="/images/logo.jpg">
+                            </div>
+                        
+                        <div class="info-box">
+                            <div class="author border-box">
+                                <span class="name">iamywang</span>
+                                
+                            </div>
+                            <div class="meta-info border-box">
+                                
+
+<div class="post-meta-info-container border-box post">
+    <div class="post-meta-info border-box">
+        
+
+        
+            <span class="meta-info-item post-create-date">
+                <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
+                <span class="datetime">2026-01-27 13:00:00</span>
+            </span>
+
+            
+                <span class="meta-info-item post-update-date">
+                    <i class="icon fa-solid fa-file-pen"></i>&nbsp;
+                    <span class="datetime" data-updated="Tue Jan 27 2026 13:00:00 GMT+0800">2026-01-27 13:00:00</span>
+                </span>
+            
+        
+
+        
+            <span class="meta-info-item post-category border-box"><i class="icon fas fa-folder"></i>&nbsp;
+                <ul class="post-category-ul">
+                    
+                            <li class="category-item"><a href="/categories/%E4%BE%A7%E4%BF%A1%E9%81%93%E5%AE%89%E5%85%A8/">侧信道安全</a></li>
+                        
+                    
+                </ul>
+            </span>
+        
+
+        
+            <span class="post-tag meta-info-item border-box">
+                <ul class="post-tag-ul">
+                    
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/CPU%E6%BC%8F%E6%B4%9E/">CPU漏洞</a></li>
+                        
+                    
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E4%BE%A7%E4%BF%A1%E9%81%93%E5%AE%89%E5%85%A8/">侧信道安全</a></li>
+                        
+                    
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/CVE%E5%88%97%E8%A1%A8/">CVE列表</a></li>
+                        
+                    
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E6%BC%8F%E6%B4%9E%E6%B1%87%E6%80%BB/">漏洞汇总</a></li>
+                        
+                    
+                </ul>
+            </span>
+        
+
+        
+        
+            <span class="meta-info-item post-wordcount">
+                <i class="icon fas fa-file-word"></i>&nbsp;<span>1.2k 字</span>
+            </span>
+        
+        
+            <span class="meta-info-item post-min2read">
+                <i class="icon fas fa-clock"></i>&nbsp;<span>6 分钟</span>
+            </span>
+        
+        
+            <span class="meta-info-item post-pv">
+                <i class="icon fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    </div>
+
+    
+</div>
+
+                            </div>
+                        </div>
+                    </div>
+                
+
+                <div class="post-content keep-markdown-body ">
+                    
+
+                    
+                         <h2 id="0x00-说明"><a href="#0x00-说明" class="headerlink" title="0x00 说明"></a>0x00 说明</h2><ul>
+<li>本文收集整理了近年来国内外关于处理器侧信道安全相关的CVE漏洞列表；</li>
+<li>涵盖侧信道攻击漏洞、瞬态执行漏洞以及架构错误漏洞等方面；</li>
+<li>侧信道漏洞包括Timing类、Cache类等多种类型；</li>
+<li>瞬态执行漏洞主要涉及Meltdown、Spectre等漏洞及其变种；</li>
+<li>架构错误漏洞涵盖处理器设计缺陷导致的安全问题。</li>
+</ul>
+<h2 id="0x01-侧信道漏洞CVE汇总"><a href="#0x01-侧信道漏洞CVE汇总" class="headerlink" title="0x01 侧信道漏洞CVE汇总"></a>0x01 侧信道漏洞CVE汇总</h2><p><strong>Cache&#x2F;Timing&#x2F;Power类侧信道漏洞：</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">序号</th>
+<th align="center">漏洞类型</th>
+<th align="center">攻击名称</th>
+<th align="center">处理器架构</th>
+<th align="center">攻击描述</th>
+<th align="center">CVE编号</th>
+<th align="center">披露时间</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td align="center">Cache</td>
+<td align="center">Flush+Reload</td>
+<td align="center">Intel<br>AMD<br>ARM</td>
+<td align="center">利用冲刷指令探测缓存行重用</td>
+<td align="center">CVE-2013-4242<br>（GnuPG）</td>
+<td align="center">2013</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center">Cache</td>
+<td align="center">Prime+Probe</td>
+<td align="center">Intel<br>AMD<br>ARM</td>
+<td align="center">利用驱逐集探测缓存组竞争</td>
+<td align="center">CVE-2015-0837<br>（GnuPG）</td>
+<td align="center">2015</td>
+</tr>
+<tr>
+<td align="center">3</td>
+<td align="center">Timing</td>
+<td align="center">SQUIP</td>
+<td align="center">AMD</td>
+<td align="center">执行单元调度程序争用</td>
+<td align="center">CVE-2021-46778</td>
+<td align="center">2022</td>
+</tr>
+<tr>
+<td align="center">4</td>
+<td align="center">Power</td>
+<td align="center">PLATYPUS</td>
+<td align="center">Intel</td>
+<td align="center">RAPL功耗接口泄漏</td>
+<td align="center">CVE-2020-8694</td>
+<td align="center">2020</td>
+</tr>
+<tr>
+<td align="center">5</td>
+<td align="center">Power</td>
+<td align="center">HertzBleed</td>
+<td align="center">Intel<br>AMD</td>
+<td align="center">DVFS动态电压频率缩放泄漏</td>
+<td align="center">CVE-2022-24436<br>CVE-2022-23823</td>
+<td align="center">2022</td>
+</tr>
+<tr>
+<td align="center">6</td>
+<td align="center">Power</td>
+<td align="center">Collide+Power</td>
+<td align="center">AMD</td>
+<td align="center">汉明距离功耗泄漏</td>
+<td align="center">CVE-2023-20583</td>
+<td align="center">2023</td>
+</tr>
+</tbody></table>
+<p><strong>参考资料：</strong></p>
+<p>[1] <a target="_blank" rel="noopener" href="https://www.usenix.org/conference/usenixsecurity14/technical-sessions/presentation/yarom">https://www.usenix.org/conference/usenixsecurity14/technical-sessions/presentation/yarom</a></p>
+<p>[2] <a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/7163050">https://ieeexplore.ieee.org/document/7163050</a></p>
+<p>[3] <a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/10179368">https://ieeexplore.ieee.org/document/10179368</a></p>
+<p>[4] <a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/9519416">https://ieeexplore.ieee.org/document/9519416</a></p>
+<p>[5] <a target="_blank" rel="noopener" href="https://www.usenix.org/conference/usenixsecurity22/presentation/wang-yingchen">https://www.usenix.org/conference/usenixsecurity22/presentation/wang-yingchen</a></p>
+<p>[6] <a target="_blank" rel="noopener" href="https://www.usenix.org/conference/usenixsecurity23/presentation/kogler">https://www.usenix.org/conference/usenixsecurity23/presentation/kogler</a></p>
+<h2 id="0x02-瞬态执行漏洞CVE汇总"><a href="#0x02-瞬态执行漏洞CVE汇总" class="headerlink" title="0x02 瞬态执行漏洞CVE汇总"></a>0x02 瞬态执行漏洞CVE汇总</h2><p><strong>乱序类漏洞：</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">序号</th>
+<th align="center">攻击名称</th>
+<th align="center">处理器架构</th>
+<th align="center">攻击描述</th>
+<th align="center">CVE编号</th>
+<th align="center">披露时间</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td align="center">Meltdown</td>
+<td align="center">Intel<br>ARM</td>
+<td align="center">特权数据缓存加载</td>
+<td align="center">CVE-2017-5754</td>
+<td align="center">2018</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center">Meltdown V3a</td>
+<td align="center">Intel</td>
+<td align="center">特权寄存器越权读取</td>
+<td align="center">CVE-2018-3640</td>
+<td align="center">2018</td>
+</tr>
+<tr>
+<td align="center">3</td>
+<td align="center">Foreshadow</td>
+<td align="center">Intel</td>
+<td align="center">针对SGX的L1终端故障</td>
+<td align="center">CVE-2018-3615</td>
+<td align="center">2018</td>
+</tr>
+<tr>
+<td align="center">4</td>
+<td align="center">Foreshadow-OS</td>
+<td align="center">Intel</td>
+<td align="center">针对系统内核的L1终端故障</td>
+<td align="center">CVE-2018-3620</td>
+<td align="center">2018</td>
+</tr>
+<tr>
+<td align="center">5</td>
+<td align="center">Foreshadow-VMM</td>
+<td align="center">Intel</td>
+<td align="center">针对虚拟机的L1终端故障</td>
+<td align="center">CVE-2018-3646</td>
+<td align="center">2018</td>
+</tr>
+<tr>
+<td align="center">6</td>
+<td align="center">Fallout</td>
+<td align="center">Intel</td>
+<td align="center">存储缓冲区数据采样</td>
+<td align="center">CVE-2018-12126</td>
+<td align="center">2019</td>
+</tr>
+<tr>
+<td align="center">7</td>
+<td align="center">RIDL</td>
+<td align="center">Intel</td>
+<td align="center">加载端口数据采样</td>
+<td align="center">CVE-2018-12127</td>
+<td align="center">2019</td>
+</tr>
+<tr>
+<td align="center">8</td>
+<td align="center">ZombieLoad</td>
+<td align="center">Intel</td>
+<td align="center">行填充缓冲区数据采样</td>
+<td align="center">CVE-2018-12130</td>
+<td align="center">2019</td>
+</tr>
+<tr>
+<td align="center">9</td>
+<td align="center">TAA</td>
+<td align="center">Intel</td>
+<td align="center">事务异步中止数据采样</td>
+<td align="center">CVE-2019-11135</td>
+<td align="center">2019</td>
+</tr>
+<tr>
+<td align="center">10</td>
+<td align="center">CacheOut</td>
+<td align="center">Intel</td>
+<td align="center">L1数据缓存驱逐采样</td>
+<td align="center">CVE-2020-0549</td>
+<td align="center">2020</td>
+</tr>
+<tr>
+<td align="center">11</td>
+<td align="center">Snoop</td>
+<td align="center">Intel</td>
+<td align="center">Snoop辅助的L1数据缓存采样</td>
+<td align="center">CVE-2020-0550</td>
+<td align="center">2020</td>
+</tr>
+<tr>
+<td align="center">12</td>
+<td align="center">LVI</td>
+<td align="center">Intel</td>
+<td align="center">加载值注入</td>
+<td align="center">CVE-2020-0551</td>
+<td align="center">2020</td>
+</tr>
+<tr>
+<td align="center">13</td>
+<td align="center">CrossTalk</td>
+<td align="center">Intel</td>
+<td align="center">特殊寄存器缓冲区数据采样</td>
+<td align="center">CVE-2020-0543</td>
+<td align="center">2020</td>
+</tr>
+<tr>
+<td align="center">14</td>
+<td align="center">Downfall</td>
+<td align="center">Intel</td>
+<td align="center">向量寄存器文件数据采样</td>
+<td align="center">CVE-2022-40982</td>
+<td align="center">2023</td>
+</tr>
+<tr>
+<td align="center">15</td>
+<td align="center">RFDS</td>
+<td align="center">Intel</td>
+<td align="center">寄存器文件数据采样</td>
+<td align="center">CVE-2023-28746</td>
+<td align="center">2024</td>
+</tr>
+</tbody></table>
+<p><strong>推测类漏洞：</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">序号</th>
+<th align="center">攻击名称</th>
+<th align="center">处理器架构</th>
+<th align="center">攻击描述</th>
+<th align="center">CVE编号</th>
+<th align="center">披露时间</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td align="center">Spectre V1</td>
+<td align="center">Intel<br>AMD<br>ARM</td>
+<td align="center">边界检查绕过</td>
+<td align="center">CVE-2017-5753</td>
+<td align="center">2018</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center">Spectre V2</td>
+<td align="center">Intel<br>AMD<br>ARM</td>
+<td align="center">分支目标注入</td>
+<td align="center">CVE-2017-5715</td>
+<td align="center">2018</td>
+</tr>
+<tr>
+<td align="center">3</td>
+<td align="center">Spectre V4</td>
+<td align="center">Intel<br>AMD<br>ARM</td>
+<td align="center">推测存储绕过</td>
+<td align="center">CVE-2018-3639</td>
+<td align="center">2018</td>
+</tr>
+<tr>
+<td align="center">4</td>
+<td align="center">Spectre V5</td>
+<td align="center">Intel</td>
+<td align="center">返回分支注入</td>
+<td align="center">CVE-2017-5715</td>
+<td align="center">2018</td>
+</tr>
+<tr>
+<td align="center">5</td>
+<td align="center">BHI</td>
+<td align="center">Intel<br>ARM</td>
+<td align="center">分支历史注入</td>
+<td align="center">CVE-2022-0001<br>CVE-2022-0002</td>
+<td align="center">2022</td>
+</tr>
+<tr>
+<td align="center">6</td>
+<td align="center">RetBleed</td>
+<td align="center">Intel<br>AMD</td>
+<td align="center">返回堆栈缓冲区溢出</td>
+<td align="center">CVE-2022-29900<br>CVE-2022-29901</td>
+<td align="center">2022</td>
+</tr>
+<tr>
+<td align="center">7</td>
+<td align="center">GhostRace</td>
+<td align="center">Intel<br>AMD</td>
+<td align="center">推测竞态条件</td>
+<td align="center">CVE-2024-2193</td>
+<td align="center">2024</td>
+</tr>
+<tr>
+<td align="center">8</td>
+<td align="center">InSpectre</td>
+<td align="center">Intel<br>ARM</td>
+<td align="center">分支历史利用</td>
+<td align="center">CVE-2024-2201</td>
+<td align="center">2024</td>
+</tr>
+<tr>
+<td align="center">9</td>
+<td align="center">BSE</td>
+<td align="center">ARM</td>
+<td align="center">分支状态驱逐</td>
+<td align="center">CVE-2024-10929</td>
+<td align="center">2024</td>
+</tr>
+<tr>
+<td align="center">10</td>
+<td align="center">ITS</td>
+<td align="center">Intel</td>
+<td align="center">间接目标选择</td>
+<td align="center">CVE-2024-28956</td>
+<td align="center">2025</td>
+</tr>
+<tr>
+<td align="center">11</td>
+<td align="center">BPI</td>
+<td align="center">Intel</td>
+<td align="center">分支特权注入</td>
+<td align="center">CVE-2024-45332</td>
+<td align="center">2025</td>
+</tr>
+<tr>
+<td align="center">12</td>
+<td align="center">TSA</td>
+<td align="center">AMD</td>
+<td align="center">暂态调度数据泄漏</td>
+<td align="center">CVE-2024-36350<br>CVE-2024-36357<br>CVE-2024-36348<br>CVE-2024-36349</td>
+<td align="center">2025</td>
+</tr>
+<tr>
+<td align="center">13</td>
+<td align="center">VMSCAPE</td>
+<td align="center">Intel<br>AMD</td>
+<td align="center">虚拟化分支目标注入</td>
+<td align="center">CVE-2025-40300</td>
+<td align="center">2025</td>
+</tr>
+</tbody></table>
+<p><strong>参考资料：</strong></p>
+<p>[1] <a target="_blank" rel="noopener" href="https://www.usenix.org/conference/usenixsecurity18/presentation/lipp">https://www.usenix.org/conference/usenixsecurity18/presentation/lipp</a></p>
+<p>[2] <a target="_blank" rel="noopener" href="https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-00115.html">https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-00115.html</a></p>
+<p>[3] <a target="_blank" rel="noopener" href="https://www.usenix.org/conference/usenixsecurity18/presentation/bulck">https://www.usenix.org/conference/usenixsecurity18/presentation/bulck</a></p>
+<p>[4] <a target="_blank" rel="noopener" href="https://foreshadowattack.eu/">https://foreshadowattack.eu</a></p>
+<p>[5] <a target="_blank" rel="noopener" href="https://dl.acm.org/doi/10.1145/3319535.3363219">https://dl.acm.org/doi/10.1145/3319535.3363219</a></p>
+<p>[6] <a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/8835281">https://ieeexplore.ieee.org/document/8835281</a></p>
+<p>[7] <a target="_blank" rel="noopener" href="https://dl.acm.org/doi/10.1145/3319535.3354252">https://dl.acm.org/doi/10.1145/3319535.3354252</a></p>
+<p>[8] <a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/9519461">https://ieeexplore.ieee.org/document/9519461</a></p>
+<p>[9] <a target="_blank" rel="noopener" href="https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-00330.html">https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-00330.html</a></p>
+<p>[10] <a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/9152763">https://ieeexplore.ieee.org/document/9152763</a></p>
+<p>[11] <a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/9519489">https://ieeexplore.ieee.org/document/9519489</a></p>
+<p>[12] <a target="_blank" rel="noopener" href="https://www.usenix.org/conference/usenixsecurity23/presentation/moghimi">https://www.usenix.org/conference/usenixsecurity23/presentation/moghimi</a></p>
+<p>[13] <a target="_blank" rel="noopener" href="https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-00898.html">https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-00898.html</a></p>
+<p>[14] <a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/8835233">https://ieeexplore.ieee.org/document/8835233</a></p>
+<p>[15] <a target="_blank" rel="noopener" href="https://bugs.chromium.org/p/project-zero/issues/detail?id=1528">https://bugs.chromium.org/p/project-zero/issues/detail?id=1528</a></p>
+<p>[16] <a target="_blank" rel="noopener" href="https://www.usenix.org/conference/woot18/presentation/koruyeh">https://www.usenix.org/conference/woot18/presentation/koruyeh</a></p>
+<p>[17] <a target="_blank" rel="noopener" href="https://www.usenix.org/conference/usenixsecurity22/presentation/barberis">https://www.usenix.org/conference/usenixsecurity22/presentation/barberis</a></p>
+<p>[18] <a target="_blank" rel="noopener" href="https://www.usenix.org/conference/usenixsecurity22/presentation/wikner">https://www.usenix.org/conference/usenixsecurity22/presentation/wikner</a></p>
+<p>[19] <a target="_blank" rel="noopener" href="https://www.usenix.org/conference/usenixsecurity24/presentation/ragab">https://www.usenix.org/conference/usenixsecurity24/presentation/ragab</a></p>
+<p>[20] <a target="_blank" rel="noopener" href="https://www.usenix.org/conference/usenixsecurity24/presentation/wiebing">https://www.usenix.org/conference/usenixsecurity24/presentation/wiebing</a></p>
+<p>[21] <a target="_blank" rel="noopener" href="https://www.usenix.org/conference/usenixsecurity25/presentation/zhu-yuhui">https://www.usenix.org/conference/usenixsecurity25/presentation/zhu-yuhui</a></p>
+<p>[22] <a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/11023266">https://ieeexplore.ieee.org/document/11023266</a></p>
+<p>[23] <a target="_blank" rel="noopener" href="https://www.usenix.org/conference/usenixsecurity25/presentation/ruegge">https://www.usenix.org/conference/usenixsecurity25/presentation/ruegge</a></p>
+<p>[24] <a target="_blank" rel="noopener" href="https://www.amd.com/en/resources/product-security/bulletin/amd-sb-7029.html">https://www.amd.com/en/resources/product-security/bulletin/amd-sb-7029.html</a></p>
+<p>[25] <a target="_blank" rel="noopener" href="https://comsec.ethz.ch/research/microarch/vmscape-exposing-and-exploiting-incomplete-branch-predictor-isolation-in-cloud-environments">https://comsec.ethz.ch/research/microarch/vmscape-exposing-and-exploiting-incomplete-branch-predictor-isolation-in-cloud-environments</a></p>
+<h2 id="0x03-架构错误漏洞CVE汇总"><a href="#0x03-架构错误漏洞CVE汇总" class="headerlink" title="0x03 架构错误漏洞CVE汇总"></a>0x03 架构错误漏洞CVE汇总</h2><p><strong>架构错误类漏洞：</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">序号</th>
+<th align="center">攻击名称</th>
+<th align="center">处理器架构</th>
+<th align="center">攻击描述</th>
+<th align="center">CVE编号</th>
+<th align="center">披露时间</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td align="center">ÆPIC</td>
+<td align="center">Intel</td>
+<td align="center">APIC MMIO“陈旧”数据泄漏</td>
+<td align="center">CVE-2022-21233</td>
+<td align="center">2022</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center">CacheWarp</td>
+<td align="center">AMD</td>
+<td align="center">未写回内存“陈旧”数据覆盖</td>
+<td align="center">CVE-2023-20592</td>
+<td align="center">2024</td>
+</tr>
+<tr>
+<td align="center">3</td>
+<td align="center">GhostWrite</td>
+<td align="center">RISC-V</td>
+<td align="center">向量指令任意内存写</td>
+<td align="center">CVE-2024-44067</td>
+<td align="center">2024</td>
+</tr>
+<tr>
+<td align="center">4</td>
+<td align="center">StackWarp</td>
+<td align="center">AMD</td>
+<td align="center">SEV-SNP客户机堆栈指针劫持</td>
+<td align="center">CVE-2025-29943</td>
+<td align="center">2026</td>
+</tr>
+</tbody></table>
+<p><strong>参考资料：</strong></p>
+<p>[1] <a target="_blank" rel="noopener" href="https://www.usenix.org/conference/usenixsecurity22/presentation/borrello">https://www.usenix.org/conference/usenixsecurity22/presentation/borrello</a></p>
+<p>[2] <a target="_blank" rel="noopener" href="https://www.usenix.org/conference/usenixsecurity24/presentation/zhang-ruiyi">https://www.usenix.org/conference/usenixsecurity24/presentation/zhang-ruiyi</a></p>
+<p>[3] <a target="_blank" rel="noopener" href="https://dl.acm.org/doi/10.1145/3719027.3765141">https://dl.acm.org/doi/10.1145/3719027.3765141</a></p>
+<p>[4] <a target="_blank" rel="noopener" href="https://stackwarpattack.com/">https://stackwarpattack.com</a></p>
+
+                    
+                </div>
+
+                
+                        
+<div class="post-copyright-info-container border-box">
+    <div class="copyright-info-content border-box">
+        <div class="copyright-info-top border-box">
+            <div class="copyright-post-title border-box text-ellipsis">
+                侧信道安全（2）——与处理器相关的CVE漏洞列表
+            </div>
+
+            <div class="copyright-post-link border-box text-ellipsis">
+                2026/01/27/side-channel-2/
+            </div>
+        </div>
+
+        <div class="copyright-info-bottom border-box">
+            <div class="copyright-post-author bottom-item">
+                <div class="type">
+                    作者
+                </div>
+                <div class="content">iamywang</div>
+            </div>
+
+            <div class="post-time bottom-item">
+                <div class="type">
+                    发布于
+                </div>
+                <div class="content">2026-01-27 13:00</div>
+            </div>
+
+
+            <div class="post-license bottom-item">
+                <div class="type">
+                    许可
+                </div>
+                <div class="content tooltip" data-tooltip-content="CC BY-NC-SA 4.0">
+                    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" target="_blank">
+                        
+                            <i class="fa-brands fa-creative-commons"></i>
+                            <i class="fa-brands fa-creative-commons-by"></i>
+                            <i class="fa-brands fa-creative-commons-nc"></i>
+                            <i class="fa-brands fa-creative-commons-sa"></i>
+                        
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <i class="copyright-bg fa-solid fa-copyright"></i>
+    </div>
+    <div class="copy-copyright-info flex-center tooltip" data-tooltip-content="复制版权信息" data-tooltip-offset-y="-2px">
+        <i class="fa-solid fa-copy"></i>
+    </div>
+</div>
+
+                
+
+                <div class="post-bottom-tags-and-share border-box">
+                    <div>
+                        
+                            <ul class="post-tags-box border-box">
+                                
+                                    <li class="tag-item border-box">
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/CPU%E6%BC%8F%E6%B4%9E/">CPU漏洞</a>
+                                    </li>
+                                
+                                    <li class="tag-item border-box">
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E4%BE%A7%E4%BF%A1%E9%81%93%E5%AE%89%E5%85%A8/">侧信道安全</a>
+                                    </li>
+                                
+                                    <li class="tag-item border-box">
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/CVE%E5%88%97%E8%A1%A8/">CVE列表</a>
+                                    </li>
+                                
+                                    <li class="tag-item border-box">
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E6%BC%8F%E6%B4%9E%E6%B1%87%E6%80%BB/">漏洞汇总</a>
+                                    </li>
+                                
+                            </ul>
+                        
+                    </div>
+                    <div>
+                        
+                            <div class="post-share-container border-box">
+    <ul class="share-list-wrap border-box">
+        <li class="qq share-item border-box flex-center tooltip"
+            data-tooltip-content="分享到 QQ"
+        >
+            <i class="fa-brands fa-qq"></i>
+        </li>
+        <li class="wechat share-item border-box flex-center tooltip tooltip-img"
+            data-tooltip-content="分享到微信"
+            data-tooltip-img-tip="微信扫一扫"
+            data-tooltip-img-style="background-color: #fff; top: -10px; padding: 0.6rem 0.6rem 0.1rem 0.6rem;"
+        >
+            <i class="fa-brands fa-weixin"></i>
+        </li>
+        <li class="weibo share-item border-box flex-center tooltip"
+            data-tooltip-content="分享到微博"
+        >
+            <i class="fa-brands fa-weibo"></i>
+        </li>
+    </ul>
+</div>
+
+                        
+                    </div>
+                </div>
+
+                
+
+                
+                    <div class="post-nav border-box">
+                        
+                        
+                            <div class="next-post">
+                                <a class="next"
+                                   rel="next"
+                                   href="/2026/01/27/side-channel-1/"
+                                   title="侧信道安全（1）——国内外处理器侧信道安全综述研究论文"
+                                >
+                                    <span class="title flex-center">
+                                        <span class="post-nav-title-item text-ellipsis">侧信道安全（1）——国内外处理器侧信道安全综述研究论文</span>
+                                        <span class="post-nav-item">下一篇</span>
+                                    </span>
+                                    <span class="right arrow-icon flex-center">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </span>
+                                </a>
+                            </div>
+                        
+                    </div>
+                
+
+                
+                    
+
+
+    <div class="comments-container border-box">
+        <div id="comments-anchor" class="comment-area-title border-box">
+            <i class="fas fa-comments"></i>&nbsp;评论
+        </div>
+        <div class="comment-plugin-fail border-box">
+    <span class="fail-tip">评论插件加载失败</span>
+    <button class="reload keep-button">点击重新加载</button>
+</div>
+<div class="comment-plugin-loading flex-center border-box">
+    <i class="loading-icon fa-solid fa-spinner fa-spin"></i>
+    <span class="load-tip">正在加载评论插件</span>
+</div>
+<script data-pjax>
+  window.KeepCommentPlugin = {}
+  window.KeepCommentPlugin.hideLoading = () => {
+    const cplDom = document.querySelector('.comments-container .comment-plugin-loading')
+    cplDom.style.display = 'none'
+  }
+  window.KeepCommentPlugin.loadFailHandle = () => {
+    window.KeepCommentPlugin.hideLoading()
+    const cpfDom = document.querySelector('.comments-container .comment-plugin-fail')
+    cpfDom.style.display = 'flex'
+    cpfDom.querySelector('.reload').addEventListener('click', () => {
+      window.location.reload()
+    })
+  }
+</script>
+
+        
+            
+
+    <div class="giscus-comments-container">
+        <div class="giscus" id="giscus"></div>
+        <script data-pjax
+                onerror="window.KeepCommentPlugin.loadFailHandle()"
+        >
+          if (!window.KeepCommentPlugin?.getGiscusTheme) {
+            window.KeepCommentPlugin.getGiscusTheme = () => {
+              return document.documentElement.classList.contains('dark-mode') ? 'dark_dimmed' : 'light_tritanopia'
+            }
+          }
+
+          if (!window.KeepCommentPlugin?.changeGiscusTheme) {
+            window.KeepCommentPlugin.changeGiscusTheme = () => {
+              const iframe = document.querySelector('iframe.giscus-frame')
+              iframe && iframe.contentWindow.postMessage({
+                giscus: {
+                  setConfig: {
+                    theme: window.KeepCommentPlugin.getGiscusTheme()
+                  }
+                }
+              }, 'https://giscus.app')
+            }
+          }
+
+          if (!window.KeepCommentPlugin?.initGiscus) {
+            window.KeepCommentPlugin.initGiscus = () => {
+              const script = document.createElement('script')
+              script.async = true
+              script.src = 'https://giscus.app/client.js'
+              script.setAttribute('data-repo', 'iamywang/iamywang.github.io')
+              script.setAttribute('data-repo-id', 'MDEwOlJlcG9zaXRvcnkxNTY0OTIyOTA=')
+              script.setAttribute('data-category', 'Announcements')
+              script.setAttribute('data-category-id', 'DIC_kwDOCVPiAs4CaIL_')
+              script.setAttribute('data-reactions-enabled', '1')
+              script.setAttribute('data-lang', 'zh-CN')
+              script.setAttribute('data-mapping', 'pathname')
+              script.setAttribute('data-strict', '0')
+              script.setAttribute('data-emit-metadata', '0')
+              script.setAttribute('data-input-position', 'top')
+              script.setAttribute('crossorigin', 'anonymous')
+              script.setAttribute('loading', 'lazy')
+              script.setAttribute('data-theme', window.KeepCommentPlugin.getGiscusTheme())
+              document.querySelector('.giscus-comments-container').appendChild(script)
+              script.onerror = () => {
+                window.KeepCommentPlugin.loadFailHandle()
+              }
+              script.onload = () => {
+                window.KeepCommentPlugin.hideLoading()
+              }
+              const toggleThemeBtn = document.querySelector('.tool-toggle-theme-mode')
+              toggleThemeBtn && toggleThemeBtn.addEventListener('click', () => {
+                window.KeepCommentPlugin.changeGiscusTheme()
+              })
+            }
+          }
+
+          if ('true' === "true") {
+            setTimeout(() => {
+              window.KeepCommentPlugin.initGiscus()
+            }, 1000)
+          } else {
+            window.addEventListener("DOMContentLoaded", window.KeepCommentPlugin.initGiscus)
+          }
+        </script>
+    </div>
+
+
+        
+    </div>
+
+
+
+
+
+                
+            </div>
+        </div>
+
+        
+            <div class="pc-post-toc left-toc">
+                <div class="post-toc-wrap border-box">
+    <div class="post-toc border-box">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x00-%E8%AF%B4%E6%98%8E"><span class="nav-number">1.</span> <span class="nav-text">0x00 说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-%E4%BE%A7%E4%BF%A1%E9%81%93%E6%BC%8F%E6%B4%9ECVE%E6%B1%87%E6%80%BB"><span class="nav-number">2.</span> <span class="nav-text">0x01 侧信道漏洞CVE汇总</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-%E7%9E%AC%E6%80%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9ECVE%E6%B1%87%E6%80%BB"><span class="nav-number">3.</span> <span class="nav-text">0x02 瞬态执行漏洞CVE汇总</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03-%E6%9E%B6%E6%9E%84%E9%94%99%E8%AF%AF%E6%BC%8F%E6%B4%9ECVE%E6%B1%87%E6%80%BB"><span class="nav-number">4.</span> <span class="nav-text">0x03 架构错误漏洞CVE汇总</span></a></li></ol>
+    </div>
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+        </div>
+
+        <div class="page-main-content-bottom border-box">
+            
+<footer class="footer border-box">
+    <div class="copyright-info info-item">
+    &copy;&nbsp;<span>2022</span>&nbsp;-&nbsp;2026
+    
+            &nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;&nbsp;<a href="/">iamywang</a>
+        
+    </div>
+
+    <div class="theme-info info-item">
+        由&nbsp;<a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;驱动&nbsp;&&nbsp;主题&nbsp;<a class="keep-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep</a>
+    </div>
+
+    
+        
+        <div class="deploy-info info-item">
+            
+            本站由 <span class="tooltip" data-tooltip-content="GitHub Pages"><img src="/images/brands/github.png"></span> 提供部署服务
+            
+        </div>
+    
+
+    
+        <div class="count-info info-item">
+            
+                <span class="count-item border-box word">
+                    <span class="item-type border-box">总字数</span>
+                    <span class="item-value border-box word">31.9k</span>
+                </span>
+            
+
+            
+                <span class="count-item border-box uv">
+                    <span class="item-type border-box">访客数</span>
+                    <span class="item-value border-box uv" id="busuanzi_value_site_uv"></span>
+                </span>
+            
+
+            
+                <span class="count-item border-box pv">
+                    <span class="item-type border-box">访问量</span>
+                    <span class="item-value border-box pv" id="busuanzi_value_site_pv"></span>
+                </span>
+            
+        </div>
+    
+
+    
+</footer>
+
+        </div>
+    </div>
+
+    <!-- post tools -->
+    
+        <div class="post-tools left-toc">
+            <div class="post-tools-container border-box">
+    <ul class="post-tools-list border-box">
+        <!-- PC encrypt again -->
+        
+
+        <!-- PC TOC show toggle -->
+        
+            <li class="tools-item flex-center toggle-show-toc">
+                <i class="fas fa-list"></i>
+            </li>
+        
+
+        <!-- PC go comment -->
+        
+            <li class="tools-item flex-center go-to-comments">
+                <i class="fas fa-comment"></i>
+                <span class="post-comments-count"></span>
+            </li>
+        
+
+        <!-- PC full screen -->
+        <li class="tools-item flex-center full-screen">
+            <i class="fa-solid fa-expand"></i>
+        </li>
+    </ul>
+</div>
+
+        </div>
+    
+
+    <!-- side tools -->
+    <div class="side-tools">
+        <div class="side-tools-container border-box ">
+    <ul class="side-tools-list side-tools-show-handle border-box">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <!-- toggle mode -->
+        
+            <li class="tools-item tool-toggle-theme-mode flex-center">
+                <i class="fas fa-moon"></i>
+            </li>
+        
+
+        <!-- rss -->
+        
+            <li class="tools-item rss flex-center">
+                <a class="flex-center"
+                   href="/atom.xml"
+                   target="_blank"
+                >
+                    <i class="fas fa-rss"></i>
+                </a>
+            </li>
+        
+
+        <!-- to bottom -->
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list border-box">
+        
+            <li class="tools-item toggle-show-toc-tablet flex-center">
+                <i class="fas fa-list"></i>
+            </li>
+        
+
+        
+            <li class="tools-item go-to-comments-tablet flex-center">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+        <li class="tools-item tool-scroll-to-top flex-center show-arrow">
+            <i class="arrow fas fa-arrow-up"></i>
+            <span class="percent"></span>
+        </li>
+    </ul>
+</div>
+
+    </div>
+
+    <!-- image mask -->
+    <div class="zoom-in-image-mask">
+    <img class="zoom-in-image">
+</div>
+
+
+    <!-- local search -->
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="close-popup-btn">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+    <!-- tablet toc -->
+    
+        <div class="tablet-post-toc-mask">
+            <div class="tablet-post-toc">
+                <div class="post-toc-wrap border-box">
+    <div class="post-toc border-box">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x00-%E8%AF%B4%E6%98%8E"><span class="nav-number">1.</span> <span class="nav-text">0x00 说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-%E4%BE%A7%E4%BF%A1%E9%81%93%E6%BC%8F%E6%B4%9ECVE%E6%B1%87%E6%80%BB"><span class="nav-number">2.</span> <span class="nav-text">0x01 侧信道漏洞CVE汇总</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-%E7%9E%AC%E6%80%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9ECVE%E6%B1%87%E6%80%BB"><span class="nav-number">3.</span> <span class="nav-text">0x02 瞬态执行漏洞CVE汇总</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03-%E6%9E%B6%E6%9E%84%E9%94%99%E8%AF%AF%E6%BC%8F%E6%B4%9ECVE%E6%B1%87%E6%80%BB"><span class="nav-number">4.</span> <span class="nav-text">0x03 架构错误漏洞CVE汇总</span></a></li></ol>
+    </div>
+</div>
+
+            </div>
+        </div>
+    
+</main>
+
+
+
+
+
+<!-- common js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/utils.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/header-shrink.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/back2top.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/toggle-theme.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/code-block.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/main.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/libs/anime.min.js"></script>
+
+<!-- local search -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/local-search.min.js"></script>
+
+
+<!-- lazyload -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/lazyload.min.js"></script>
+
+
+<div class="pjax">
+    <!-- home page -->
+    
+
+    <!-- post page -->
+    
+        <!-- post-helper -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/post/post-helper.min.js"></script>
+
+        <!-- toc -->
+        
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/post/toc.min.js"></script>
+        
+
+        <!-- copyright-info -->
+        
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/post/copyright-info.min.js"></script>
+        
+
+        <!-- share -->
+        
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/post/share.min.js"></script>
+        
+    
+
+    <!-- categories page -->
+    
+
+    <!-- links page -->
+    
+
+    <!-- photos page -->
+    
+
+    <!-- tools page -->
+    
+</div>
+
+<!-- mermaid -->
+
+
+<!-- pjax -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/libs/pjax.min.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            KEEP.utils.pjaxProgressBarStart()
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            KEEP.utils.pjaxProgressBarEnd()
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'))
+            KEEP.initExecute()
+        });
+    });
+</script>
+
+
+
+
+    
+        
+    
+
+</body>
+</html>

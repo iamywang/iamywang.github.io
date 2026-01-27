@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="iamywang">
+    
+    <title>
+        
+            侧信道安全（1）——国内外处理器侧信道安全综述研究论文 |
+        
+        没事我就挠脑袋
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="shortcut icon" href="/images/logo.jpg">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/fontawesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/regular.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/solid.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/brands.min.css">
+    
+        
+            
+        
+            
+                
+<link rel="stylesheet" href="/css/custom.css">
+
+            
+        
+    
+    <script class="keep-theme-configurations">
+    const KEEP = window.KEEP || {}
+    KEEP.hexo_config = {"hostname":"iamywang.github.io","root":"/","language":"zh-CN","path":"search.json"}
+    KEEP.theme_config = {"base_info":{"primary_color":"#0f59a4","title":"没事我就挠脑袋","author":"iamywang","avatar":"/images/logo.jpg","logo":"/images/logo.jpg","favicon":"/images/logo.jpg"},"menu":{"home":"/ || fa-solid fa-home","archives":"/archives || fa-solid fa-box-archive","categories":"/categories || fa-solid fa-layer-group","tags":"/tags || fa-solid fa-tags","links":"/links || fa-solid fa-link","about":"/about || fa-solid fa-user-graduate"},"first_screen":{"enable":true,"background_img":"/images/bg.svg","background_img_dark":"/images/bg.svg","description":"A Ph.D. Candidate Interested in Computer Architecture and Side-Channels. || 一个对计算机体系结构、侧信道攻击感兴趣的博士生。","hitokoto":false},"social_contact":{"enable":true,"links":{"github":"https://github.com/iamywang","weixin":null,"qq":null,"weibo":null,"zhihu":null,"twitter":null,"x":"https://x.com/iamywang","facebook":"https://www.facebook.com/iamywang10","email":"wangquancheng@whu.edu.cn","orcid":"https://orcid.org/0000-0002-0313-1853","scholar":"https://scholar.google.com/citations?user=KhWFO6sAAAAJ&hl=en"}},"scroll":{"progress_bar":true,"percent":false,"hide_header":true},"home":{"announcement":null,"category":true,"tag":false,"post_datetime":"created"},"post":{"author_badge":{"enable":false,"level_badge":true,"custom_badge":["One","Two","Three"]},"word_count":{"wordcount":true,"min2read":true},"datetime_format":"YYYY-MM-DD HH:mm:ss","copyright_info":true,"share":true,"reward":{"enable":false,"img_link":null,"text":null,"icon":null}},"code_block":{"tools":{"enable":true,"style":"mac"},"highlight_theme":"obsidian"},"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true,"layout":"left"},"website_count":{"busuanzi_count":{"enable":true,"site_uv":true,"site_pv":true,"page_pv":true}},"local_search":{"enable":true,"preload":true},"comment":{"enable":true,"use":"giscus","valine":{"appid":null,"appkey":null,"server_urls":null,"placeholder":null},"gitalk":{"github_id":null,"github_admins":null,"repository":null,"client_id":null,"client_secret":null,"proxy":null},"twikoo":{"env_id":null,"region":null,"version":"1.6.36"},"waline":{"server_url":null,"reaction":false,"version":"3.2.1"},"giscus":{"repo":"iamywang/iamywang.github.io","repo_id":"MDEwOlJlcG9zaXRvcnkxNTY0OTIyOTA=","category":"Announcements","category_id":"DIC_kwDOCVPiAs4CaIL_","reactions_enabled":true},"artalk":{"server":null},"disqus":{"shortname":null}},"rss":{"enable":true},"lazyload":{"enable":true},"cdn":{"enable":true,"provider":"cdnjs"},"pjax":{"enable":true},"footer":{"since":2022,"word_count":true,"site_deploy":{"enable":true,"provider":"github","url":null},"record":{"enable":false,"list":[{"code":null,"link":null}]}},"inject":{"enable":true,"css":[null,"/css/custom.css"],"js":[null]},"root":"","source_data":{"links":[{"title":"朋友们"},{"name":"zu1k","link":"https://zu1k.com/","description":"A boy dreaming of traveling around the world.","avatar":"https://zu1k.com/images/logo.jpg"},{"name":"Sarace","link":"https://blog.huisa.win/","description":"Knowledge comes from books and from experience of the world.","avatar":"https://blog.huisa.win/favicon-256x256.png"}],"icons":{"scholar":{"svg":"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d=\"M390.9 298.5c0 0 0 .1 .1 .1c9.2 19.4 14.4 41.1 14.4 64C405.3 445.1 338.5 512 256 512s-149.3-66.9-149.3-149.3c0-22.9 5.2-44.6 14.4-64h0c1.7-3.6 3.6-7.2 5.6-10.7c4.4-7.6 9.4-14.7 15-21.3c27.4-32.6 68.5-53.3 114.4-53.3c33.6 0 64.6 11.1 89.6 29.9c9.1 6.9 17.4 14.7 24.8 23.5c5.6 6.6 10.6 13.8 15 21.3c2 3.4 3.8 7 5.5 10.5zm26.4-18.8c-30.1-58.4-91-98.4-161.3-98.4s-131.2 40-161.3 98.4L0 202.7 256 0 512 202.7l-94.7 77.1z\"/></svg>","link":"https://scholar.google.com/citations?user=KhWFO6sAAAAJ&hl=en"}}},"version":"4.2.5"}
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"}
+    KEEP.language_code_block = {"copy":"复制代码","copied":"已复制","fold":"折叠代码块","folded":"已折叠"}
+    KEEP.language_copy_copyright = {"copy":"复制版权信息","copied":"已复制","title":"原文标题","author":"原文作者","link":"原文链接"}
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <i class="pjax-progress-icon fas fa-circle-notch fa-spin"></i>
+    
+</div>
+
+
+
+<main class="page-container border-box">
+    <!-- home first screen  -->
+    
+
+    <!-- page content -->
+    <div class="page-main-content border-box">
+        <div class="page-main-content-top">
+            
+<header class="header-wrapper">
+
+    <div class="border-box header-content">
+        <div class="left flex-start border-box">
+            
+                <a class="logo-image border-box" href="/">
+                    <img src="/images/logo.jpg">
+                </a>
+            
+            <a class="site-name border-box" href="/">
+               没事我就挠脑袋
+            </a>
+        </div>
+
+        <div class="right border-box">
+            <div class="pc border-box">
+                <ul class="menu-list border-box">
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/">
+                                
+                                    <i class="menu-text-color menu-icon fa-solid fa-home"></i>
+                                
+                                首页
+                                
+                            </a>
+                            
+                        </li>
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/archives">
+                                
+                                    <i class="menu-text-color menu-icon fa-solid fa-box-archive"></i>
+                                
+                                归档
+                                
+                            </a>
+                            
+                        </li>
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/categories">
+                                
+                                    <i class="menu-text-color menu-icon fa-solid fa-layer-group"></i>
+                                
+                                分类
+                                
+                            </a>
+                            
+                        </li>
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/tags">
+                                
+                                    <i class="menu-text-color menu-icon fa-solid fa-tags"></i>
+                                
+                                标签
+                                
+                            </a>
+                            
+                        </li>
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/links">
+                                
+                                    <i class="menu-text-color menu-icon fa-solid fa-link"></i>
+                                
+                                友链
+                                
+                            </a>
+                            
+                        </li>
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/about">
+                                
+                                    <i class="menu-text-color menu-icon fa-solid fa-user-graduate"></i>
+                                
+                                关于
+                                
+                            </a>
+                            
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="menu-text-color fas search fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile border-box flex-start">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list border-box">
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/">
+                            
+                                <span class="menu-icon-wrap border-box flex-center">
+                                    <i class="drawer-menu-text-color menu-icon fa-solid fa-home"></i>
+                                </span>
+                            
+                            首页
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/archives">
+                            
+                                <span class="menu-icon-wrap border-box flex-center">
+                                    <i class="drawer-menu-text-color menu-icon fa-solid fa-box-archive"></i>
+                                </span>
+                            
+                            归档
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/categories">
+                            
+                                <span class="menu-icon-wrap border-box flex-center">
+                                    <i class="drawer-menu-text-color menu-icon fa-solid fa-layer-group"></i>
+                                </span>
+                            
+                            分类
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/tags">
+                            
+                                <span class="menu-icon-wrap border-box flex-center">
+                                    <i class="drawer-menu-text-color menu-icon fa-solid fa-tags"></i>
+                                </span>
+                            
+                            标签
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/links">
+                            
+                                <span class="menu-icon-wrap border-box flex-center">
+                                    <i class="drawer-menu-text-color menu-icon fa-solid fa-link"></i>
+                                </span>
+                            
+                            友链
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/about">
+                            
+                                <span class="menu-icon-wrap border-box flex-center">
+                                    <i class="drawer-menu-text-color menu-icon fa-solid fa-user-graduate"></i>
+                                </span>
+                            
+                            关于
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle border-box">
+
+            <div class="main-content border-box">
+                
+
+                    
+<div class="fade-in-down-animation">
+    <div class="post-page-container border-box">
+        <div class="post-content-container border-box">
+            
+
+            <div class="post-content-bottom border-box">
+                
+                    <div class="post-title">
+                        侧信道安全（1）——国内外处理器侧信道安全综述研究论文
+                    </div>
+                
+
+                
+                    <div class="post-header border-box">
+                        
+                            <div class="avatar-box border-box">
+                                <img src="/images/logo.jpg">
+                            </div>
+                        
+                        <div class="info-box">
+                            <div class="author border-box">
+                                <span class="name">iamywang</span>
+                                
+                            </div>
+                            <div class="meta-info border-box">
+                                
+
+<div class="post-meta-info-container border-box post">
+    <div class="post-meta-info border-box">
+        
+
+        
+            <span class="meta-info-item post-create-date">
+                <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
+                <span class="datetime">2026-01-27 10:00:00</span>
+            </span>
+
+            
+                <span class="meta-info-item post-update-date">
+                    <i class="icon fa-solid fa-file-pen"></i>&nbsp;
+                    <span class="datetime" data-updated="Tue Jan 27 2026 10:00:00 GMT+0800">2026-01-27 10:00:00</span>
+                </span>
+            
+        
+
+        
+            <span class="meta-info-item post-category border-box"><i class="icon fas fa-folder"></i>&nbsp;
+                <ul class="post-category-ul">
+                    
+                            <li class="category-item"><a href="/categories/%E4%BE%A7%E4%BF%A1%E9%81%93%E5%AE%89%E5%85%A8/">侧信道安全</a></li>
+                        
+                    
+                </ul>
+            </span>
+        
+
+        
+            <span class="post-tag meta-info-item border-box">
+                <ul class="post-tag-ul">
+                    
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/CPU%E6%BC%8F%E6%B4%9E/">CPU漏洞</a></li>
+                        
+                    
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E4%BE%A7%E4%BF%A1%E9%81%93%E5%AE%89%E5%85%A8/">侧信道安全</a></li>
+                        
+                    
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E7%BB%BC%E8%BF%B0%E8%AE%BA%E6%96%87/">综述论文</a></li>
+                        
+                    
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E8%AE%BA%E6%96%87%E6%B1%87%E6%80%BB/">论文汇总</a></li>
+                        
+                    
+                </ul>
+            </span>
+        
+
+        
+        
+            <span class="meta-info-item post-wordcount">
+                <i class="icon fas fa-file-word"></i>&nbsp;<span>1.3k 字</span>
+            </span>
+        
+        
+            <span class="meta-info-item post-min2read">
+                <i class="icon fas fa-clock"></i>&nbsp;<span>5 分钟</span>
+            </span>
+        
+        
+            <span class="meta-info-item post-pv">
+                <i class="icon fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    </div>
+
+    
+</div>
+
+                            </div>
+                        </div>
+                    </div>
+                
+
+                <div class="post-content keep-markdown-body ">
+                    
+
+                    
+                         <h2 id="0x00-说明"><a href="#0x00-说明" class="headerlink" title="0x00 说明"></a>0x00 说明</h2><ul>
+<li>本文收集整理了近年来国内外关于处理器侧信道安全综述研究的相关论文；</li>
+<li>涉及处理器侧信道攻击技术、防御机制以及检测方法等方面的研究；</li>
+<li>论文类型主要包括综述论文（Survey&#x2F;SoK）或者系统化评估论文（Systematic Evaluation）。</li>
+</ul>
+<h2 id="0x01-英文会议论文"><a href="#0x01-英文会议论文" class="headerlink" title="0x01 英文会议论文"></a>0x01 英文会议论文</h2><ul>
+<li><p><strong>[1] A Systematic Evaluation of Transient Execution Attacks and Defenses</strong></p>
+<ul>
+<li>会议&#x2F;期刊: USENIX Security 2019</li>
+<li>论文级别: CCF-A类会议，信息安全四大顶会</li>
+<li>发表时间: 2019年</li>
+</ul>
+</li>
+<li><p><strong>[2] SoK: Hardware Defenses Against Speculative Execution Attacks</strong></p>
+<ul>
+<li>会议&#x2F;期刊: IEEE SEED 2021</li>
+<li>论文级别: None</li>
+<li>发表时间: 2021年</li>
+</ul>
+</li>
+<li><p><strong>[3] Systematic Analysis of Randomization-based Protected Cache Architectures</strong></p>
+<ul>
+<li>会议&#x2F;期刊: IEEE SP 2021</li>
+<li>论文级别: CCF-A类会议，信息安全四大顶会</li>
+<li>发表时间: 2021年</li>
+</ul>
+</li>
+<li><p><strong>[4] SoK: Practical Foundations for Spectre Defenses</strong></p>
+<ul>
+<li>会议&#x2F;期刊: IEEE SP 2022</li>
+<li>论文级别: CCF-A类会议，信息安全四大顶会</li>
+<li>发表时间: 2022年</li>
+</ul>
+</li>
+<li><p><strong>[5] A Systematic Evaluation of Automated Tools for Side-Channel Vulnerabilities Detection in Cryptographic Libraries</strong></p>
+<ul>
+<li>会议&#x2F;期刊: ACM CCS 2023</li>
+<li>论文级别: CCF-A类会议，信息安全四大顶会</li>
+<li>发表时间: 2023年</li>
+</ul>
+</li>
+<li><p><strong>[6] SoK: Analysis of Root Causes and Defense Strategies for Attacks on Microarchitectural Optimizations</strong></p>
+<ul>
+<li>会议&#x2F;期刊: IEEE EuroSP 2023</li>
+<li>论文级别: CCF-C类会议，信息安全重要会议</li>
+<li>发表时间: 2023年</li>
+</ul>
+</li>
+<li><p><strong>[7] A Security RISC Microarchitectural Attacks on Hardware RISC-V CPUs</strong></p>
+<ul>
+<li>会议&#x2F;期刊: IEEE SP 2023</li>
+<li>论文级别: CCF-A类会议，信息安全四大顶会</li>
+<li>发表时间: 2023年</li>
+</ul>
+</li>
+<li><p><strong>[8] On The Effect of Replacement Policies on The Security of Randomized Cache Architectures</strong></p>
+<ul>
+<li>会议&#x2F;期刊: ACM ASIACCS 2024</li>
+<li>论文级别: CCF-C类会议，信息安全重要会议</li>
+<li>发表时间: 2024年</li>
+</ul>
+</li>
+<li><p><strong>[9] SoK: Can We Really Detect Cache Side-Channel Attacks by Monitoring Performance Counters</strong></p>
+<ul>
+<li>会议&#x2F;期刊: ACM ASIACCS 2024</li>
+<li>论文级别: CCF-C类会议，信息安全重要会议</li>
+<li>发表时间: 2024年</li>
+</ul>
+</li>
+<li><p><strong>[10] A Systematic Evaluation of Novel and Existing Cache Side Channels</strong></p>
+<ul>
+<li>会议&#x2F;期刊: NDSS 2025</li>
+<li>论文级别: CCF-A类会议，信息安全四大顶会</li>
+<li>发表时间: 2025年</li>
+</ul>
+</li>
+<li><p><strong>[11] SoK: So You Think You Know All About Secure Randomized Caches</strong></p>
+<ul>
+<li>会议&#x2F;期刊: USENIX Security 2025</li>
+<li>论文级别: CCF-A类会议，信息安全四大顶会</li>
+<li>发表时间: 2025年</li>
+</ul>
+</li>
+<li><p><strong>[12] Systematic Evaluation of Randomized Cache Designs against Cache Occupancy</strong></p>
+<ul>
+<li>会议&#x2F;期刊: USENIX Security 2025</li>
+<li>论文级别: CCF-A类会议，信息安全四大顶会</li>
+<li>发表时间: 2025年</li>
+</ul>
+</li>
+</ul>
+<h2 id="0x02-英文期刊论文"><a href="#0x02-英文期刊论文" class="headerlink" title="0x02 英文期刊论文"></a>0x02 英文期刊论文</h2><ul>
+<li><p><strong>[1] A Survey of Microarchitectural Timing Attacks and Countermeasures on Contemporary Hardware</strong></p>
+<ul>
+<li>会议&#x2F;期刊: Springer JCE</li>
+<li>论文级别: SCI四区</li>
+<li>发表时间: 2018年</li>
+</ul>
+</li>
+<li><p><strong>[2] Survey of Microarchitectural Side and Covert Channels Attacks and Defenses</strong></p>
+<ul>
+<li>会议&#x2F;期刊: Springer JHSS</li>
+<li>论文级别: None</li>
+<li>发表时间: 2019年</li>
+</ul>
+</li>
+<li><p><strong>[3] A Survey of Microarchitectural Side-channel Vulnerabilities Attacks and Defenses in Cryptography</strong></p>
+<ul>
+<li>会议&#x2F;期刊: ACM CSUR</li>
+<li>论文级别: SCI一区</li>
+<li>发表时间: 2021年</li>
+</ul>
+</li>
+<li><p><strong>[4] Survey of Transient Execution Attacks and Their Mitigations</strong></p>
+<ul>
+<li>会议&#x2F;期刊: ACM CSUR</li>
+<li>论文级别: SCI一区</li>
+<li>发表时间: 2021年</li>
+</ul>
+</li>
+<li><p><strong>[5] Microarchitectural Attacks in Heterogeneous Systems: A Survey</strong></p>
+<ul>
+<li>会议&#x2F;期刊: ACM CSUR</li>
+<li>论文级别: SCI一区</li>
+<li>发表时间: 2022年</li>
+</ul>
+</li>
+<li><p><strong>[6] Transient-Execution Attacks: A Computer Architect Perspective</strong></p>
+<ul>
+<li>会议&#x2F;期刊: ACM CSUR</li>
+<li>论文级别: SCI一区</li>
+<li>发表时间: 2023年</li>
+</ul>
+</li>
+<li><p><strong>[7] Timing Side-channel Attacks and Countermeasures in CPU Microarchitectures</strong></p>
+<ul>
+<li>会议&#x2F;期刊: ACM CSUR</li>
+<li>论文级别: SCI一区</li>
+<li>发表时间: 2024年</li>
+</ul>
+</li>
+<li><p><strong>[8] A Survey of Side-Channel Attacks on Branch Prediction Units</strong></p>
+<ul>
+<li>会议&#x2F;期刊: ACM CSUR</li>
+<li>论文级别: SCI一区</li>
+<li>发表时间: 2025年</li>
+</ul>
+</li>
+</ul>
+<h2 id="0x03-中文期刊论文"><a href="#0x03-中文期刊论文" class="headerlink" title="0x03 中文期刊论文"></a>0x03 中文期刊论文</h2><ul>
+<li><p><strong>[1] 访问驱动下的Cache侧信道攻击研究综述</strong></p>
+<ul>
+<li>会议&#x2F;期刊: 计算机研究与发展</li>
+<li>论文级别: CCF-T1类</li>
+<li>发表时间: 2020年</li>
+</ul>
+</li>
+<li><p><strong>[2] 微架构瞬态执行攻击与防御方法</strong></p>
+<ul>
+<li>会议&#x2F;期刊: 软件学报</li>
+<li>论文级别: CCF-T1类</li>
+<li>发表时间: 2020年</li>
+</ul>
+</li>
+<li><p><strong>[3] 缓存侧信道防御研究综述</strong></p>
+<ul>
+<li>会议&#x2F;期刊: 计算机研究与发展</li>
+<li>论文级别: CCF-T1类</li>
+<li>发表时间: 2021年</li>
+</ul>
+</li>
+<li><p><strong>[4] 处理器分支预测攻击研究综述</strong></p>
+<ul>
+<li>会议&#x2F;期刊: 计算机学报</li>
+<li>论文级别: CCF-T1类</li>
+<li>发表时间: 2022年</li>
+</ul>
+</li>
+<li><p><strong>[5] 处理器微体系结构安全研究综述</strong></p>
+<ul>
+<li>会议&#x2F;期刊: 信息安全学报</li>
+<li>论文级别: CCF-T2类</li>
+<li>发表时间: 2022年</li>
+</ul>
+</li>
+<li><p><strong>[6] 侧信道攻击与防御技术研究进展</strong></p>
+<ul>
+<li>会议&#x2F;期刊: 计算机学报</li>
+<li>论文级别: CCF-T1类</li>
+<li>发表时间: 2023年</li>
+</ul>
+</li>
+<li><p><strong>[7] 缓存侧信道攻击与防御</strong></p>
+<ul>
+<li>会议&#x2F;期刊: 计算机研究与发展</li>
+<li>论文级别: CCF-T1类</li>
+<li>发表时间: 2023年</li>
+</ul>
+</li>
+<li><p><strong>[8] 基于微架构的隐蔽信道攻击、防护与检测综述</strong></p>
+<ul>
+<li>会议&#x2F;期刊: 密码学报</li>
+<li>论文级别: CCF-T2类</li>
+<li>发表时间: 2023年</li>
+</ul>
+</li>
+<li><p><strong>[9] 可信执行环境软件侧信道攻击研究综述</strong></p>
+<ul>
+<li>会议&#x2F;期刊: 软件学报</li>
+<li>论文级别: CCF-T1类</li>
+<li>发表时间: 2023年</li>
+</ul>
+</li>
+<li><p><strong>[10] 微架构安全漏洞攻击技术综述</strong></p>
+<ul>
+<li>会议&#x2F;期刊: 密码学报</li>
+<li>论文级别: CCF-T2类</li>
+<li>发表时间: 2024年</li>
+</ul>
+</li>
+<li><p><strong>[11] 处理器数据预取器安全研究综述</strong></p>
+<ul>
+<li>会议&#x2F;期刊: 电子与信息学报</li>
+<li>论文级别: CCF-T1类</li>
+<li>发表时间: 2025年</li>
+</ul>
+</li>
+<li><p><strong>[12] 处理器硬件漏洞研究综述</strong></p>
+<ul>
+<li>会议&#x2F;期刊: 电子与信息学报</li>
+<li>论文级别: CCF-T1类</li>
+<li>发表时间: 2025年</li>
+</ul>
+</li>
+</ul>
+
+                    
+                </div>
+
+                
+                        
+<div class="post-copyright-info-container border-box">
+    <div class="copyright-info-content border-box">
+        <div class="copyright-info-top border-box">
+            <div class="copyright-post-title border-box text-ellipsis">
+                侧信道安全（1）——国内外处理器侧信道安全综述研究论文
+            </div>
+
+            <div class="copyright-post-link border-box text-ellipsis">
+                2026/01/27/side-channel-1/
+            </div>
+        </div>
+
+        <div class="copyright-info-bottom border-box">
+            <div class="copyright-post-author bottom-item">
+                <div class="type">
+                    作者
+                </div>
+                <div class="content">iamywang</div>
+            </div>
+
+            <div class="post-time bottom-item">
+                <div class="type">
+                    发布于
+                </div>
+                <div class="content">2026-01-27 10:00</div>
+            </div>
+
+
+            <div class="post-license bottom-item">
+                <div class="type">
+                    许可
+                </div>
+                <div class="content tooltip" data-tooltip-content="CC BY-NC-SA 4.0">
+                    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" target="_blank">
+                        
+                            <i class="fa-brands fa-creative-commons"></i>
+                            <i class="fa-brands fa-creative-commons-by"></i>
+                            <i class="fa-brands fa-creative-commons-nc"></i>
+                            <i class="fa-brands fa-creative-commons-sa"></i>
+                        
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <i class="copyright-bg fa-solid fa-copyright"></i>
+    </div>
+    <div class="copy-copyright-info flex-center tooltip" data-tooltip-content="复制版权信息" data-tooltip-offset-y="-2px">
+        <i class="fa-solid fa-copy"></i>
+    </div>
+</div>
+
+                
+
+                <div class="post-bottom-tags-and-share border-box">
+                    <div>
+                        
+                            <ul class="post-tags-box border-box">
+                                
+                                    <li class="tag-item border-box">
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/CPU%E6%BC%8F%E6%B4%9E/">CPU漏洞</a>
+                                    </li>
+                                
+                                    <li class="tag-item border-box">
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E4%BE%A7%E4%BF%A1%E9%81%93%E5%AE%89%E5%85%A8/">侧信道安全</a>
+                                    </li>
+                                
+                                    <li class="tag-item border-box">
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E7%BB%BC%E8%BF%B0%E8%AE%BA%E6%96%87/">综述论文</a>
+                                    </li>
+                                
+                                    <li class="tag-item border-box">
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E8%AE%BA%E6%96%87%E6%B1%87%E6%80%BB/">论文汇总</a>
+                                    </li>
+                                
+                            </ul>
+                        
+                    </div>
+                    <div>
+                        
+                            <div class="post-share-container border-box">
+    <ul class="share-list-wrap border-box">
+        <li class="qq share-item border-box flex-center tooltip"
+            data-tooltip-content="分享到 QQ"
+        >
+            <i class="fa-brands fa-qq"></i>
+        </li>
+        <li class="wechat share-item border-box flex-center tooltip tooltip-img"
+            data-tooltip-content="分享到微信"
+            data-tooltip-img-tip="微信扫一扫"
+            data-tooltip-img-style="background-color: #fff; top: -10px; padding: 0.6rem 0.6rem 0.1rem 0.6rem;"
+        >
+            <i class="fa-brands fa-weixin"></i>
+        </li>
+        <li class="weibo share-item border-box flex-center tooltip"
+            data-tooltip-content="分享到微博"
+        >
+            <i class="fa-brands fa-weibo"></i>
+        </li>
+    </ul>
+</div>
+
+                        
+                    </div>
+                </div>
+
+                
+
+                
+                    <div class="post-nav border-box">
+                        
+                            <div class="prev-post">
+                                <a class="prev"
+                                   rel="prev"
+                                   href="/2026/01/27/side-channel-2/"
+                                   title="侧信道安全（2）——与处理器相关的CVE漏洞列表"
+                                >
+                                    <span class="left arrow-icon flex-center">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </span>
+                                    <span class="title flex-center">
+                                        <span class="post-nav-title-item text-ellipsis">侧信道安全（2）——与处理器相关的CVE漏洞列表</span>
+                                        <span class="post-nav-item">上一篇</span>
+                                    </span>
+                                </a>
+                            </div>
+                        
+                        
+                            <div class="next-post">
+                                <a class="next"
+                                   rel="next"
+                                   href="/2025/03/08/arch-mem-5/"
+                                   title="体系结构与内存安全（5）——Oakland’25运行时完整性SoK论文阅读"
+                                >
+                                    <span class="title flex-center">
+                                        <span class="post-nav-title-item text-ellipsis">体系结构与内存安全（5）——Oakland’25运行时完整性SoK论文阅读</span>
+                                        <span class="post-nav-item">下一篇</span>
+                                    </span>
+                                    <span class="right arrow-icon flex-center">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </span>
+                                </a>
+                            </div>
+                        
+                    </div>
+                
+
+                
+                    
+
+
+    <div class="comments-container border-box">
+        <div id="comments-anchor" class="comment-area-title border-box">
+            <i class="fas fa-comments"></i>&nbsp;评论
+        </div>
+        <div class="comment-plugin-fail border-box">
+    <span class="fail-tip">评论插件加载失败</span>
+    <button class="reload keep-button">点击重新加载</button>
+</div>
+<div class="comment-plugin-loading flex-center border-box">
+    <i class="loading-icon fa-solid fa-spinner fa-spin"></i>
+    <span class="load-tip">正在加载评论插件</span>
+</div>
+<script data-pjax>
+  window.KeepCommentPlugin = {}
+  window.KeepCommentPlugin.hideLoading = () => {
+    const cplDom = document.querySelector('.comments-container .comment-plugin-loading')
+    cplDom.style.display = 'none'
+  }
+  window.KeepCommentPlugin.loadFailHandle = () => {
+    window.KeepCommentPlugin.hideLoading()
+    const cpfDom = document.querySelector('.comments-container .comment-plugin-fail')
+    cpfDom.style.display = 'flex'
+    cpfDom.querySelector('.reload').addEventListener('click', () => {
+      window.location.reload()
+    })
+  }
+</script>
+
+        
+            
+
+    <div class="giscus-comments-container">
+        <div class="giscus" id="giscus"></div>
+        <script data-pjax
+                onerror="window.KeepCommentPlugin.loadFailHandle()"
+        >
+          if (!window.KeepCommentPlugin?.getGiscusTheme) {
+            window.KeepCommentPlugin.getGiscusTheme = () => {
+              return document.documentElement.classList.contains('dark-mode') ? 'dark_dimmed' : 'light_tritanopia'
+            }
+          }
+
+          if (!window.KeepCommentPlugin?.changeGiscusTheme) {
+            window.KeepCommentPlugin.changeGiscusTheme = () => {
+              const iframe = document.querySelector('iframe.giscus-frame')
+              iframe && iframe.contentWindow.postMessage({
+                giscus: {
+                  setConfig: {
+                    theme: window.KeepCommentPlugin.getGiscusTheme()
+                  }
+                }
+              }, 'https://giscus.app')
+            }
+          }
+
+          if (!window.KeepCommentPlugin?.initGiscus) {
+            window.KeepCommentPlugin.initGiscus = () => {
+              const script = document.createElement('script')
+              script.async = true
+              script.src = 'https://giscus.app/client.js'
+              script.setAttribute('data-repo', 'iamywang/iamywang.github.io')
+              script.setAttribute('data-repo-id', 'MDEwOlJlcG9zaXRvcnkxNTY0OTIyOTA=')
+              script.setAttribute('data-category', 'Announcements')
+              script.setAttribute('data-category-id', 'DIC_kwDOCVPiAs4CaIL_')
+              script.setAttribute('data-reactions-enabled', '1')
+              script.setAttribute('data-lang', 'zh-CN')
+              script.setAttribute('data-mapping', 'pathname')
+              script.setAttribute('data-strict', '0')
+              script.setAttribute('data-emit-metadata', '0')
+              script.setAttribute('data-input-position', 'top')
+              script.setAttribute('crossorigin', 'anonymous')
+              script.setAttribute('loading', 'lazy')
+              script.setAttribute('data-theme', window.KeepCommentPlugin.getGiscusTheme())
+              document.querySelector('.giscus-comments-container').appendChild(script)
+              script.onerror = () => {
+                window.KeepCommentPlugin.loadFailHandle()
+              }
+              script.onload = () => {
+                window.KeepCommentPlugin.hideLoading()
+              }
+              const toggleThemeBtn = document.querySelector('.tool-toggle-theme-mode')
+              toggleThemeBtn && toggleThemeBtn.addEventListener('click', () => {
+                window.KeepCommentPlugin.changeGiscusTheme()
+              })
+            }
+          }
+
+          if ('true' === "true") {
+            setTimeout(() => {
+              window.KeepCommentPlugin.initGiscus()
+            }, 1000)
+          } else {
+            window.addEventListener("DOMContentLoaded", window.KeepCommentPlugin.initGiscus)
+          }
+        </script>
+    </div>
+
+
+        
+    </div>
+
+
+
+
+
+                
+            </div>
+        </div>
+
+        
+            <div class="pc-post-toc left-toc">
+                <div class="post-toc-wrap border-box">
+    <div class="post-toc border-box">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x00-%E8%AF%B4%E6%98%8E"><span class="nav-number">1.</span> <span class="nav-text">0x00 说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-%E8%8B%B1%E6%96%87%E4%BC%9A%E8%AE%AE%E8%AE%BA%E6%96%87"><span class="nav-number">2.</span> <span class="nav-text">0x01 英文会议论文</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-%E8%8B%B1%E6%96%87%E6%9C%9F%E5%88%8A%E8%AE%BA%E6%96%87"><span class="nav-number">3.</span> <span class="nav-text">0x02 英文期刊论文</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03-%E4%B8%AD%E6%96%87%E6%9C%9F%E5%88%8A%E8%AE%BA%E6%96%87"><span class="nav-number">4.</span> <span class="nav-text">0x03 中文期刊论文</span></a></li></ol>
+    </div>
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+        </div>
+
+        <div class="page-main-content-bottom border-box">
+            
+<footer class="footer border-box">
+    <div class="copyright-info info-item">
+    &copy;&nbsp;<span>2022</span>&nbsp;-&nbsp;2026
+    
+            &nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;&nbsp;<a href="/">iamywang</a>
+        
+    </div>
+
+    <div class="theme-info info-item">
+        由&nbsp;<a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;驱动&nbsp;&&nbsp;主题&nbsp;<a class="keep-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep</a>
+    </div>
+
+    
+        
+        <div class="deploy-info info-item">
+            
+            本站由 <span class="tooltip" data-tooltip-content="GitHub Pages"><img src="/images/brands/github.png"></span> 提供部署服务
+            
+        </div>
+    
+
+    
+        <div class="count-info info-item">
+            
+                <span class="count-item border-box word">
+                    <span class="item-type border-box">总字数</span>
+                    <span class="item-value border-box word">31.9k</span>
+                </span>
+            
+
+            
+                <span class="count-item border-box uv">
+                    <span class="item-type border-box">访客数</span>
+                    <span class="item-value border-box uv" id="busuanzi_value_site_uv"></span>
+                </span>
+            
+
+            
+                <span class="count-item border-box pv">
+                    <span class="item-type border-box">访问量</span>
+                    <span class="item-value border-box pv" id="busuanzi_value_site_pv"></span>
+                </span>
+            
+        </div>
+    
+
+    
+</footer>
+
+        </div>
+    </div>
+
+    <!-- post tools -->
+    
+        <div class="post-tools left-toc">
+            <div class="post-tools-container border-box">
+    <ul class="post-tools-list border-box">
+        <!-- PC encrypt again -->
+        
+
+        <!-- PC TOC show toggle -->
+        
+            <li class="tools-item flex-center toggle-show-toc">
+                <i class="fas fa-list"></i>
+            </li>
+        
+
+        <!-- PC go comment -->
+        
+            <li class="tools-item flex-center go-to-comments">
+                <i class="fas fa-comment"></i>
+                <span class="post-comments-count"></span>
+            </li>
+        
+
+        <!-- PC full screen -->
+        <li class="tools-item flex-center full-screen">
+            <i class="fa-solid fa-expand"></i>
+        </li>
+    </ul>
+</div>
+
+        </div>
+    
+
+    <!-- side tools -->
+    <div class="side-tools">
+        <div class="side-tools-container border-box ">
+    <ul class="side-tools-list side-tools-show-handle border-box">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <!-- toggle mode -->
+        
+            <li class="tools-item tool-toggle-theme-mode flex-center">
+                <i class="fas fa-moon"></i>
+            </li>
+        
+
+        <!-- rss -->
+        
+            <li class="tools-item rss flex-center">
+                <a class="flex-center"
+                   href="/atom.xml"
+                   target="_blank"
+                >
+                    <i class="fas fa-rss"></i>
+                </a>
+            </li>
+        
+
+        <!-- to bottom -->
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list border-box">
+        
+            <li class="tools-item toggle-show-toc-tablet flex-center">
+                <i class="fas fa-list"></i>
+            </li>
+        
+
+        
+            <li class="tools-item go-to-comments-tablet flex-center">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+        <li class="tools-item tool-scroll-to-top flex-center show-arrow">
+            <i class="arrow fas fa-arrow-up"></i>
+            <span class="percent"></span>
+        </li>
+    </ul>
+</div>
+
+    </div>
+
+    <!-- image mask -->
+    <div class="zoom-in-image-mask">
+    <img class="zoom-in-image">
+</div>
+
+
+    <!-- local search -->
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="close-popup-btn">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+    <!-- tablet toc -->
+    
+        <div class="tablet-post-toc-mask">
+            <div class="tablet-post-toc">
+                <div class="post-toc-wrap border-box">
+    <div class="post-toc border-box">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x00-%E8%AF%B4%E6%98%8E"><span class="nav-number">1.</span> <span class="nav-text">0x00 说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-%E8%8B%B1%E6%96%87%E4%BC%9A%E8%AE%AE%E8%AE%BA%E6%96%87"><span class="nav-number">2.</span> <span class="nav-text">0x01 英文会议论文</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-%E8%8B%B1%E6%96%87%E6%9C%9F%E5%88%8A%E8%AE%BA%E6%96%87"><span class="nav-number">3.</span> <span class="nav-text">0x02 英文期刊论文</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03-%E4%B8%AD%E6%96%87%E6%9C%9F%E5%88%8A%E8%AE%BA%E6%96%87"><span class="nav-number">4.</span> <span class="nav-text">0x03 中文期刊论文</span></a></li></ol>
+    </div>
+</div>
+
+            </div>
+        </div>
+    
+</main>
+
+
+
+
+
+<!-- common js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/utils.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/header-shrink.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/back2top.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/toggle-theme.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/code-block.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/main.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/libs/anime.min.js"></script>
+
+<!-- local search -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/local-search.min.js"></script>
+
+
+<!-- lazyload -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/lazyload.min.js"></script>
+
+
+<div class="pjax">
+    <!-- home page -->
+    
+
+    <!-- post page -->
+    
+        <!-- post-helper -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/post/post-helper.min.js"></script>
+
+        <!-- toc -->
+        
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/post/toc.min.js"></script>
+        
+
+        <!-- copyright-info -->
+        
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/post/copyright-info.min.js"></script>
+        
+
+        <!-- share -->
+        
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/post/share.min.js"></script>
+        
+    
+
+    <!-- categories page -->
+    
+
+    <!-- links page -->
+    
+
+    <!-- photos page -->
+    
+
+    <!-- tools page -->
+    
+</div>
+
+<!-- mermaid -->
+
+
+<!-- pjax -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/libs/pjax.min.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            KEEP.utils.pjaxProgressBarStart()
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            KEEP.utils.pjaxProgressBarEnd()
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'))
+            KEEP.initExecute()
+        });
+    });
+</script>
+
+
+
+
+    
+        
+    
+
+</body>
+</html>
